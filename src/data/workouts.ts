@@ -281,21 +281,52 @@ export function getCoachingTip(week: number): CoachingTip | null {
   return phaseTips[tipIndex];
 }
 
+// Get exercises for a given week - start light, add more over time
+function getExercisesForWeek(week: number): Exercise[] {
+  const phase = getPhase(week);
+
+  // Foundation: Start with 3 core exercises
+  // Building: Add 1 more exercise (4 total)
+  // Strength: Add another (5 total)
+  // Power: All 6 exercises
+  if (phase === 'foundation') {
+    // Goblet Squat, Kettlebell Swing, Dead Bug - the essentials
+    return [EXERCISES[0], EXERCISES[1], EXERCISES[5]];
+  }
+
+  if (phase === 'building') {
+    // Add Romanian Deadlift
+    return [EXERCISES[0], EXERCISES[1], EXERCISES[2], EXERCISES[5]];
+  }
+
+  if (phase === 'strength') {
+    // Add Reverse Lunge
+    return [EXERCISES[0], EXERCISES[1], EXERCISES[2], EXERCISES[3], EXERCISES[5]];
+  }
+
+  // Power phase: all exercises
+  return EXERCISES;
+}
+
 // Weekly schedule: Mon/Wed/Fri workout, rest days in between
-export function getWorkoutForDate(date: Date, _startDate: Date): WorkoutDay {
+export function getWorkoutForDate(date: Date, startDate: Date): WorkoutDay {
   const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  const week = getCurrentWeek(startDate);
 
   // Workout days: Monday (1), Wednesday (3), Friday (5)
   const isWorkoutDay = dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5;
 
   if (isWorkoutDay) {
+    const exercises = getExercisesForWeek(week);
+    const exerciseCount = exercises.length;
+
     return {
       type: 'workout',
       title: 'Legs & Core',
-      subtitle: '5×5 strength training',
-      estimatedTime: 35,
+      subtitle: `${exerciseCount} exercises`,
+      estimatedTime: 15 + (exerciseCount * 5), // ~5 min per exercise + warmup
       warmup: WARMUP,
-      exercises: EXERCISES,
+      exercises,
     };
   }
 
@@ -328,30 +359,31 @@ export function getPhaseInfo(week: number): PhaseInfo {
 }
 
 // Suggested starting weights by week (in lbs)
+// Beginner-friendly progression - start very light, progress slowly
 export function getSuggestedWeight(week: number, _exerciseId?: string): number {
   const phase = getPhase(week);
 
   if (phase === 'foundation') {
-    // Weeks 1-4: bodyweight
-    // Weeks 5-13: gradually introduce weight
-    if (week <= 4) return 0;
-    const progressWeeks = week - 4;
-    return Math.min(progressWeeks * 5, 25); // Up to 25 lbs by week 13
+    // Weeks 1-6: bodyweight only - master form first
+    // Weeks 7-13: very light weight, add 2.5 lbs every 2 weeks
+    if (week <= 6) return 0;
+    const progressWeeks = Math.floor((week - 6) / 2);
+    return Math.min(5 + progressWeeks * 2.5, 15); // Start at 5 lbs, up to 15 lbs by week 13
   }
 
   if (phase === 'building') {
-    // Weeks 14-26: 25-50 lbs, adding ~2 lbs/week
+    // Weeks 14-26: 15-30 lbs, adding ~1 lb/week
     const progressWeeks = week - 13;
-    return 25 + (progressWeeks * 2);
+    return 15 + progressWeeks;
   }
 
   if (phase === 'strength') {
-    // Weeks 27-39: 50-75 lbs
+    // Weeks 27-39: 30-45 lbs
     const progressWeeks = week - 26;
-    return 50 + (progressWeeks * 2);
+    return 30 + progressWeeks;
   }
 
-  // Power phase: 75+ lbs
+  // Power phase: 45+ lbs
   const progressWeeks = week - 39;
-  return 75 + (progressWeeks * 2);
+  return 45 + progressWeeks;
 }

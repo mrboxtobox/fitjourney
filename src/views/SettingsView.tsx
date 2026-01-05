@@ -199,8 +199,8 @@ export function SettingsView({ startDate, onBack, onStartDateChange }: SettingsV
           strength training (Mon/Wed/Fri) and active recovery days.
         </p>
         <div class="text-xs text-[var(--white-dim)] space-y-1">
-          <p>Weeks 1-4: Bodyweight only (no equipment needed)</p>
-          <p>Weeks 5+: Light kettlebell (start with 15-25 lbs)</p>
+          <p>Weeks 1-6: Bodyweight only (master form first)</p>
+          <p>Weeks 7+: Light kettlebell (start with 5 lbs)</p>
           <p class="mt-2 text-[var(--white-muted)]">All exercises use bodyweight or kettlebells</p>
         </div>
       </div>
