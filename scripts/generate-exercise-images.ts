@@ -27,234 +27,774 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 // =============================================================================
 const STYLE_GUIDE = `=== VINTAGE INSTRUCTIONAL ILLUSTRATION STYLE GUIDE ===
 
-You are creating exercise illustrations in the style of classic fitness manuals and Art of Manliness illustrations by Ted Slampyak.
+Create an exercise illustration in the style of classic 1950s-1960s fitness manuals and military training guides.
 
-ARTISTIC STYLE (CRITICAL - FOLLOW EXACTLY):
-- Traditional pen and ink illustration with precise crosshatching for shading
-- Bold, confident black ink outlines with varying line weights (thicker outlines, finer detail lines)
-- Crosshatch shading technique using parallel lines at different angles for depth and form
-- Clean, anatomically accurate figure drawing with visible muscle definition
-- Professional instructional manual quality - like 1950s-1960s fitness guides
+ARTISTIC STYLE:
+- Traditional pen and ink illustration with crosshatching for shading
+- Bold black ink outlines with varying line weights
+- Clean, anatomically accurate figure drawing
+- Professional instructional manual quality
 
-COLOR PALETTE (STRICT - USE ONLY THESE):
-- Background: Warm cream/off-white (#F5F0E6) - like aged paper
-- Primary figure color: Deep navy blue (#1a3a5c) for clothing/shorts
-- Ink lines: Rich black (#1a1a1a) for all linework and crosshatching
-- Skin tone: Leave as cream background with ink crosshatching for shading
-- Motion arrows: Bold red (#c41e3a) with curved directional arrows showing movement path
-- Accent highlights: Light blue wash (#a8c8e8) for subtle depth on clothing
+COLOR PALETTE (USE ONLY THESE - NO OTHER COLORS):
+- Background: Warm cream/off-white (#F5F0E6)
+- Clothing: Deep navy blue (#1a3a5c)
+- Ink lines: Rich black for all linework
+- Skin: Cream background with black ink crosshatching for shading (no color fill)
+- Motion arrows: Bold red (#c41e3a)
 
-FIGURE RENDERING:
-- Athletic male or female figure with realistic proportions
-- Clear muscle definition shown through ink crosshatching, not color
-- Profile or 3/4 view preferred for clarity of movement
-- Confident, focused facial expression
-- Simple athletic wear: tank top/t-shirt and shorts
-- Bare feet or simple athletic shoes
-
-SHOWING MOVEMENT (CRITICAL):
-- Use RED curved arrows to show direction of movement
-- For exercises with multiple phases, show 2-3 positions of the figure (ghosted/lighter for previous positions, solid for current)
-- Arrows should be bold, curved, and clearly indicate the motion path
-- Small motion lines near moving body parts to indicate dynamic movement
+FIGURE REQUIREMENTS:
+- EXACTLY 2 arms and EXACTLY 2 legs (no extra limbs)
+- Athletic build with realistic proportions
+- Profile or 3/4 view for clarity
+- Simple athletic wear: tank top and shorts in navy blue
 
 COMPOSITION:
-- Single figure centered on cream background
-- Adequate white space around figure
-- Clean, uncluttered composition
-- No text, labels, or watermarks in the image
-- Square format, figure fills ~70% of frame
-
-TECHNICAL QUALITY:
-- High contrast between ink lines and background
-- Consistent line weight throughout
-- Professional crosshatching technique
-- Clean edges, no fuzzy or blurred lines
-
-AVOID:
-- Photorealistic rendering
-- Gradients or digital airbrush effects
-- Bright or neon colors
-- Complex backgrounds or environments
-- Cartoonish or anime styles
-- 3D CGI look
-- Watercolor or painterly effects
-
-This should look like it came from a vintage physical fitness manual or military training guide.`;
+- Single figure on plain cream background
+- No text, labels, or watermarks
+- Square format
+- Figure fills ~70% of frame`;
 
 // =============================================================================
-// Exercise definitions with detailed form descriptions
+// Exercise definitions with HYPER-DETAILED form descriptions
 // =============================================================================
 interface ExerciseIllustration {
   id: string;
   name: string;
   formDescription: string;
-  movementArrows: string;
-  showMultiplePositions: boolean;
   modelGender: 'male' | 'female';
 }
 
 const EXERCISES: ExerciseIllustration[] = [
-  // McGill Big 3
+  // =========================================================================
+  // McGILL BIG 3
+  // =========================================================================
   {
     id: 'mcgill-curl-up',
     name: 'McGill Curl-Up',
-    formDescription: `Person lying on back (supine position). One knee bent with foot flat on floor, other leg extended straight along the ground. Both hands placed underneath the lower back to maintain the natural lumbar curve - this is critical for spine protection. Head and shoulders lifted only 1-2 inches off the ground - NOT a full sit-up. Chin slightly tucked, eyes looking at ceiling. Core muscles braced and engaged. Hold this elevated position.`,
-    movementArrows: `Red arrow pointing upward from the shoulders showing the small lifting motion. Small curved arrow near the head showing the slight chin tuck.`,
-    showMultiplePositions: true,
     modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Side view (profile), looking at the person from their right side.
+
+BODY POSITION - BE EXTREMELY PRECISE:
+- Person lying flat on their BACK on the ground (supine position)
+- Head is on the LEFT side of the image, feet on the RIGHT side
+
+LEFT LEG (closer to head):
+- Knee is BENT at approximately 90 degrees
+- Foot is FLAT on the ground
+- Thigh is angled upward, lower leg is vertical
+
+RIGHT LEG (closer to feet in image):
+- Leg is COMPLETELY STRAIGHT and FLAT on the ground
+- Knee is NOT bent at all
+- The entire leg from hip to heel touches the ground
+
+HANDS AND ARMS:
+- BOTH hands are tucked UNDER the lower back (lumbar region)
+- Palms facing down, supporting the natural curve of the spine
+- Elbows are out to the sides, resting on the ground
+
+HEAD AND SHOULDERS:
+- Head and shoulder blades are lifted ONLY 1-2 inches off the ground
+- This is NOT a sit-up - the lift is very small
+- Chin is slightly tucked toward chest
+- Eyes looking toward the ceiling
+
+ARROWS:
+- One small red arrow pointing UPWARD from the upper back/shoulders showing the small lift
+- The arrow should be small to indicate this is a minimal movement
+
+CRITICAL: One leg bent (foot flat), one leg straight (flat on ground). Hands under lower back. Tiny lift of head/shoulders only.`,
   },
   {
     id: 'mcgill-side-plank',
     name: 'McGill Side Plank',
-    formDescription: `Person in side-lying position, propped up on forearm. Elbow positioned directly under the shoulder for proper alignment. Body forms a perfectly straight line from head to feet - no sagging or piking at the hips. Top arm resting on the hip or side of body. Feet stacked on top of each other. Knees can be bent for modified version. Core engaged, hips lifted and square. Neutral spine maintained throughout.`,
-    movementArrows: `Red arrow pointing upward at the hip area showing the hip lift direction. Small arrow at the core indicating engagement/bracing.`,
-    showMultiplePositions: true,
     modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Front view, looking at the person from the front as they face the camera while in side plank.
+
+BODY POSITION - BE EXTREMELY PRECISE:
+- Person is lying on their RIGHT side, propped up on their right forearm
+- Body faces the CAMERA (viewer sees the front of their body)
+- The body forms a STRAIGHT LINE from head to feet - like a wooden plank
+
+RIGHT ARM (bottom arm):
+- Right forearm is flat on the ground
+- Right elbow is DIRECTLY under the right shoulder (90-degree angle at elbow)
+- Right hand is flat on ground, fingers pointing forward
+
+LEFT ARM (top arm):
+- Left hand is placed on the left hip
+- Left elbow points toward ceiling
+
+LEGS:
+- BOTH legs are straight and stacked on top of each other
+- Right leg is on the bottom, left leg is on top
+- Feet are stacked (left foot on top of right foot)
+
+HIPS:
+- Hips are LIFTED off the ground
+- Hips are stacked vertically (not rotated forward or backward)
+- There is a straight line from shoulders through hips to feet
+
+HEAD:
+- Head is in neutral alignment with spine
+- Looking forward (at camera)
+
+ARROWS:
+- One red arrow pointing UPWARD at the hip area, showing the lift direction
+- Small arrow at the core area indicating bracing/engagement
+
+CRITICAL: Body is a straight diagonal line from head to feet. Propped on forearm. Hips lifted. Not lying flat.`,
   },
   {
     id: 'mcgill-bird-dog',
     name: 'Bird Dog',
-    formDescription: `Person on hands and knees in quadruped position (tabletop). Hands directly under shoulders, knees directly under hips. Spine neutral and flat like a table - no arching or rounding. Right arm extending straight forward, parallel to the ground, thumb pointing up. Left leg extending straight back, parallel to the ground, toes pointing down. Hips remain perfectly square to the ground - no rotation or tilting. Core braced throughout. Head in neutral alignment with spine, looking at the floor.`,
-    movementArrows: `Red arrow extending from the shoulder forward along the reaching arm. Red arrow extending from the hip backward along the extending leg. Both arrows show the extension direction.`,
-    showMultiplePositions: true,
     modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Side view (profile), looking at the person from their left side.
+
+BODY POSITION - BE EXTREMELY PRECISE:
+- Person is on HANDS and KNEES (quadruped/tabletop position)
+- Back is FLAT and horizontal like a tabletop - no arching or rounding
+
+BASE OF SUPPORT (what touches the ground):
+- LEFT hand is flat on ground, directly under left shoulder
+- LEFT knee is on ground, directly under left hip
+- ONLY the left hand and left knee touch the ground
+
+RIGHT ARM (extended):
+- Right arm extends STRAIGHT FORWARD, parallel to the ground
+- Arm is at shoulder height
+- Palm faces inward (thumb up)
+- Arm is fully extended with slight bend at elbow
+
+LEFT LEG (extended):
+- Left leg extends STRAIGHT BACKWARD, parallel to the ground
+- Leg is at hip height
+- Toes point toward the ground
+- Leg is fully extended
+
+STATIONARY LIMBS:
+- Left arm: straight down from shoulder to ground, supporting body
+- Right leg: bent at 90 degrees, knee on ground under hip
+
+TORSO:
+- Back is FLAT - horizontal like a tabletop
+- No rotation in hips or shoulders - hips stay square to ground
+- Core is braced/engaged
+
+HEAD:
+- Head in neutral position, looking at the ground
+- Neck continues the line of the spine
+
+ARROWS:
+- Red arrow pointing FORWARD from the extended right arm
+- Red arrow pointing BACKWARD from the extended left leg
+
+CRITICAL: ONLY ONE arm raised (right), ONLY ONE leg raised (left) - OPPOSITE arm and leg. The other arm and leg stay on the ground. This is the key to the exercise.`,
   },
 
-  // Strength exercises
+  // =========================================================================
+  // STRENGTH EXERCISES
+  // =========================================================================
   {
     id: 'goblet-squat',
     name: 'Goblet Squat',
-    formDescription: `Person in deep squat position holding a kettlebell at chest height. Kettlebell held vertically with both hands cupping the sides of the handle (like holding a goblet). Feet shoulder-width apart or slightly wider, toes pointed slightly outward (15-30 degrees). Knees tracking over the toes, pushing outward - elbows can touch inside of knees at bottom. Full depth squat with hips well below knee level. Chest up and proud, back straight, maintaining upright torso. Weight in mid-foot to heels.`,
-    movementArrows: `Two red arrows: one pointing downward showing the descent into the squat, one pointing upward showing the drive up to standing. Curved arrows at the knees showing them tracking outward over toes.`,
-    showMultiplePositions: true,
     modelGender: 'female',
+    formDescription: `CAMERA ANGLE: 3/4 view from the front-left, so we can see both the front of the body and slight side profile.
+
+BODY POSITION - BOTTOM OF THE SQUAT:
+- Person is in a DEEP squat position (bottom position of the squat)
+- This is the lowest point of the movement
+
+FEET:
+- Feet are shoulder-width apart or slightly wider
+- Feet are flat on the ground (heels DOWN, not raised)
+- Toes point outward at about 15-30 degrees
+
+KNEES:
+- Knees are bent deeply (more than 90 degrees)
+- Knees track OUTWARD over the toes (not caving inward)
+- Knees may be pushed out by the elbows
+
+HIPS:
+- Hips are dropped DOWN, below knee level
+- This is a DEEP squat, not a half squat
+- Buttocks are close to the ground (but not touching)
+
+KETTLEBELL AND ARMS:
+- Kettlebell is held at CHEST height
+- Both hands cup the sides of the kettlebell handle (like holding a goblet/chalice)
+- The kettlebell is vertical (bottom of bell faces down)
+- Elbows point down and can touch the inside of the knees
+
+TORSO:
+- Chest is UP and proud (not collapsed forward)
+- Back is straight, maintaining upright torso
+- Slight forward lean is okay, but torso stays as vertical as possible
+
+HEAD:
+- Head is neutral, looking forward
+- Chin is level
+
+ARROWS:
+- Red arrow pointing DOWN into the squat (showing descent)
+- Red arrow pointing UP (showing the drive to stand)
+- Small curved arrows at knees showing them pushing outward
+
+CRITICAL: This is a DEEP squat - hips well below knees. Heels stay flat on ground. Kettlebell at chest.`,
   },
   {
     id: 'farmers-carry',
     name: "Farmer's Carry",
-    formDescription: `Person walking with upright posture while carrying a kettlebell in one hand (single-arm farmer's carry). Shoulders perfectly level - not tilting toward the weight. Shoulder blades packed down and back. Core braced hard to resist lateral flexion. Free arm can be slightly out for balance or held naturally. Walking with controlled, deliberate steps. Head up, eyes forward. Chest proud, tall spine. The loaded side works harder to maintain neutral posture.`,
-    movementArrows: `Red arrow showing forward walking direction. Small arrows at the core/obliques showing the anti-lateral flexion engagement. Arrow at shoulders showing them staying level.`,
-    showMultiplePositions: false,
     modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Side view (profile), person walking from left to right.
+
+BODY POSITION - MID-STRIDE:
+- Person is WALKING with perfect upright posture
+- Caught mid-step, one foot forward, one foot back
+
+KETTLEBELL:
+- ONE kettlebell held in the RIGHT hand (arm at side)
+- Arm hangs straight down, kettlebell at thigh level
+- Grip is firm, knuckles facing forward
+- LEFT hand is empty (this is a single-arm carry)
+
+POSTURE - CRITICAL:
+- Shoulders are PERFECTLY LEVEL (not tilting toward the weight)
+- Both shoulders are at the same height
+- Shoulder blades are pulled back and down
+- Spine is VERTICAL - no leaning to either side
+
+WALKING STANCE:
+- Left leg is forward, foot about to contact ground (heel strike)
+- Right leg is back, pushing off from toes
+- Natural walking stride - not too wide
+
+HEAD:
+- Head is up, eyes looking forward
+- Chin is level, neck is neutral
+
+CORE:
+- Core is braced to prevent side bending
+- The challenge is resisting the pull to lean toward the weight
+
+ARROWS:
+- Red arrow pointing FORWARD showing walking direction
+- Small arrows at the shoulders showing they stay LEVEL
+- Arrow at the core showing bracing/engagement
+
+CRITICAL: Shoulders stay LEVEL despite holding weight on only one side. Walking with tall posture.`,
   },
   {
     id: 'kb-deadlift',
     name: 'Kettlebell Deadlift',
-    formDescription: `Person performing hip hinge movement with kettlebell. Starting position: standing tall with kettlebell on the ground between feet. Feet hip-width apart. Movement: hinging at the hips (NOT squatting) - pushing hips back while maintaining flat back. Knees have a soft bend but shins stay relatively vertical. Back is flat with neutral spine - chest up, shoulders back. Arms straight, gripping the kettlebell handle. Weight in heels and mid-foot. Show the bottom position of the hinge with the torso at roughly 45-degree angle.`,
-    movementArrows: `Red curved arrow at the hips showing the hip hinge movement (hips pushing back and then driving forward). Arrow pointing up showing the lift direction. Arrow at the back showing it staying flat/neutral.`,
-    showMultiplePositions: true,
     modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their right side.
+
+BODY POSITION - BOTTOM OF THE DEADLIFT (hinged position):
+- Person is in a HIP HINGE position - bent forward at the hips
+- This is NOT a squat - the movement is a hinge, not a sit
+
+FEET:
+- Feet are hip-width apart
+- Feet are flat on ground
+- Weight is in heels and mid-foot
+
+KETTLEBELL POSITION:
+- Kettlebell is on the GROUND between the feet
+- Both hands grip the kettlebell handle
+- Arms are straight, hanging down from shoulders
+
+HIP HINGE - CRITICAL:
+- Hips are pushed FAR BACK (like closing a car door with your butt)
+- Torso is hinged forward at approximately 45-degree angle from vertical
+- The fold happens at the HIP JOINT, not the lower back
+
+BACK:
+- Back is FLAT (neutral spine) - not rounded
+- Chest is up, creating a flat back position
+- Shoulders are pulled back (not rounded forward)
+
+KNEES:
+- Knees have a SOFT BEND (about 15-20 degrees)
+- Knees are NOT deeply bent like a squat
+- Shins are nearly VERTICAL
+
+HEAD:
+- Head is neutral, continuing line of spine
+- Looking at a spot on the ground a few feet ahead
+
+ARROWS:
+- Curved red arrow at hips showing the hinge motion (hips going back)
+- Red arrow pointing UP along the kettlebell/arms showing lift direction
+- Arrow along the back showing it staying FLAT
+
+CRITICAL: This is a HIP HINGE, not a squat. Hips push back, torso tips forward, back stays flat, knees are only slightly bent. Kettlebell is on/near the ground.`,
   },
   {
     id: 'kb-swing',
     name: 'Kettlebell Swing',
-    formDescription: `Person at the top of a kettlebell swing. Standing tall with hips fully extended and squeezed forward. Glutes contracted hard at the top. Kettlebell at chest height with arms straight (the arms don't lift the bell - the hip snap does). Shoulders packed down, not shrugged. Core braced, body forming a straight vertical line. Knees straight but not locked. This is the power position - all force comes from the explosive hip extension, not the arms.`,
-    movementArrows: `Large curved red arrow showing the arc of the kettlebell swing from between the legs up to chest height. Arrow at the hips showing the powerful forward hip snap/thrust. Small motion lines behind the kettlebell showing its momentum.`,
-    showMultiplePositions: true,
     modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their right side.
+
+BODY POSITION - TOP OF THE SWING:
+- Person is at the TOP/PEAK of a kettlebell swing
+- This is the moment of full hip extension
+
+STANCE:
+- Feet are shoulder-width apart
+- Feet flat and planted firmly
+- Weight distributed evenly
+
+HIPS AND LEGS - CRITICAL:
+- Hips are FULLY EXTENDED - pushed forward
+- Standing COMPLETELY UPRIGHT (vertical torso)
+- Glutes are SQUEEZED hard
+- Knees are straight (but not hyperextended/locked)
+
+KETTLEBELL POSITION:
+- Kettlebell is at CHEST HEIGHT (not overhead!)
+- Kettlebell is in FRONT of the body
+- Arms are STRAIGHT (elbows not bent)
+- The kettlebell appears to "float" at the top of its arc
+
+ARMS:
+- Both arms are straight, extended forward
+- Arms are parallel to the ground at chest height
+- Hands grip kettlebell handle firmly
+- Shoulders are DOWN (not shrugged up)
+
+TORSO:
+- Torso is VERTICAL (standing straight up)
+- Core is braced
+- Body forms a straight vertical line from head to heels
+
+HEAD:
+- Head neutral, eyes forward
+- Chin level
+
+ARROWS:
+- Large curved red arrow showing the ARC of the swing (from between legs up to chest height)
+- Arrow at hips showing the forward HIP SNAP/THRUST
+- Motion lines behind kettlebell showing momentum
+
+CRITICAL: Kettlebell is at CHEST height (NOT overhead). Arms are straight forward, parallel to ground. Body is standing STRAIGHT UP with hips thrust forward. This is NOT an overhead press.`,
   },
 
-  // Mobility exercises
+  // =========================================================================
+  // MOBILITY EXERCISES
+  // =========================================================================
   {
     id: '90-90',
     name: '90/90 Hip Stretch',
-    formDescription: `Person seated on the floor in the 90/90 position. Front leg: hip externally rotated, knee bent at 90 degrees, shin parallel to the front edge of the mat, inner thigh and inner knee resting on floor. Back leg: hip internally rotated, knee bent at 90 degrees, shin perpendicular to front shin, outer thigh and outer knee on floor. Torso upright and tall, sitting bones grounded. Hands can rest lightly on the floor for balance. This stretches both hip internal and external rotation simultaneously.`,
-    movementArrows: `Red curved arrows showing the rotation direction of each hip - external rotation on front leg, internal rotation on back leg. Arrow at the spine showing upright posture.`,
-    showMultiplePositions: false,
     modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Front view, looking at the person from directly in front as they sit on the floor.
+
+BODY POSITION - SEATED ON FLOOR:
+- Person is SITTING on the ground
+- Buttocks/sitting bones are on the floor
+
+FRONT LEG (closer to camera):
+- Hip is EXTERNALLY ROTATED (thigh rotated outward)
+- Knee is bent at 90 degrees
+- Shin is roughly horizontal, parallel to the front edge of an imaginary mat
+- INNER thigh and INNER knee rest on the ground
+- Foot is to the person's left
+
+BACK LEG:
+- Hip is INTERNALLY ROTATED (thigh rotated inward)
+- Knee is bent at 90 degrees
+- Shin points backward/away from camera
+- OUTER thigh and OUTER knee rest on the ground
+- Foot is behind the person
+
+THE 90-90 SHAPE:
+- Looking from above, the legs form a "Z" or "S" shape
+- Both knees are bent at 90 degrees (hence "90/90")
+- Front shin and back shin are roughly perpendicular to each other
+
+TORSO:
+- Torso is UPRIGHT and TALL
+- Sitting straight up, not leaning forward
+- Spine is vertical
+
+ARMS:
+- Hands rest lightly on the ground beside hips for balance
+- Or hands can rest on the front knee
+
+HEAD:
+- Head neutral, looking forward
+- Tall posture maintained
+
+ARROWS:
+- Curved arrow at front hip showing EXTERNAL rotation direction
+- Curved arrow at back hip showing INTERNAL rotation direction
+- Arrow at spine showing UPRIGHT posture
+
+CRITICAL: Both knees at 90 degrees. Front leg externally rotated (inner thigh down). Back leg internally rotated (outer thigh down). Sitting upright.`,
   },
   {
     id: 'deep-squat-hold',
     name: 'Deep Squat Hold',
-    formDescription: `Person in a full deep squat (also called Asian squat or malasana). Feet flat on the ground - heels down, not raised. Feet roughly shoulder-width apart, toes turned out slightly. Hips dropped as low as possible, below knee level. Knees tracking over toes, pushed out wide. Torso upright as much as flexibility allows. Arms can be in prayer position at chest, or extended forward for balance. This is a resting position, relaxed but with good posture. Chest lifted, spine as neutral as possible.`,
-    movementArrows: `Small arrows at the heels emphasizing they stay flat on ground. Arrows at the knees showing them pressing outward. Arrow showing the hip sinking down low.`,
-    showMultiplePositions: false,
     modelGender: 'male',
+    formDescription: `CAMERA ANGLE: 3/4 front view, seeing both front and slight side of the person.
+
+BODY POSITION - FULL DEEP SQUAT (resting position):
+- Person is in the DEEPEST possible squat position
+- This is also called an "Asian squat" or "third world squat"
+- This is a RESTING position, held statically
+
+FEET - CRITICAL:
+- Feet are shoulder-width apart or slightly wider
+- HEELS are FLAT ON THE GROUND (not raised!)
+- Entire foot including heel maintains contact with floor
+- Toes point outward at about 30 degrees
+
+KNEES:
+- Knees are FULLY bent (maximum flexion)
+- Knees push OUTWARD, tracking over toes
+- Knees are wide apart
+
+HIPS:
+- Hips are dropped AS LOW AS POSSIBLE
+- Buttocks are very close to the ground (almost touching heels)
+- Hips are BELOW knee level by a significant amount
+
+TORSO:
+- Torso is as UPRIGHT as flexibility allows
+- Chest is lifted
+- Some forward lean is natural, but try to stay upright
+- Back maintains natural curve
+
+ARMS:
+- Arms are extended forward for balance, OR
+- Hands in prayer position at chest with elbows pushing knees out
+
+HEAD:
+- Head neutral, looking forward
+- Relaxed expression (this is a resting position)
+
+ARROWS:
+- Arrows at HEELS emphasizing they stay FLAT on ground
+- Arrows at knees showing them pushing OUTWARD
+- Arrow showing hips sinking DOWN
+
+CRITICAL: This is the DEEPEST squat possible. Heels MUST be flat on the ground. Hips are very low, close to the ground. Not a half squat.`,
   },
   {
     id: 'couch-stretch',
     name: 'Couch Stretch',
-    formDescription: `Person in a deep lunge position with back foot elevated against a wall (or couch). Front foot flat on ground, front knee at roughly 90 degrees, front shin vertical. Back knee on the ground (use pad for comfort), back shin running up the wall vertically so the top of the back foot is against the wall. Torso upright and tall, not leaning forward. Back glute squeezed to increase the hip flexor stretch. Hands can rest on front knee for support. This intensely stretches the hip flexors and quadriceps of the back leg.`,
-    movementArrows: `Red arrow at the back hip showing the hip flexor stretch direction (hip extending/opening). Arrow at the glute showing the squeeze/contraction. Arrow showing torso staying upright.`,
-    showMultiplePositions: false,
     modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their left side. A wall is on the right side of the image.
+
+BODY POSITION - LUNGE WITH BACK FOOT ON WALL:
+- Person is in a deep lunge position with back foot elevated against a wall
+
+FRONT LEG (left leg, closer to camera):
+- Foot is flat on the ground
+- Knee is bent at approximately 90 degrees
+- Shin is vertical (perpendicular to ground)
+- Thigh is horizontal (parallel to ground)
+
+BACK LEG (right leg, against wall) - CRITICAL:
+- KNEE is on the ground (use a pad/mat for comfort)
+- SHIN runs UP the wall VERTICALLY
+- TOP of the FOOT is pressed against the wall
+- This creates an intense stretch in the hip flexor and quadricep
+
+WALL:
+- The wall is behind the person
+- The back shin/foot is pressed against the wall
+- The corner where wall meets floor is where the back knee rests
+
+TORSO:
+- Torso is UPRIGHT and TALL (not leaning forward)
+- Spine is vertical
+- Core is engaged
+- Back glute is SQUEEZED to intensify the stretch
+
+ARMS:
+- Hands rest on the front knee for support
+- Or arms can be raised overhead
+
+HEAD:
+- Head neutral, looking forward
+- Tall posture
+
+ARROWS:
+- Arrow at back hip showing the hip OPENING/EXTENDING
+- Arrow at back glute showing the SQUEEZE
+- Arrow at torso showing it staying UPRIGHT
+
+CRITICAL: Back shin goes UP the wall with top of foot against wall. Knee on ground at base of wall. Front shin is vertical. Torso stays upright.`,
   },
   {
     id: 'pigeon-stretch',
     name: 'Pigeon Stretch',
-    formDescription: `Person in pigeon pose. Front leg: bent with shin roughly parallel to the front of the mat (or angled based on flexibility), outer thigh and hip resting on the ground, knee bent at roughly 90 degrees. Back leg: extended straight behind, top of thigh, knee, and top of foot all resting on the ground. Hips square to the front as much as possible. Torso can be upright for less intensity or folded forward over the front leg for deeper stretch. This deeply stretches the hip external rotators (piriformis, glutes) of the front leg.`,
-    movementArrows: `Arrow showing the external rotation of the front hip. Arrow showing the hip flexor stretch of the back leg. If folded forward, arrow showing the forward fold direction.`,
-    showMultiplePositions: true,
     modelGender: 'male',
+    formDescription: `CAMERA ANGLE: 3/4 front view, looking down slightly at the person on the floor.
+
+BODY POSITION - PIGEON POSE (upright version):
+- Person is on the floor in pigeon pose/stretch
+
+FRONT LEG (bent leg):
+- Front leg is BENT with knee pointing forward/outward
+- Shin is angled across the body (not straight forward)
+- OUTER hip and OUTER thigh of front leg rest on the ground
+- Front foot is near opposite hip
+- Knee is bent at approximately 90 degrees
+
+BACK LEG (straight leg) - CRITICAL:
+- Back leg extends STRAIGHT BEHIND the body
+- The ENTIRE back leg is on the ground:
+  - Top of thigh on ground
+  - Knee on ground
+  - Top of foot on ground (not toes tucked)
+- Back leg is fully extended (straight knee)
+- Back leg is in line with the hip (not angled outward)
+
+HIPS:
+- Hips try to stay SQUARE (facing forward)
+- Front hip will naturally be more open
+- Both hip bones point forward as much as possible
+
+TORSO:
+- Torso is UPRIGHT (not folded forward in this version)
+- Spine is tall and vertical
+- Chest is lifted
+
+ARMS:
+- Hands on ground beside hips for support
+- Arms help maintain upright position
+
+HEAD:
+- Head neutral, looking forward
+- Tall posture
+
+ARROWS:
+- Arrow at front hip showing EXTERNAL rotation
+- Arrow at back hip showing hip flexor STRETCH
+- Arrow at torso showing UPRIGHT posture
+
+CRITICAL: Front leg bent on ground with outer hip down. Back leg is STRAIGHT and FLAT on the ground behind (not bent). Torso upright.`,
   },
 
-  // Warmup exercises
+  // =========================================================================
+  // WARMUP EXERCISES
+  // =========================================================================
   {
     id: 'cat-cow',
     name: 'Cat-Cow',
-    formDescription: `Person on hands and knees showing the CAT position (spinal flexion). Hands under shoulders, knees under hips. Back rounded up toward the ceiling like an angry cat - full spinal flexion. Head dropped down, chin toward chest. Tailbone tucked under. Abdominals pulled in. The opposite COW position would have the back arched, belly dropping, head lifted - but show the CAT position primarily with a ghosted cow position to show the movement.`,
-    movementArrows: `Red curved arrows showing the spinal movement - arrow curving upward for the cat (rounding), and a lighter/ghosted arrow curving downward for the cow (arching). Arrow at the pelvis showing the tuck and tilt.`,
-    showMultiplePositions: true,
     modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their left side.
+
+BODY POSITION - "CAT" POSITION (spinal flexion):
+- Person is on HANDS and KNEES (quadruped position)
+- Showing the "CAT" portion of cat-cow
+
+HANDS AND ARMS:
+- Hands flat on ground, DIRECTLY UNDER shoulders
+- Arms are straight (elbows not bent)
+- Fingers spread for stability
+
+KNEES AND LEGS:
+- Knees on ground, DIRECTLY UNDER hips
+- Shins flat on ground behind
+- Thighs are vertical
+
+SPINE - THE KEY ELEMENT:
+- Back is ROUNDED UP toward the ceiling
+- Like an angry/scared cat arching its back
+- Maximum spinal FLEXION (rounding)
+- The middle of the back is the highest point
+
+HEAD:
+- Head is dropped DOWN
+- Chin tucked toward chest
+- Looking at knees or navel
+- Neck continues the rounded curve of spine
+
+PELVIS:
+- Tailbone is tucked UNDER
+- Pelvis tilts posteriorly (pubic bone lifts toward navel)
+
+ABDOMEN:
+- Belly is pulled IN toward spine
+- Core is engaged
+
+ARROWS:
+- Large curved arrow showing spine rounding UPWARD (convex curve up)
+- Arrow at pelvis showing tailbone tucking UNDER
+- Arrow at head showing it dropping DOWN
+
+OPTIONAL GHOSTED POSITION:
+- Lighter/ghosted figure showing "COW" position (back arched downward, head up) to show the contrast
+
+CRITICAL: Back is rounded UP like an angry cat. Head down, tailbone tucked. This is spinal FLEXION (rounding up).`,
   },
   {
     id: 'leg-swings',
     name: 'Leg Swings',
-    formDescription: `Person standing on one leg, other leg swinging forward and back in a controlled pendulum motion. Standing leg straight and stable, planted firmly. Swinging leg relaxed, moving from the hip in a smooth arc. One hand touching a wall or support for balance. Torso stays upright and stable - the movement is isolated to the swinging leg. Show the leg in mid-swing forward position, with ghosted positions showing the backward swing. This is a dynamic stretch for the hip flexors and hamstrings.`,
-    movementArrows: `Large red curved double-arrow showing the pendulum swing path - forward and backward. Arrow at the hip showing it as the pivot point. Arrow at the torso showing it staying stable.`,
-    showMultiplePositions: true,
     modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their right side. A wall or support is on the left.
+
+BODY POSITION - DYNAMIC LEG SWING:
+- Person is standing on ONE leg, swinging the other leg forward and back
+
+SUPPORT:
+- LEFT hand touches a wall or support (on the left side of image)
+- This provides balance during the dynamic movement
+
+STANDING LEG (left leg):
+- Left foot is flat on ground
+- Left leg is STRAIGHT (or very slight bend)
+- This leg stays STATIONARY and stable
+- All weight is on this leg
+
+SWINGING LEG (right leg) - SHOW MULTIPLE POSITIONS:
+- Right leg swings like a pendulum from the HIP
+- Show the leg in FORWARD swing position (primary)
+- Show ghosted/lighter positions showing:
+  - Leg swinging BACKWARD
+  - Neutral position (hanging straight down)
+- The leg stays RELATIVELY STRAIGHT during the swing
+- Movement comes from the HIP JOINT
+
+TORSO:
+- Torso stays UPRIGHT and STABLE
+- Core is braced
+- Upper body does NOT swing with the leg
+- Minimal forward/backward lean
+
+HEAD:
+- Looking forward
+- Head stays stable
+
+ARROWS:
+- Large curved DOUBLE-HEADED arrow showing the pendulum swing path (forward AND backward)
+- The arrow should arc from behind the body, down, and forward
+- Small arrow at hip showing it as the PIVOT POINT
+- Arrow at torso showing it staying STABLE
+
+CRITICAL: Standing on one leg, other leg swings freely from the hip like a pendulum. Upper body stays stable. Show the swinging motion with multiple leg positions or motion blur.`,
   },
   {
     id: 'hip-circles',
     name: 'Hip Circles',
-    formDescription: `Person standing with feet shoulder-width apart, hands on hips. Hips moving in a circular motion - like hula hooping without the hoop. Knees slightly bent and soft. Upper body relatively stable while the hips trace a circle. Show the hips shifted to one side as part of the circular motion. This mobilizes the entire hip complex and lower back.`,
-    movementArrows: `Red circular arrow around the hip area showing the clockwise (or counterclockwise) rotation path. Small arrows showing the hip shifting through the circle. Arrow at the upper body showing it staying relatively stable.`,
-    showMultiplePositions: false,
     modelGender: 'female',
+    formDescription: `CAMERA ANGLE: 3/4 front view, seeing front and slight side of person.
+
+BODY POSITION - STANDING HIP CIRCLES:
+- Person is standing upright, moving hips in a circular motion
+- Like hula hooping without a hoop
+
+FEET:
+- Feet are shoulder-width apart (or slightly wider)
+- Feet stay FLAT and PLANTED on ground
+- Feet do not move during the exercise
+
+KNEES:
+- Knees are SOFT (slight bend)
+- Not locked straight, not deeply bent
+- Knees may move slightly with the hip motion
+
+HIPS - THE MOVING PART:
+- Hips move in a CIRCULAR motion
+- Show hips shifted to ONE SIDE (as part of the circle)
+- The hips trace a horizontal circle/oval shape
+- Like stirring a pot with your hips
+
+UPPER BODY:
+- Upper body stays RELATIVELY STABLE
+- Shoulders stay mostly level
+- Upper body does not swing wildly
+
+ARMS:
+- HANDS ON HIPS (this is the classic position for this exercise)
+- Elbows point outward
+- This helps feel and control the hip movement
+
+HEAD:
+- Head stays neutral and relatively stable
+- Looking forward
+
+ARROWS:
+- CIRCULAR arrow around the hip area showing the rotation path
+- The arrow should make a complete circle (or 3/4 circle visible)
+- Arrow can show clockwise or counterclockwise rotation
+- Small arrows showing hips shifting through different points of the circle
+
+CRITICAL: Hands on hips. Hips move in a circle. Upper body and feet stay stable. This mobilizes the hip joints and lower back.`,
   },
   {
     id: 'glute-bridge-warmup',
     name: 'Glute Bridge',
-    formDescription: `Person lying on back with knees bent, feet flat on floor about hip-width apart, close to the buttocks. Arms flat on the ground at sides, palms down for stability. Hips lifted high off the ground, creating a straight line from shoulders to knees - the bridge position. Glutes squeezed hard at the top. Core engaged. Weight in the heels, not the toes. Head and upper back remain on the ground. This activates the glutes and teaches hip extension.`,
-    movementArrows: `Red arrow pointing upward at the hips showing the lift/bridge direction. Arrow at the glutes showing the squeeze/contraction. Small arrows at the heels showing weight pressing through heels.`,
-    showMultiplePositions: true,
     modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their right side.
+
+BODY POSITION - TOP OF GLUTE BRIDGE:
+- Person is lying on their BACK with hips LIFTED (bridge position)
+- This is the TOP of the movement where hips are raised
+
+POSITION ON GROUND:
+- Upper back and shoulders remain on the ground
+- Head is on the ground, looking up at ceiling
+- ARMS are flat on the ground at sides, palms DOWN
+
+FEET AND LOWER LEGS:
+- BOTH feet are flat on the ground
+- Feet are hip-width apart
+- Feet are positioned close to the buttocks (heels near butt)
+- Knees are bent at approximately 90 degrees
+- Knees point toward ceiling
+
+HIPS - THE KEY ELEMENT:
+- Hips are LIFTED HIGH off the ground
+- There is a straight line from SHOULDERS to KNEES
+- The body forms a "bridge" or ramp shape
+- Hips are at the highest point of this line
+
+GLUTES:
+- Glutes (buttocks) are SQUEEZED HARD at the top
+- This is the main muscle being activated
+- Maximum glute contraction
+
+CORE:
+- Core is engaged to maintain straight body line
+- No sagging or arching in the lower back
+
+WHAT'S ON THE GROUND:
+- Head, shoulders, upper back
+- Arms at sides
+- Both feet
+
+WHAT'S LIFTED:
+- Lower back, hips, and thighs
+
+ARROWS:
+- Red arrow pointing UP at the hips showing the LIFT direction
+- Arrow at glutes showing SQUEEZE/contraction
+- Small arrows at heels showing weight pressing through heels
+
+CRITICAL: Lying on back, knees bent, feet flat on floor. HIPS are LIFTED creating a straight line from shoulders to knees. This is NOT a leg raise - both feet stay on the ground, the hips lift UP.`,
   },
 ];
 
 async function generateImage(exercise: ExerciseIllustration): Promise<boolean> {
   console.log(`Generating: ${exercise.name}...`);
 
-  const multiPositionInstruction = exercise.showMultiplePositions
-    ? `MULTIPLE POSITIONS: Show 2-3 positions of the figure to illustrate the movement. The starting or secondary positions should be rendered lighter/ghosted (using lighter line weight or less crosshatching), while the primary position is rendered fully. This shows the movement progression.`
-    : `SINGLE POSITION: Show one clear position of the exercise at the key moment of the movement.`;
-
   const prompt = `${STYLE_GUIDE}
 
-=== EXERCISE TO ILLUSTRATE ===
+=== EXERCISE: ${exercise.name} ===
 
-EXERCISE NAME: ${exercise.name}
-
-FORM AND POSITION (Follow this exactly):
 ${exercise.formDescription}
 
-MOVEMENT ARROWS TO INCLUDE:
-${exercise.movementArrows}
+MODEL: Athletic ${exercise.modelGender}.
 
-${multiPositionInstruction}
-
-MODEL: Athletic ${exercise.modelGender} figure with realistic proportions.
-
-Remember:
-- Cream/off-white background
-- Black ink crosshatching for shading
-- Navy blue for clothing
-- RED arrows showing movement direction
-- Professional instructional manual quality
-- NO text or labels in the image
-- Square format`;
+FINAL REMINDERS:
+- Cream background, black ink lines, navy clothing, RED arrows
+- NO text or labels
+- Anatomically correct - exactly 2 arms, 2 legs
+- Follow the position description EXACTLY`;
 
   try {
     const response = await fetch(
@@ -316,10 +856,20 @@ async function main() {
   console.log(`Output: ${OUTPUT_DIR}`);
   console.log('========================================\n');
 
+  // Parse command line args to regenerate specific exercises
+  const args = process.argv.slice(2);
+  const exercisesToGenerate = args.length > 0
+    ? EXERCISES.filter(e => args.includes(e.id))
+    : EXERCISES;
+
+  if (args.length > 0) {
+    console.log(`Regenerating specific exercises: ${args.join(', ')}\n`);
+  }
+
   let success = 0;
   let failed = 0;
 
-  for (const exercise of EXERCISES) {
+  for (const exercise of exercisesToGenerate) {
     const result = await generateImage(exercise);
     if (result) {
       success++;
@@ -334,8 +884,8 @@ async function main() {
   console.log('\n========================================');
   console.log('RESULTS');
   console.log('========================================');
-  console.log(`Success: ${success}/${EXERCISES.length}`);
-  console.log(`Failed: ${failed}/${EXERCISES.length}`);
+  console.log(`Success: ${success}/${exercisesToGenerate.length}`);
+  console.log(`Failed: ${failed}/${exercisesToGenerate.length}`);
   console.log(`Output: ${OUTPUT_DIR}`);
   console.log('========================================\n');
 }
