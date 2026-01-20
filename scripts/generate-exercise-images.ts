@@ -72,38 +72,27 @@ const EXERCISES: ExerciseIllustration[] = [
     id: 'mcgill-curl-up',
     name: 'McGill Curl-Up',
     modelGender: 'male',
-    formDescription: `CAMERA ANGLE: Side view (profile), looking at the person from their right side.
+    formDescription: `Side profile view of a man doing a McGill curl-up exercise.
 
-BODY POSITION - BE EXTREMELY PRECISE:
-- Person lying flat on their BACK on the ground (supine position)
-- Head is on the LEFT side of the image, feet on the RIGHT side
+The man lies on his back. His head is on the left, feet on the right.
 
-LEFT LEG (closer to head):
-- Knee is BENT at approximately 90 degrees
-- Foot is FLAT on the ground
-- Thigh is angled upward, lower leg is vertical
+LEG POSITIONS - ASYMMETRICAL:
+- His LEFT leg: knee bent, foot flat on floor (like sitting in a chair while lying down)
+- His RIGHT leg: completely straight, lying flat on the floor from hip to heel
 
-RIGHT LEG (closer to feet in image):
-- Leg is COMPLETELY STRAIGHT and FLAT on the ground
-- Knee is NOT bent at all
-- The entire leg from hip to heel touches the ground
+HAND POSITION:
+- Both hands are tucked underneath his lower back, palms down
+- His lower back has a slight arch with hands filling that space
+- His elbows point outward and rest on the floor
 
-HANDS AND ARMS:
-- BOTH hands are tucked UNDER the lower back (lumbar region)
-- Palms facing down, supporting the natural curve of the spine
-- Elbows are out to the sides, resting on the ground
+HEAD POSITION:
+- His head and shoulder blades are raised just 1-2 inches off the ground
+- Looking straight up at the ceiling
+- Small movement, not a full sit-up
 
-HEAD AND SHOULDERS:
-- Head and shoulder blades are lifted ONLY 1-2 inches off the ground
-- This is NOT a sit-up - the lift is very small
-- Chin is slightly tucked toward chest
-- Eyes looking toward the ceiling
+The KEY visual is the asymmetry: one bent knee with foot on floor, one straight leg flat.
 
-ARROWS:
-- One small red arrow pointing UPWARD from the upper back/shoulders showing the small lift
-- The arrow should be small to indicate this is a minimal movement
-
-CRITICAL: One leg bent (foot flat), one leg straight (flat on ground). Hands under lower back. Tiny lift of head/shoulders only.`,
+Vintage pen-and-ink style, crosshatching, navy shorts, cream background. Red arrow pointing up at shoulders.`,
   },
   {
     id: 'mcgill-side-plank',
@@ -729,53 +718,21 @@ CRITICAL: Hands on hips. Hips move in a circle. Upper body and feet stay stable.
     id: 'glute-bridge-warmup',
     name: 'Glute Bridge',
     modelGender: 'male',
-    formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their right side.
+    formDescription: `Illustration of a hip thrust / bridge exercise from a side view.
 
-BODY POSITION - TOP OF GLUTE BRIDGE:
-- Person is lying on their BACK with hips LIFTED (bridge position)
-- This is the TOP of the movement where hips are raised
+The man's body makes a BRIDGE or RAMP shape:
+- HEAD and SHOULDERS rest on the floor
+- HIPS are thrust UP HIGH (the peak of the bridge)
+- KNEES are bent at 90 degrees
+- FEET are FLAT on the floor
 
-POSITION ON GROUND:
-- Upper back and shoulders remain on the ground
-- Head is on the ground, looking up at ceiling
-- ARMS are flat on the ground at sides, palms DOWN
+CRITICAL: The man's feet must be on the ground. Both soles of his feet touch the floor. His knees point toward the ceiling. His hips are the highest point.
 
-FEET AND LOWER LEGS:
-- BOTH feet are flat on the ground
-- Feet are hip-width apart
-- Feet are positioned close to the buttocks (heels near butt)
-- Knees are bent at approximately 90 degrees
-- Knees point toward ceiling
+The silhouette looks like a triangle: floor to shoulders (low), up to hips (high), down to knees (medium), feet on floor.
 
-HIPS - THE KEY ELEMENT:
-- Hips are LIFTED HIGH off the ground
-- There is a straight line from SHOULDERS to KNEES
-- The body forms a "bridge" or ramp shape
-- Hips are at the highest point of this line
+DO NOT show legs in the air. DO NOT show a leg raise. The feet MUST be on the ground.
 
-GLUTES:
-- Glutes (buttocks) are SQUEEZED HARD at the top
-- This is the main muscle being activated
-- Maximum glute contraction
-
-CORE:
-- Core is engaged to maintain straight body line
-- No sagging or arching in the lower back
-
-WHAT'S ON THE GROUND:
-- Head, shoulders, upper back
-- Arms at sides
-- Both feet
-
-WHAT'S LIFTED:
-- Lower back, hips, and thighs
-
-ARROWS:
-- Red arrow pointing UP at the hips showing the LIFT direction
-- Arrow at glutes showing SQUEEZE/contraction
-- Small arrows at heels showing weight pressing through heels
-
-CRITICAL: Lying on back, knees bent, feet flat on floor. HIPS are LIFTED creating a straight line from shoulders to knees. This is NOT a leg raise - both feet stay on the ground, the hips lift UP.`,
+Vintage pen-and-ink illustration style. Navy shorts. Cream background. Red upward arrow at hips.`,
   },
 ];
 
