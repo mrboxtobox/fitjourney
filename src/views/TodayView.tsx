@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'preact/hooks';
-import { Lightbulb } from 'lucide-preact';
-import { getWorkoutForDate, getAllExercises, getPhaseInfo, getCurrentWeek, getSuggestedWeight, getCoachingTip } from '../data/workouts';
+import { getWorkoutForDate, getAllExercises, getCurrentWeek } from '../data/workouts';
 import type { WorkoutDay } from '../data/workouts';
-import { ExerciseCard, WarmupItem } from '../components/ExerciseCard';
+import { ExerciseItem, WarmupItem } from '../components/ExerciseCard';
 import { DateNav } from '../components/Navigation';
 import { useDate, formatDateString } from '../hooks/useDate';
 import {
   getWorkoutLogsForDate,
   toggleExercise,
-  updateExerciseLog,
   saveDailyLog,
   type WorkoutLog,
 } from '../db';
@@ -25,7 +23,6 @@ export function TodayView({ startDate }: TodayViewProps) {
   const [logs, setLogs] = useState<WorkoutLog[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Load workout and logs when date changes
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -46,8 +43,6 @@ export function TodayView({ startDate }: TodayViewProps) {
   const isComplete = completedCount === totalCount && totalCount > 0;
 
   const week = getCurrentWeek(startDate);
-  const phaseInfo = getPhaseInfo(week);
-  const coachingTip = getCoachingTip(week);
 
   const handleToggle = async (exerciseId: string) => {
     const existing = logs.find((l) => l.exerciseId === exerciseId);
@@ -55,7 +50,6 @@ export function TodayView({ startDate }: TodayViewProps) {
 
     await toggleExercise(dateString, exerciseId, newCompleted);
 
-    // Update local state
     setLogs((prev) => {
       const idx = prev.findIndex((l) => l.exerciseId === exerciseId);
       if (idx >= 0) {
@@ -66,7 +60,6 @@ export function TodayView({ startDate }: TodayViewProps) {
       return [...prev, { date: dateString, exerciseId, completed: newCompleted }];
     });
 
-    // Check if workout is complete
     const newCompletedCount = newCompleted ? completedCount + 1 : completedCount - 1;
     if (newCompletedCount === totalCount && workout) {
       await saveDailyLog({
@@ -77,28 +70,14 @@ export function TodayView({ startDate }: TodayViewProps) {
     }
   };
 
-  const handleWeightChange = async (exerciseId: string, weight: number) => {
-    await updateExerciseLog(dateString, exerciseId, { weight });
-    setLogs((prev) => {
-      const idx = prev.findIndex((l) => l.exerciseId === exerciseId);
-      if (idx >= 0) {
-        const updated = [...prev];
-        updated[idx] = { ...updated[idx], weight };
-        return updated;
-      }
-      return [...prev, { date: dateString, exerciseId, completed: false, weight }];
-    });
-  };
-
   const getExerciseLog = (exerciseId: string) => logs.find((l) => l.exerciseId === exerciseId);
 
   if (loading) {
     return (
-      <div class="container-poster py-12">
-        <div class="animate-pulse space-y-6">
-          <div class="h-8 rounded w-1/2" style={{ background: 'var(--gray)' }} />
-          <div class="h-24 rounded" style={{ background: 'var(--gray)' }} />
-          <div class="h-16 rounded" style={{ background: 'var(--gray)' }} />
+      <div class="container-app py-12">
+        <div class="animate-pulse space-y-4">
+          <div class="h-4 rounded w-1/3" style={{ background: 'var(--border)' }} />
+          <div class="h-12 rounded" style={{ background: 'var(--border)' }} />
         </div>
       </div>
     );
@@ -106,15 +85,14 @@ export function TodayView({ startDate }: TodayViewProps) {
 
   if (!workout) {
     return (
-      <div class="container-poster py-12">
-        <p style={{ color: 'var(--white-dim)' }}>No workout found for this date.</p>
+      <div class="container-app py-12">
+        <p style={{ color: 'var(--text-dim)' }}>No workout found.</p>
       </div>
     );
   }
 
   return (
-    <div class="container-poster pb-safe-nav">
-      {/* Date navigation */}
+    <div class="container-app pb-safe-nav">
       <DateNav
         displayText={displayDate}
         onPrev={goPrev}
@@ -123,92 +101,52 @@ export function TodayView({ startDate }: TodayViewProps) {
         showToday={!isToday}
       />
 
-      {/* Workout header */}
-      <div class="py-6">
-        <div class="flex items-center gap-3 mb-2">
-          <span class="badge-format">5×5</span>
-          <p class="text-xs uppercase tracking-wider" style={{ color: 'var(--white-dim)' }}>
-            Week {week} · {phaseInfo.name}
-          </p>
-        </div>
-        <h2 class="font-display text-4xl" style={{ color: 'var(--white)' }}>
-          {workout.title.toUpperCase()}
-        </h2>
-        <p class="mt-1" style={{ color: 'var(--white-muted)' }}>
-          {workout.subtitle}
-        </p>
-
-        {/* Progress */}
-        {totalCount > 0 && (
-          <div class="mt-6">
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-sm" style={{ color: 'var(--white-dim)' }}>
-                {completedCount} of {totalCount}
-              </span>
-              {isComplete && (
-                <span class="text-sm font-medium" style={{ color: 'var(--mint)' }}>
-                  Complete
-                </span>
-              )}
-            </div>
-            <div class="progress-bar">
-              <div
-                class="progress-bar-fill"
-                style={{
-                  width: `${(completedCount / totalCount) * 100}%`,
-                  background: isComplete ? 'var(--mint)' : 'var(--coral)',
-                }}
-              />
-            </div>
+      {/* Progress */}
+      {totalCount > 0 && (
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs" style={{ color: 'var(--text-dim)' }}>
+              Week {week}
+            </span>
+            <span class="text-xs" style={{ color: isComplete ? 'var(--check)' : 'var(--text-dim)' }}>
+              {completedCount}/{totalCount}
+            </span>
           </div>
-        )}
-      </div>
-
-      {/* Coaching tip */}
-      {coachingTip && workout.type !== 'rest' && (
-        <div
-          class="mt-6 p-4 rounded-lg flex gap-3"
-          style={{ background: 'rgba(255, 230, 109, 0.1)', border: '1px solid rgba(255, 230, 109, 0.2)' }}
-        >
-          <Lightbulb size={20} style={{ color: 'var(--gold)', flexShrink: 0, marginTop: 2 }} />
-          <div>
-            <p class="font-semibold text-sm" style={{ color: 'var(--gold)' }}>
-              {coachingTip.title}
-            </p>
-            <p class="text-sm mt-1" style={{ color: 'var(--white-muted)' }}>
-              {coachingTip.message}
-            </p>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              style={{
+                width: `${(completedCount / totalCount) * 100}%`,
+                background: isComplete ? 'var(--check)' : 'var(--text)',
+              }}
+            />
           </div>
         </div>
       )}
 
-      {/* Rest day message */}
+      {/* Rest day */}
       {workout.type === 'rest' ? (
-        <div class="card-rest py-16 text-center mt-8">
-          <h3 class="text-3xl font-extrabold mb-3" style={{ color: 'var(--white)', fontFamily: "'Outfit', sans-serif" }}>
-            REST DAY
-          </h3>
-          <p class="max-w-xs mx-auto" style={{ color: 'var(--white-dim)' }}>
-            Your muscles grow stronger during rest. Enjoy a gentle stretch or walk if you feel like it.
+        <div class="rest-card">
+          <h2 class="text-2xl font-semibold mb-2">Rest</h2>
+          <p style={{ color: 'var(--text-dim)' }}>
+            Recovery is part of the practice.
           </p>
         </div>
       ) : (
-        <div class="stagger-children">
+        <>
           {/* Warmup */}
-          {workout.warmup && workout.warmup.length > 0 && (
-            <section class="pt-6">
-              <h3 class="section-title mb-4">WARM-UP</h3>
-              <div class="card-dark p-4">
-                {workout.warmup.map((warmupExercise) => {
-                  const log = getExerciseLog(warmupExercise.id);
+          {workout.warmup.length > 0 && (
+            <section>
+              <h2 class="section-header">Warmup</h2>
+              <div>
+                {workout.warmup.map((exercise) => {
+                  const log = getExerciseLog(exercise.id);
                   return (
                     <WarmupItem
-                      key={warmupExercise.id}
-                      name={warmupExercise.name}
-                      description={warmupExercise.description}
-                      duration={warmupExercise.duration}
+                      key={exercise.id}
+                      exercise={exercise}
                       completed={log?.completed ?? false}
-                      onToggle={() => handleToggle(warmupExercise.id)}
+                      onToggle={() => handleToggle(exercise.id)}
                     />
                   );
                 })}
@@ -216,27 +154,24 @@ export function TodayView({ startDate }: TodayViewProps) {
             </section>
           )}
 
-          {/* Main workout */}
-          <section class="pt-8">
-            <h3 class="section-title mb-4">EXERCISES</h3>
-            {workout.exercises.map((exercise, index) => {
-              const log = getExerciseLog(exercise.id);
-              const suggested = getSuggestedWeight(week, exercise.id);
-              return (
-                <ExerciseCard
-                  key={exercise.id}
-                  exercise={exercise}
-                  completed={log?.completed ?? false}
-                  weight={log?.weight}
-                  suggestedWeight={suggested}
-                  onToggle={() => handleToggle(exercise.id)}
-                  onWeightChange={(w) => handleWeightChange(exercise.id, w)}
-                  colorIndex={index}
-                />
-              );
-            })}
+          {/* Main exercises */}
+          <section>
+            <h2 class="section-header">Exercises</h2>
+            <div>
+              {workout.exercises.map((exercise) => {
+                const log = getExerciseLog(exercise.id);
+                return (
+                  <ExerciseItem
+                    key={exercise.id}
+                    exercise={exercise}
+                    completed={log?.completed ?? false}
+                    onToggle={() => handleToggle(exercise.id)}
+                  />
+                );
+              })}
+            </div>
           </section>
-        </div>
+        </>
       )}
     </div>
   );

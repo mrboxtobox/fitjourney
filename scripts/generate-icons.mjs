@@ -1,45 +1,62 @@
 import sharp from 'sharp';
-import { writeFileSync } from 'fs';
 
-// Create a simple fitness icon - coral dumbbell on dark background
+// Idaraya - minimalist icon design
+// Simple letter 'I' in a clean, modern style
 const size = 512;
-const svg = `
+
+// Light/app icon - dark 'I' on light background
+const appIconSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <rect width="${size}" height="${size}" rx="80" fill="#0a0a0a"/>
-  <!-- Dumbbell icon (simplified) -->
-  <g transform="translate(${size/2}, ${size/2})">
-    <!-- Bar -->
-    <rect x="-140" y="-15" width="280" height="30" rx="15" fill="#FF6B5B"/>
-    <!-- Left weight -->
-    <rect x="-170" y="-60" width="50" height="120" rx="12" fill="#FF6B5B"/>
-    <!-- Right weight -->
-    <rect x="120" y="-60" width="50" height="120" rx="12" fill="#FF6B5B"/>
-  </g>
+  <rect width="${size}" height="${size}" fill="#fafafa"/>
+  <text
+    x="${size/2}"
+    y="${size/2 + 40}"
+    font-family="Inter, system-ui, sans-serif"
+    font-size="280"
+    font-weight="600"
+    fill="#1a1a1a"
+    text-anchor="middle"
+  >I</text>
+</svg>`;
+
+// Dark variant for OG image
+const darkIconSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+  <rect width="${size}" height="${size}" fill="#0f0f0f"/>
+  <text
+    x="${size/2}"
+    y="${size/2 + 40}"
+    font-family="Inter, system-ui, sans-serif"
+    font-size="280"
+    font-weight="600"
+    fill="#fafafa"
+    text-anchor="middle"
+  >I</text>
 </svg>`;
 
 async function generateIcons() {
   // Generate favicon.png (32x32)
-  await sharp(Buffer.from(svg))
+  await sharp(Buffer.from(appIconSvg))
     .resize(32, 32)
     .png()
     .toFile('./public/favicon.png');
   console.log('Created favicon.png');
 
   // Generate apple-touch-icon.png (180x180)
-  await sharp(Buffer.from(svg))
+  await sharp(Buffer.from(appIconSvg))
     .resize(180, 180)
     .png()
     .toFile('./public/apple-touch-icon.png');
   console.log('Created apple-touch-icon.png');
 
   // Generate PWA icons
-  await sharp(Buffer.from(svg))
+  await sharp(Buffer.from(appIconSvg))
     .resize(192, 192)
     .png()
     .toFile('./public/pwa-192x192.png');
   console.log('Created pwa-192x192.png');
 
-  await sharp(Buffer.from(svg))
+  await sharp(Buffer.from(appIconSvg))
     .resize(512, 512)
     .png()
     .toFile('./public/pwa-512x512.png');
@@ -48,16 +65,21 @@ async function generateIcons() {
   // Generate OG image (1200x630)
   const ogSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#0a0a0a"/>
-  <!-- Dumbbell icon -->
-  <g transform="translate(200, 315)">
-    <rect x="-70" y="-8" width="140" height="16" rx="8" fill="#FF6B5B"/>
-    <rect x="-90" y="-35" width="30" height="70" rx="8" fill="#FF6B5B"/>
-    <rect x="60" y="-35" width="30" height="70" rx="8" fill="#FF6B5B"/>
-  </g>
+  <rect width="1200" height="630" fill="#0f0f0f"/>
+  <!-- Logo mark -->
+  <text
+    x="200"
+    y="380"
+    font-family="Inter, system-ui, sans-serif"
+    font-size="200"
+    font-weight="600"
+    fill="#fafafa"
+    text-anchor="middle"
+  >I</text>
   <!-- Text -->
-  <text x="320" y="290" font-family="Inter, sans-serif" font-size="72" font-weight="800" fill="#fafafa">FitJourney</text>
-  <text x="320" y="360" font-family="Inter, sans-serif" font-size="32" fill="rgba(255,255,255,0.6)">52-Week Progressive Fitness Program</text>
+  <text x="350" y="280" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="600" fill="#fafafa">Idaraya</text>
+  <text x="350" y="340" font-family="Inter, system-ui, sans-serif" font-size="24" fill="#666">Minimalist movement practice</text>
+  <text x="350" y="400" font-family="Inter, system-ui, sans-serif" font-size="18" fill="#444">McGill Big 3 · Goblet Squat · Farmer's Carry · Hip Mobility</text>
 </svg>`;
 
   await sharp(Buffer.from(ogSvg))

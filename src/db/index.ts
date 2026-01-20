@@ -37,14 +37,14 @@ export interface DailyLog {
   notes?: string;
 }
 
-export class FitJourneyDB extends Dexie {
+export class IdarayaDB extends Dexie {
   workoutLogs!: Table<WorkoutLog>;
   dailyLogs!: Table<DailyLog>;
   weightLogs!: Table<WeightLog>;
   settings!: Table<UserSettings>;
 
   constructor() {
-    super('fitjourney');
+    super('idaraya');
     this.version(1).stores({
       workoutLogs: '++id, date, exerciseId, [date+exerciseId]',
       dailyLogs: '++id, &date',
@@ -54,7 +54,7 @@ export class FitJourneyDB extends Dexie {
   }
 }
 
-export const db = new FitJourneyDB();
+export const db = new IdarayaDB();
 
 // Helper functions
 export async function getWorkoutLogsForDate(date: string): Promise<WorkoutLog[]> {

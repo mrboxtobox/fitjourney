@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png', 'apple-touch-icon.png'],
       manifest: {
-        name: 'FitJourney',
-        short_name: 'FitJourney',
-        description: 'A 52-week progressive fitness tracker for couples',
+        name: 'Idaraya',
+        short_name: 'Idaraya',
+        description: '20-minute daily movement practice',
         theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
         display: 'standalone',

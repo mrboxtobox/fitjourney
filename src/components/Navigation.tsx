@@ -10,19 +10,18 @@ export function BottomNav({ current, onNavigate }: NavProps) {
     { id: 'today' as const, label: 'Today' },
     { id: 'week' as const, label: 'Week' },
     { id: 'month' as const, label: 'Month' },
-    { id: 'weight' as const, label: 'Weight' },
   ];
 
   return (
-    <nav class="nav-bottom fixed bottom-0 left-0 right-0" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0)' }}>
-      <div class="max-w-md mx-auto flex items-center justify-around py-3">
+    <nav class="nav-bottom">
+      <div class="max-w-md mx-auto flex items-center justify-center">
         {items.map((item) => (
           <button
             key={item.id}
             onClick={() => onNavigate(item.id)}
-            class={`nav-item touch-target flex items-center justify-center px-4 cursor-pointer transition-all ${current === item.id ? 'active' : ''}`}
+            class={`nav-item ${current === item.id ? 'active' : ''}`}
           >
-            <span class="text-sm" style={{ fontWeight: current === item.id ? 500 : 400 }}>{item.label}</span>
+            {item.label}
           </button>
         ))}
       </div>
@@ -38,32 +37,21 @@ interface HeaderProps {
 
 export function Header({ title, subtitle, onSettingsClick }: HeaderProps) {
   return (
-    <header
-      class="sticky top-0 z-40"
-      style={{
-        background: 'var(--black)',
-      }}
-    >
-      <div class="container-poster py-5 flex items-center justify-between">
+    <header class="sticky top-0 z-40" style={{ background: 'var(--bg)' }}>
+      <div class="container-app py-4 flex items-center justify-between">
         <div>
-          <h1 class="font-display text-2xl tracking-wider" style={{ color: 'var(--white)' }}>
-            {title.toUpperCase()}
-          </h1>
+          <h1 class="text-lg font-semibold">{title}</h1>
           {subtitle && (
-            <p class="text-sm mt-0.5" style={{ color: 'var(--white-dim)' }}>
-              {subtitle}
-            </p>
+            <p class="text-xs week-badge">{subtitle}</p>
           )}
         </div>
         {onSettingsClick && (
           <button
             onClick={onSettingsClick}
-            class="touch-target flex items-center justify-center cursor-pointer"
+            class="nav-item cursor-pointer"
             aria-label="Settings"
           >
-            <span class="text-sm" style={{ color: 'var(--white-muted)' }}>
-              Settings
-            </span>
+            Settings
           </button>
         )}
       </div>
@@ -81,25 +69,25 @@ interface DateNavProps {
 
 export function DateNav({ displayText, onPrev, onNext, onToday, showToday = false }: DateNavProps) {
   return (
-    <div class="flex items-center justify-between py-4">
+    <div class="flex items-center justify-between py-3">
       <button
         onClick={onPrev}
         class="touch-target flex items-center justify-center cursor-pointer"
         aria-label="Previous"
-        style={{ color: 'var(--white-dim)' }}
+        style={{ color: 'var(--text-dim)' }}
       >
-        <ChevronLeft size={24} />
+        <ChevronLeft size={20} />
       </button>
 
       <div class="text-center">
-        <button onClick={onToday} class="cursor-pointer" style={{ color: 'var(--white)' }}>
-          <span class="font-medium">{displayText}</span>
+        <button onClick={onToday} class="cursor-pointer date-display">
+          {displayText}
         </button>
         {showToday && onToday && (
           <button
             onClick={onToday}
-            class="ml-3 text-sm cursor-pointer"
-            style={{ color: 'var(--coral)' }}
+            class="ml-2 text-xs cursor-pointer font-medium"
+            style={{ color: 'var(--text)' }}
           >
             Today
           </button>
@@ -110,9 +98,9 @@ export function DateNav({ displayText, onPrev, onNext, onToday, showToday = fals
         onClick={onNext}
         class="touch-target flex items-center justify-center cursor-pointer"
         aria-label="Next"
-        style={{ color: 'var(--white-dim)' }}
+        style={{ color: 'var(--text-dim)' }}
       >
-        <ChevronRight size={24} />
+        <ChevronRight size={20} />
       </button>
     </div>
   );

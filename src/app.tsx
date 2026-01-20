@@ -3,10 +3,9 @@ import { BottomNav, Header } from './components/Navigation';
 import { TodayView } from './views/TodayView';
 import { WeekView } from './views/WeekView';
 import { MonthView } from './views/MonthView';
-import { WeightView } from './views/WeightView';
 import { SettingsView } from './views/SettingsView';
 import { getSettings, saveSettings } from './db';
-import { getCurrentWeek, getPhaseInfo } from './data/workouts';
+import { getCurrentWeek } from './data/workouts';
 
 type View = 'today' | 'week' | 'month' | 'weight' | 'settings';
 
@@ -15,14 +14,12 @@ export function App() {
   const [startDate, setStartDate] = useState(new Date('2025-01-06'));
   const [loading, setLoading] = useState(true);
 
-  // Load settings on mount
   useEffect(() => {
     const loadSettings = async () => {
       const settings = await getSettings();
       if (settings?.startDate) {
         setStartDate(new Date(settings.startDate));
       } else {
-        // Set default start date and save
         const defaultStart = new Date('2025-01-06');
         await saveSettings({
           startDate: '2025-01-06',
@@ -37,7 +34,6 @@ export function App() {
   }, []);
 
   const handleDayClick = () => {
-    // Navigate to that day in today view
     setCurrentView('today');
   };
 
@@ -46,18 +42,11 @@ export function App() {
   };
 
   const week = getCurrentWeek(startDate);
-  const phaseInfo = getPhaseInfo(week);
 
   if (loading) {
     return (
-      <div class="min-h-screen flex items-center justify-center" style={{ background: 'var(--black)' }}>
-        <div class="text-center">
-          <div
-            class="w-12 h-12 border-4 rounded-full animate-spin mx-auto mb-4"
-            style={{ borderColor: 'var(--gray)', borderTopColor: 'var(--coral)' }}
-          />
-          <p style={{ color: 'var(--white-dim)' }}>Loading your journey...</p>
-        </div>
+      <div class="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
+        <p style={{ color: 'var(--text-dim)' }}>Loading...</p>
       </div>
     );
   }
@@ -65,22 +54,20 @@ export function App() {
   const getHeaderInfo = () => {
     switch (currentView) {
       case 'today':
-        return { title: 'FitJourney', subtitle: `Week ${week} · ${phaseInfo.name}` };
+        return { title: 'Idaraya', subtitle: `Week ${week}` };
       case 'week':
-        return { title: 'Weekly View', subtitle: phaseInfo.name + ' Phase' };
+        return { title: 'Week', subtitle: '' };
       case 'month':
-        return { title: 'Monthly View', subtitle: 'Track your progress' };
-      case 'weight':
-        return { title: 'Weight Tracker', subtitle: 'Monitor your journey' };
+        return { title: 'Month', subtitle: '' };
       default:
-        return { title: 'FitJourney', subtitle: '' };
+        return { title: 'Idaraya', subtitle: '' };
     }
   };
 
   const headerInfo = getHeaderInfo();
 
   return (
-    <div class="min-h-screen" style={{ background: 'var(--black)' }}>
+    <div class="min-h-screen" style={{ background: 'var(--bg)' }}>
       {currentView !== 'settings' && (
         <Header
           title={headerInfo.title}
@@ -89,7 +76,7 @@ export function App() {
         />
       )}
 
-      <main class="relative z-10">
+      <main>
         {currentView === 'today' && <TodayView startDate={startDate} />}
         {currentView === 'week' && (
           <WeekView startDate={startDate} onDayClick={handleDayClick} />
@@ -97,7 +84,6 @@ export function App() {
         {currentView === 'month' && (
           <MonthView startDate={startDate} onDayClick={handleDayClick} />
         )}
-        {currentView === 'weight' && <WeightView />}
         {currentView === 'settings' && (
           <SettingsView
             startDate={startDate}

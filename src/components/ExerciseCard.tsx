@@ -1,263 +1,182 @@
-import { useState, useEffect } from 'preact/hooks';
-import { Check, ChevronDown, Play, Pause, RotateCcw } from 'lucide-preact';
-import type { Exercise } from '../data/workouts';
+import { useState } from 'preact/hooks';
+import { Check, Play, Pause, RotateCcw, Minus, Plus } from 'lucide-preact';
+import type { Exercise, WarmupExercise } from '../data/workouts';
 import { useTimer } from '../hooks/useTimer';
 
-interface ExerciseCardProps {
+interface ExerciseItemProps {
   exercise: Exercise;
   completed: boolean;
-  weight?: number;
-  suggestedWeight?: number;
   onToggle: () => void;
-  onWeightChange?: (weight: number) => void;
-  colorIndex?: number;
 }
 
-export function ExerciseCard({
-  exercise,
-  completed,
-  weight,
-  suggestedWeight = 0,
-  onToggle,
-  onWeightChange,
-  colorIndex = 0,
-}: ExerciseCardProps) {
-  const [expanded, setExpanded] = useState(false);
-  const [localWeight, setLocalWeight] = useState(weight || suggestedWeight);
-  const hasWeight = exercise.equipment && exercise.equipment.length > 0;
+export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProps) {
+  const [setCount, setSetCount] = useState(0);
+  const hasHold = exercise.hold && exercise.hold > 0;
 
-  // Update local weight when prop changes
-  useEffect(() => {
-    if (weight !== undefined) {
-      setLocalWeight(weight);
+  // Timer for timed holds
+  const timer = useTimer({
+    initialSeconds: exercise.hold || 0,
+    onComplete: () => {
+      // Auto-increment set count when timer completes
+      if (setCount < exercise.sets) {
+        setSetCount(setCount + 1);
+      }
+    },
+    countDown: true,
+  });
+
+  const handleSetComplete = () => {
+    if (setCount < exercise.sets) {
+      setSetCount(setCount + 1);
+      // Auto-complete when all sets done
+      if (setCount + 1 >= exercise.sets && !completed) {
+        onToggle();
+      }
     }
-  }, [weight]);
-
-  const handleWeightChange = (newWeight: number) => {
-    setLocalWeight(newWeight);
-    onWeightChange?.(newWeight);
   };
 
-  const handleToggle = (e: Event) => {
-    e.stopPropagation();
-    onToggle();
+  const handleSetDecrement = () => {
+    if (setCount > 0) {
+      setSetCount(setCount - 1);
+      // Un-complete if we go below target
+      if (completed) {
+        onToggle();
+      }
+    }
   };
-
-  // Color based on index
-  const colors = ['var(--coral)', 'var(--mint)', 'var(--gold)', 'var(--purple)', 'var(--coral)'];
-  const accentColor = colors[colorIndex % colors.length];
 
   return (
-    <div class="animate-fade-in mb-3">
-      <div
-        class="card-dark p-5 cursor-pointer"
-        style={{ '--accent': accentColor } as any}
-        onClick={() => setExpanded(!expanded)}
+    <div class="exercise-item animate-fade">
+      <button
+        onClick={onToggle}
+        class={`checkbox-min ${completed ? 'checked' : ''}`}
+        aria-label={completed ? 'Mark incomplete' : 'Mark complete'}
       >
-        {/* Accent bar */}
-        <div
-          class="absolute top-0 left-0 right-0 h-[3px]"
-          style={{ background: accentColor }}
-        />
+        {completed && <Check size={12} color="white" strokeWidth={3} />}
+      </button>
 
-        <div class="flex items-start gap-4">
-          {/* Checkbox */}
-          <button
-            onClick={handleToggle}
-            class={`checkbox-poster ${completed ? 'checked' : ''}`}
-            aria-label={completed ? 'Mark incomplete' : 'Mark complete'}
-          >
-            {completed && <Check size={16} color="var(--black)" strokeWidth={3} />}
-          </button>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex-1">
+            <h3 class={`font-medium ${completed ? 'completed' : ''}`}>
+              {exercise.name}
+            </h3>
+            <p class="text-sm mt-0.5" style={{ color: 'var(--text-muted)' }}>
+              {exercise.cue}
+            </p>
+          </div>
 
-          {/* Content */}
-          <div class="flex-1 min-w-0">
-            <div class="flex items-start justify-between gap-3">
-              <div class="flex-1">
-                <h3
-                  class={`font-semibold text-base ${completed ? 'line-through opacity-50' : ''}`}
-                >
-                  {exercise.name}
-                </h3>
-                <p class="text-sm mt-1" style={{ color: 'var(--white-muted)' }}>
-                  {exercise.sets} × {exercise.reps}
-                  {exercise.restBetweenSets && (
-                    <span style={{ color: 'var(--white-dim)' }}> · {exercise.restBetweenSets}s rest</span>
-                  )}
-                </p>
-
-                {/* Muscle tags */}
-                <div class="flex flex-wrap gap-2 mt-3">
-                  {exercise.isCompound && (
-                    <span class="muscle-tag" style={{ background: 'rgba(78, 205, 196, 0.2)', color: 'var(--mint)' }}>
-                      Compound
-                    </span>
-                  )}
-                  {exercise.primaryMuscles.map((muscle) => (
-                    <span key={muscle} class="muscle-tag primary">{muscle}</span>
-                  ))}
-                  {exercise.secondaryMuscles.map((muscle) => (
-                    <span key={muscle} class="muscle-tag">{muscle}</span>
-                  ))}
-                </div>
-
-                {/* Weight input for weighted exercises */}
-                {hasWeight && onWeightChange && (
-                  <div class="flex items-center gap-3 mt-4" onClick={(e) => e.stopPropagation()}>
-                    <button
-                      class="w-10 h-10 rounded-lg flex items-center justify-center text-xl font-bold cursor-pointer"
-                      style={{ background: 'var(--gray)', color: 'var(--white)' }}
-                      onClick={() => handleWeightChange(Math.max(0, localWeight - 5))}
-                    >
-                      −
-                    </button>
-                    <div class="text-center">
-                      <input
-                        type="number"
-                        inputMode="decimal"
-                        value={localWeight || ''}
-                        onChange={(e) => handleWeightChange(Number((e.target as HTMLInputElement).value))}
-                        placeholder="0"
-                        class="w-20 text-center text-2xl font-bold bg-transparent border-none outline-none"
-                        style={{ color: 'var(--white)' }}
-                      />
-                      <div class="text-xs" style={{ color: 'var(--white-dim)' }}>lbs</div>
-                    </div>
-                    <button
-                      class="w-10 h-10 rounded-lg flex items-center justify-center text-xl font-bold cursor-pointer"
-                      style={{ background: 'var(--gray)', color: 'var(--white)' }}
-                      onClick={() => handleWeightChange(localWeight + 5)}
-                    >
-                      +
-                    </button>
-                    {suggestedWeight > 0 && localWeight !== suggestedWeight && (
-                      <button
-                        class="text-xs px-2 py-1 rounded cursor-pointer"
-                        style={{ background: 'var(--coral)', color: 'var(--black)' }}
-                        onClick={() => handleWeightChange(suggestedWeight)}
-                      >
-                        Use {suggestedWeight}
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Expand indicator */}
-              <ChevronDown
-                size={20}
-                style={{
-                  color: 'var(--white-dim)',
-                  transform: expanded ? 'rotate(180deg)' : 'rotate(0)',
-                  transition: 'transform 0.2s ease',
-                }}
-              />
-            </div>
+          {/* Set counter */}
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={handleSetDecrement}
+              class="counter-btn"
+              disabled={setCount === 0}
+              style={{ opacity: setCount === 0 ? 0.3 : 1 }}
+            >
+              <Minus size={16} />
+            </button>
+            <span class="counter-display">
+              {setCount}/{exercise.sets}
+            </span>
+            <button
+              onClick={handleSetComplete}
+              class="counter-btn"
+              disabled={setCount >= exercise.sets}
+              style={{ opacity: setCount >= exercise.sets ? 0.3 : 1 }}
+            >
+              <Plus size={16} />
+            </button>
           </div>
         </div>
 
-        {/* Expanded content */}
-        {expanded && (
-          <div class="mt-5 pt-5 border-t border-white/10 animate-fade-in">
-            <p class="text-sm leading-relaxed" style={{ color: 'var(--white-muted)' }}>
-              {exercise.description}
-            </p>
-
-            {/* Tips */}
-            {exercise.tips.length > 0 && (
-              <div class="mt-4">
-                <p class="text-xs uppercase tracking-wider mb-2" style={{ color: 'var(--white-dim)' }}>
-                  Tips
-                </p>
-                <ul class="text-sm space-y-1" style={{ color: 'var(--white-muted)' }}>
-                  {exercise.tips.map((tip, i) => (
-                    <li key={i}>— {tip}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Equipment */}
-            {exercise.equipment && exercise.equipment.length > 0 && (
-              <div class="mt-4">
-                <p class="text-xs uppercase tracking-wider mb-2" style={{ color: 'var(--white-dim)' }}>
-                  Equipment
-                </p>
-                <p class="text-sm" style={{ color: 'var(--white-muted)' }}>
-                  {exercise.equipment.join(', ')}
-                </p>
-              </div>
-            )}
+        {/* Timer for holds */}
+        {hasHold && (
+          <div class="flex items-center gap-3 mt-3">
+            <button onClick={timer.toggle} class="timer-btn">
+              {timer.isRunning ? (
+                <Pause size={14} style={{ color: 'var(--text)' }} />
+              ) : (
+                <Play size={14} style={{ color: 'var(--text)', marginLeft: 2 }} />
+              )}
+            </button>
+            <span
+              class="timer-display"
+              style={{ color: timer.seconds <= 3 && timer.isRunning ? 'var(--check)' : 'var(--text)' }}
+            >
+              {timer.formattedTime}
+            </span>
+            <button onClick={() => timer.reset()} class="timer-btn">
+              <RotateCcw size={14} style={{ color: 'var(--text)' }} />
+            </button>
           </div>
         )}
+
+        {/* Reps/Rest display */}
+        <p class="text-xs mt-2" style={{ color: 'var(--text-dim)' }}>
+          {exercise.sets} × {exercise.reps}
+          {exercise.restBetweenSets && exercise.restBetweenSets > 0 && (
+            <span> · {exercise.restBetweenSets}s rest</span>
+          )}
+        </p>
       </div>
     </div>
   );
 }
 
-// Warmup item component (simpler)
+// Warmup item - simpler version with just timer
 interface WarmupItemProps {
-  name: string;
-  description: string;
-  duration: number;
+  exercise: WarmupExercise;
   completed: boolean;
   onToggle: () => void;
 }
 
-export function WarmupItem({ name, description, duration, completed, onToggle }: WarmupItemProps) {
+export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
   const timer = useTimer({
-    initialSeconds: duration,
+    initialSeconds: exercise.duration,
     onComplete: onToggle,
     countDown: true,
   });
 
-  const handleTimerToggle = (e: Event) => {
-    e.stopPropagation();
-    timer.toggle();
-  };
-
-  const handleTimerReset = (e: Event) => {
-    e.stopPropagation();
-    timer.reset();
-  };
-
   return (
-    <div class="flex items-center gap-4 py-4 border-b border-white/5">
+    <div class="exercise-item animate-fade">
       <button
         onClick={onToggle}
-        class={`checkbox-poster ${completed ? 'checked' : ''}`}
+        class={`checkbox-min ${completed ? 'checked' : ''}`}
       >
-        {completed && <Check size={16} color="var(--black)" strokeWidth={3} />}
+        {completed && <Check size={12} color="white" strokeWidth={3} />}
       </button>
 
-      <div class="flex-1">
-        <h4 class={`font-medium ${completed ? 'line-through opacity-50' : ''}`}>{name}</h4>
-        <p class="text-sm" style={{ color: 'var(--white-dim)' }}>{description}</p>
-      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 class={`font-medium ${completed ? 'completed' : ''}`}>{exercise.name}</h4>
+            <p class="text-sm" style={{ color: 'var(--text-dim)' }}>{exercise.cue}</p>
+          </div>
 
-      <div class="flex items-center gap-2">
-        <span class="timer-display text-lg" style={{ color: timer.seconds <= 5 && timer.isRunning ? 'var(--coral)' : 'var(--white)' }}>
-          {timer.formattedTime}
-        </span>
-        <button
-          onClick={handleTimerToggle}
-          class="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-          style={{ background: 'var(--gray)' }}
-        >
-          {timer.isRunning ? (
-            <Pause size={16} style={{ color: 'var(--white)' }} />
-          ) : (
-            <Play size={16} style={{ color: 'var(--white)', marginLeft: 2 }} />
-          )}
-        </button>
-        <button
-          onClick={handleTimerReset}
-          class="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-          style={{ background: 'var(--gray)' }}
-        >
-          <RotateCcw size={16} style={{ color: 'var(--white)' }} />
-        </button>
+          <div class="flex items-center gap-2">
+            <span
+              class="timer-display"
+              style={{ color: timer.seconds <= 3 && timer.isRunning ? 'var(--check)' : 'var(--text)' }}
+            >
+              {timer.formattedTime}
+            </span>
+            <button onClick={timer.toggle} class="timer-btn">
+              {timer.isRunning ? (
+                <Pause size={14} style={{ color: 'var(--text)' }} />
+              ) : (
+                <Play size={14} style={{ color: 'var(--text)', marginLeft: 2 }} />
+              )}
+            </button>
+            <button onClick={() => timer.reset()} class="timer-btn">
+              <RotateCcw size={14} style={{ color: 'var(--text)' }} />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+
+// Legacy export for compatibility
+export { ExerciseItem as ExerciseCard };
