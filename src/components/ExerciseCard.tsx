@@ -1,7 +1,26 @@
 import { useState } from 'preact/hooks';
-import { Check, Play, Pause, RotateCcw, Minus, Plus } from 'lucide-preact';
+import { Check, Play, Pause, RotateCcw, Minus, Plus, ChevronDown, ChevronUp } from 'lucide-preact';
 import type { Exercise, WarmupExercise } from '../data/workouts';
 import { useTimer } from '../hooks/useTimer';
+
+// Map exercise IDs to their image paths
+const EXERCISE_IMAGES: Record<string, string> = {
+  'mcgill-curl-up': '/exercises/mcgill-curl-up.png',
+  'mcgill-side-plank': '/exercises/mcgill-side-plank.png',
+  'mcgill-bird-dog': '/exercises/mcgill-bird-dog.png',
+  'goblet-squat': '/exercises/goblet-squat.png',
+  'farmers-carry': '/exercises/farmers-carry.png',
+  'kb-deadlift': '/exercises/kb-deadlift.png',
+  'kb-swing': '/exercises/kb-swing.png',
+  '90-90': '/exercises/90-90.png',
+  'deep-squat-hold': '/exercises/deep-squat-hold.png',
+  'couch-stretch': '/exercises/couch-stretch.png',
+  'pigeon-stretch': '/exercises/pigeon-stretch.png',
+  'cat-cow': '/exercises/cat-cow.png',
+  'leg-swings': '/exercises/leg-swings.png',
+  'hip-circles': '/exercises/hip-circles.png',
+  'glute-bridge-warmup': '/exercises/glute-bridge-warmup.png',
+};
 
 interface ExerciseItemProps {
   exercise: Exercise;
@@ -11,7 +30,9 @@ interface ExerciseItemProps {
 
 export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProps) {
   const [setCount, setSetCount] = useState(0);
+  const [showImage, setShowImage] = useState(false);
   const hasHold = exercise.hold && exercise.hold > 0;
+  const imagePath = EXERCISE_IMAGES[exercise.id];
 
   // Timer for timed holds
   const timer = useTimer({
@@ -58,9 +79,20 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
       <div class="flex-1 min-w-0">
         <div class="flex items-start justify-between gap-3">
           <div class="flex-1">
-            <h3 class={`font-medium ${completed ? 'completed' : ''}`}>
-              {exercise.name}
-            </h3>
+            <div class="flex items-center gap-2">
+              <h3 class={`font-medium ${completed ? 'completed' : ''}`}>
+                {exercise.name}
+              </h3>
+              {imagePath && (
+                <button
+                  onClick={() => setShowImage(!showImage)}
+                  class="form-toggle-btn"
+                  aria-label={showImage ? 'Hide form' : 'Show form'}
+                >
+                  {showImage ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </button>
+              )}
+            </div>
             <p class="text-sm mt-0.5" style={{ color: 'var(--text-muted)' }}>
               {exercise.cue}
             </p>
@@ -119,6 +151,18 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
             <span> · {exercise.restBetweenSets}s rest</span>
           )}
         </p>
+
+        {/* Exercise illustration */}
+        {imagePath && showImage && (
+          <div class="exercise-image-container">
+            <img
+              src={imagePath}
+              alt={`${exercise.name} form demonstration`}
+              class="exercise-image"
+              loading="lazy"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -132,6 +176,9 @@ interface WarmupItemProps {
 }
 
 export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
+  const [showImage, setShowImage] = useState(false);
+  const imagePath = EXERCISE_IMAGES[exercise.id];
+
   const timer = useTimer({
     initialSeconds: exercise.duration,
     onComplete: onToggle,
@@ -150,7 +197,18 @@ export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
       <div class="flex-1 min-w-0">
         <div class="flex items-center justify-between">
           <div>
-            <h4 class={`font-medium ${completed ? 'completed' : ''}`}>{exercise.name}</h4>
+            <div class="flex items-center gap-2">
+              <h4 class={`font-medium ${completed ? 'completed' : ''}`}>{exercise.name}</h4>
+              {imagePath && (
+                <button
+                  onClick={() => setShowImage(!showImage)}
+                  class="form-toggle-btn"
+                  aria-label={showImage ? 'Hide form' : 'Show form'}
+                >
+                  {showImage ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                </button>
+              )}
+            </div>
             <p class="text-sm" style={{ color: 'var(--text-dim)' }}>{exercise.cue}</p>
           </div>
 
@@ -173,6 +231,18 @@ export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
             </button>
           </div>
         </div>
+
+        {/* Exercise illustration */}
+        {imagePath && showImage && (
+          <div class="exercise-image-container">
+            <img
+              src={imagePath}
+              alt={`${exercise.name} form demonstration`}
+              class="exercise-image"
+              loading="lazy"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

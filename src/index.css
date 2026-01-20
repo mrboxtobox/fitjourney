@@ -292,6 +292,40 @@
     text-decoration: line-through;
     color: var(--text-dim);
   }
+
+  /* Form toggle button - subtle and minimal */
+  .form-toggle-btn {
+    padding: 0.125rem;
+    border-radius: 0.25rem;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .form-toggle-btn:hover {
+    color: var(--text-muted);
+    background: var(--bg-alt);
+  }
+
+  /* Exercise image container */
+  .exercise-image-container {
+    margin-top: 1rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: var(--bg-alt);
+    animation: fadeIn 0.25s ease-out;
+  }
+
+  .exercise-image {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
 }
 
 /* Hide scrollbar */
