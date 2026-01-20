@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Check, Play, Pause, RotateCcw, Minus, Plus, ChevronDown, ChevronUp } from 'lucide-preact';
+import { Check, Play, Pause, RotateCcw, Minus, Plus, Maximize2 } from 'lucide-preact';
 import type { Exercise, WarmupExercise } from '../data/workouts';
 import { useTimer } from '../hooks/useTimer';
 
@@ -30,7 +30,7 @@ interface ExerciseItemProps {
 
 export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProps) {
   const [setCount, setSetCount] = useState(0);
-  const [showImage, setShowImage] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const hasHold = exercise.hold && exercise.hold > 0;
   const imagePath = EXERCISE_IMAGES[exercise.id];
 
@@ -68,32 +68,41 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
 
   return (
     <div class="exercise-item animate-fade">
-      <button
-        onClick={onToggle}
-        class={`checkbox-min ${completed ? 'checked' : ''}`}
-        aria-label={completed ? 'Mark incomplete' : 'Mark complete'}
-      >
-        {completed && <Check size={12} color="white" strokeWidth={3} />}
-      </button>
+      {/* Thumbnail image - always visible */}
+      {imagePath && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          class="exercise-thumbnail-btn"
+          aria-label={expanded ? 'Collapse image' : 'Expand image'}
+        >
+          <img
+            src={imagePath}
+            alt={`${exercise.name} form`}
+            class="exercise-thumbnail"
+            loading="lazy"
+          />
+          <div class="thumbnail-expand-icon">
+            <Maximize2 size={10} />
+          </div>
+        </button>
+      )}
 
       <div class="flex-1 min-w-0">
         <div class="flex items-start justify-between gap-3">
           <div class="flex-1">
             <div class="flex items-center gap-2">
+              <button
+                onClick={onToggle}
+                class={`checkbox-min ${completed ? 'checked' : ''}`}
+                aria-label={completed ? 'Mark incomplete' : 'Mark complete'}
+              >
+                {completed && <Check size={12} color="white" strokeWidth={3} />}
+              </button>
               <h3 class={`font-medium ${completed ? 'completed' : ''}`}>
                 {exercise.name}
               </h3>
-              {imagePath && (
-                <button
-                  onClick={() => setShowImage(!showImage)}
-                  class="form-toggle-btn"
-                  aria-label={showImage ? 'Hide form' : 'Show form'}
-                >
-                  {showImage ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </button>
-              )}
             </div>
-            <p class="text-sm mt-0.5" style={{ color: 'var(--text-muted)' }}>
+            <p class="text-sm mt-0.5 ml-6" style={{ color: 'var(--text-muted)' }}>
               {exercise.cue}
             </p>
           </div>
@@ -124,7 +133,7 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
 
         {/* Timer for holds */}
         {hasHold && (
-          <div class="flex items-center gap-3 mt-3">
+          <div class="flex items-center gap-3 mt-3 ml-6">
             <button onClick={timer.toggle} class="timer-btn">
               {timer.isRunning ? (
                 <Pause size={14} style={{ color: 'var(--text)' }} />
@@ -145,21 +154,20 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
         )}
 
         {/* Reps/Rest display */}
-        <p class="text-xs mt-2" style={{ color: 'var(--text-dim)' }}>
+        <p class="text-xs mt-2 ml-6" style={{ color: 'var(--text-dim)' }}>
           {exercise.sets} × {exercise.reps}
           {exercise.restBetweenSets && exercise.restBetweenSets > 0 && (
             <span> · {exercise.restBetweenSets}s rest</span>
           )}
         </p>
 
-        {/* Exercise illustration */}
-        {imagePath && showImage && (
-          <div class="exercise-image-container">
+        {/* Expanded exercise illustration */}
+        {imagePath && expanded && (
+          <div class="exercise-image-container" onClick={() => setExpanded(false)}>
             <img
               src={imagePath}
               alt={`${exercise.name} form demonstration`}
               class="exercise-image"
-              loading="lazy"
             />
           </div>
         )}
@@ -176,7 +184,7 @@ interface WarmupItemProps {
 }
 
 export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
-  const [showImage, setShowImage] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const imagePath = EXERCISE_IMAGES[exercise.id];
 
   const timer = useTimer({
@@ -187,29 +195,38 @@ export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
 
   return (
     <div class="exercise-item animate-fade">
-      <button
-        onClick={onToggle}
-        class={`checkbox-min ${completed ? 'checked' : ''}`}
-      >
-        {completed && <Check size={12} color="white" strokeWidth={3} />}
-      </button>
+      {/* Thumbnail image - always visible */}
+      {imagePath && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          class="exercise-thumbnail-btn"
+          aria-label={expanded ? 'Collapse image' : 'Expand image'}
+        >
+          <img
+            src={imagePath}
+            alt={`${exercise.name} form`}
+            class="exercise-thumbnail"
+            loading="lazy"
+          />
+          <div class="thumbnail-expand-icon">
+            <Maximize2 size={10} />
+          </div>
+        </button>
+      )}
 
       <div class="flex-1 min-w-0">
         <div class="flex items-center justify-between">
           <div>
             <div class="flex items-center gap-2">
+              <button
+                onClick={onToggle}
+                class={`checkbox-min ${completed ? 'checked' : ''}`}
+              >
+                {completed && <Check size={12} color="white" strokeWidth={3} />}
+              </button>
               <h4 class={`font-medium ${completed ? 'completed' : ''}`}>{exercise.name}</h4>
-              {imagePath && (
-                <button
-                  onClick={() => setShowImage(!showImage)}
-                  class="form-toggle-btn"
-                  aria-label={showImage ? 'Hide form' : 'Show form'}
-                >
-                  {showImage ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                </button>
-              )}
             </div>
-            <p class="text-sm" style={{ color: 'var(--text-dim)' }}>{exercise.cue}</p>
+            <p class="text-sm ml-6" style={{ color: 'var(--text-dim)' }}>{exercise.cue}</p>
           </div>
 
           <div class="flex items-center gap-2">
@@ -232,14 +249,13 @@ export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
           </div>
         </div>
 
-        {/* Exercise illustration */}
-        {imagePath && showImage && (
-          <div class="exercise-image-container">
+        {/* Expanded exercise illustration */}
+        {imagePath && expanded && (
+          <div class="exercise-image-container" onClick={() => setExpanded(false)}>
             <img
               src={imagePath}
               alt={`${exercise.name} form demonstration`}
               class="exercise-image"
-              loading="lazy"
             />
           </div>
         )}
