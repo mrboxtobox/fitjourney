@@ -616,34 +616,34 @@ CRITICAL: This is a HIP THRUST. Feet are PLANTED on the ground. Hips lift UP. It
     id: 'band-clamshell',
     name: 'Clamshell',
     modelGender: 'female',
-    formDescription: `CAMERA: Birds-eye view looking DOWN at a woman lying on her side.
+    formDescription: `A woman doing the clamshell exercise, viewed from BEHIND her back.
 
-THE SCENE FROM ABOVE:
-- We are looking DOWN at the floor from above
-- A woman is lying on her RIGHT side
-- Her spine runs LEFT to RIGHT across the image
-- Her head is on the LEFT, her feet are on the RIGHT
-- We see the TOP of her body (her left shoulder, left hip, left leg on top)
+CAMERA POSITION: Behind the person, looking at their back.
 
-HER POSITION:
-- Lying on right side (right hip on floor, left hip on top)
-- Knees bent, pulled toward chest
-- Feet/heels touching each other
-- Head resting on right arm
+THE PERSON:
+- Woman lying on her side on the floor
+- We see her BACK (spine, shoulder blades, back of head)
+- She faces AWAY from the camera
+- Her body is horizontal, head on the left, feet on the right
 
-THE CLAMSHELL MOVEMENT (seen from above):
-- Her LEFT knee (the top one) lifts UP toward the ceiling/camera
-- Her feet stay together as the pivot point
-- The thighs form a V-shape when open
+WHAT WE SEE FROM BEHIND:
+- The back of her head (hair visible)
+- Her back and spine
+- Her bent legs (knees bent, stacked)
+- Red mini loop band around her thighs
 
-SHOW:
-- Main solid figure: Knee open (lifted)
-- Ghosted figure: Knee closed (down)
+THE CLAMSHELL FROM BEHIND:
+- Her top knee rotates UP and BACK toward the ceiling
+- We see the knee opening from behind
+- Her feet stay together
 
-Red mini loop band around both thighs.
-Red curved arrow showing knee lifting up toward camera.
+Two positions:
+- Solid: knee open (rotated up)
+- Ghosted: knee closed
 
-Vintage illustration style, cream background, navy clothing.`,
+Red arrow showing knee rotating up/back.
+
+Vintage illustration, cream background, navy clothing, black ink.`,
   },
   {
     id: 'band-squat',
