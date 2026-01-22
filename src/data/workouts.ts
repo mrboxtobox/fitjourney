@@ -105,6 +105,60 @@ const KETTLEBELL_SWING: Exercise = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
+// RESISTANCE BAND EXERCISES - Upper Body & Activation (~5 min)
+// ═══════════════════════════════════════════════════════════════════
+
+const BAND_PULL_APART: Exercise = {
+  id: 'band-pull-apart',
+  name: 'Band Pull-Apart',
+  cue: 'Arms straight ahead. Pull band to chest. Squeeze shoulder blades.',
+  sets: 3,
+  reps: 15,
+  restBetweenSets: 20,
+  equipment: ['resistance band'],
+};
+
+const BAND_FACE_PULL: Exercise = {
+  id: 'band-face-pull',
+  name: 'Band Face Pull',
+  cue: 'Anchor high. Pull to face. Elbows high, external rotate.',
+  sets: 3,
+  reps: 12,
+  restBetweenSets: 20,
+  equipment: ['resistance band'],
+};
+
+const BAND_PALLOF_PRESS: Exercise = {
+  id: 'band-pallof-press',
+  name: 'Pallof Press',
+  cue: 'Anchor at chest. Press out. Resist rotation.',
+  sets: 2,
+  reps: '10 each',
+  restBetweenSets: 20,
+  equipment: ['resistance band'],
+};
+
+const BAND_SHOULDER_DISLOCATE: Exercise = {
+  id: 'band-shoulder-dislocate',
+  name: 'Shoulder Dislocate',
+  cue: 'Wide grip. Arms straight. Arc over head and behind.',
+  sets: 2,
+  reps: 10,
+  restBetweenSets: 15,
+  equipment: ['resistance band'],
+};
+
+const BAND_MONSTER_WALK: Exercise = {
+  id: 'band-monster-walk',
+  name: 'Monster Walk',
+  cue: 'Band above knees. Quarter squat. Step diagonal.',
+  sets: 2,
+  reps: '10 each',
+  restBetweenSets: 20,
+  equipment: ['resistance band'],
+};
+
+// ═══════════════════════════════════════════════════════════════════
 // HIP MOBILITY - Gabby Thomas / Squat University Inspired (~5 min)
 // ═══════════════════════════════════════════════════════════════════
 
@@ -192,6 +246,11 @@ export const EXERCISES: Exercise[] = [
   FARMERS_CARRY,
   KETTLEBELL_DEADLIFT,
   KETTLEBELL_SWING,
+  BAND_PULL_APART,
+  BAND_FACE_PULL,
+  BAND_PALLOF_PRESS,
+  BAND_SHOULDER_DISLOCATE,
+  BAND_MONSTER_WALK,
   NINETY_NINETY,
   DEEP_SQUAT_HOLD,
   COUCH_STRETCH,
@@ -202,7 +261,8 @@ export const EXERCISES: Exercise[] = [
 // Warmup: 3 min
 // McGill Big 3: 4 min
 // Strength (2 exercises): 8 min
-// Mobility (2 exercises): 5 min
+// Accessory (bands): 2 min
+// Mobility (2 exercises): 3 min
 function getDailyWorkout(dayOfWeek: number): Exercise[] {
   // McGill Big 3 every day (spine health is non-negotiable)
   const mcgillBig3 = [MCGILL_CURL_UP, MCGILL_SIDE_PLANK, MCGILL_BIRD_DOG];
@@ -215,6 +275,19 @@ function getDailyWorkout(dayOfWeek: number): Exercise[] {
     ? [KETTLEBELL_DEADLIFT, KETTLEBELL_SWING]
     : [GOBLET_SQUAT, FARMERS_CARRY];
 
+  // Rotate resistance band exercises
+  // Days 0,3,6: Upper back focus (Pull-Apart + Face Pull)
+  // Days 1,4: Core anti-rotation (Pallof Press + Shoulder Dislocate)
+  // Days 2,5: Lower body activation (Monster Walk + Pull-Apart)
+  let bandWork: Exercise[];
+  if (dayOfWeek === 0 || dayOfWeek === 3 || dayOfWeek === 6) {
+    bandWork = [BAND_PULL_APART, BAND_FACE_PULL];
+  } else if (dayOfWeek === 1 || dayOfWeek === 4) {
+    bandWork = [BAND_PALLOF_PRESS, BAND_SHOULDER_DISLOCATE];
+  } else {
+    bandWork = [BAND_MONSTER_WALK, BAND_PULL_APART];
+  }
+
   // Rotate mobility exercises
   // Alternate between 90/90 + Deep Squat and Couch + Pigeon
   const isPigeonDay = dayOfWeek % 2 === 0;
@@ -222,7 +295,7 @@ function getDailyWorkout(dayOfWeek: number): Exercise[] {
     ? [COUCH_STRETCH, PIGEON_STRETCH]
     : [NINETY_NINETY, DEEP_SQUAT_HOLD];
 
-  return [...mcgillBig3, ...strength, ...mobility];
+  return [...mcgillBig3, ...strength, ...bandWork, ...mobility];
 }
 
 // Every day is a workout day - 20 minutes daily
@@ -265,7 +338,7 @@ export const PHASES: Record<Phase, PhaseInfo> = {
     name: 'Practice',
     weeks: '1-52',
     description: '20 minutes daily',
-    focus: ['McGill Big 3', 'Goblet Squat', "Farmer's Carry", 'Hip Mobility'],
+    focus: ['McGill Big 3', 'Kettlebell', 'Resistance Bands', 'Hip Mobility'],
   },
 };
 

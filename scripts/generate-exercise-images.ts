@@ -457,6 +457,315 @@ CRITICAL: Kettlebell is at CHEST height (NOT overhead) in solid figure. Ghosted 
   },
 
   // =========================================================================
+  // RESISTANCE BAND EXERCISES
+  // =========================================================================
+  {
+    id: 'band-pull-apart',
+    name: 'Band Pull-Apart',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Front view, looking at person straight on.
+
+=== PRIMARY POSITION (SOLID - Arms pulled back/apart) ===
+BODY POSITION - STANDING, ARMS PULLED APART:
+- Person is standing tall with excellent posture
+
+STANCE:
+- Feet shoulder-width apart
+- Standing upright, weight evenly distributed
+- Knees soft, not locked
+
+RESISTANCE BAND:
+- Person holds a resistance band (loop or flat band)
+- Hands grip the band with palms facing DOWN
+- The band is stretched WIDE apart
+
+ARMS - CRITICAL:
+- Arms are straight (elbows not bent)
+- Arms are at SHOULDER HEIGHT (parallel to ground)
+- Arms are pulled WIDE APART to the sides (like a "T" shape)
+- The band is stretched across the chest
+- Hands are wide apart, pulling the band
+
+SHOULDERS:
+- Shoulder blades are SQUEEZED TOGETHER behind the back
+- Shoulders are DOWN (not shrugged up)
+- Chest is proud and lifted
+
+TORSO:
+- Torso is upright and stable
+- Core is engaged
+- No leaning back
+
+HEAD:
+- Head neutral, looking forward
+- Chin level
+
+=== GHOSTED POSITION (FADED - Arms in front/together) ===
+Show a lighter/faded version of the same figure with:
+- Arms straight out in FRONT at shoulder height
+- Hands close together (shoulder-width or less)
+- Band is NOT stretched (slack)
+- This is the starting position before pulling apart
+
+MOVEMENT INDICATORS:
+- Red arrows pointing OUTWARD from center, showing the pull direction
+- Dashed arc showing the path of hands from together to apart
+- Small arrows at shoulder blades showing the SQUEEZE
+- Dashed horizontal line showing arms stay at shoulder height
+
+CRITICAL: Arms pull the band APART horizontally at chest/shoulder level. Solid figure shows arms wide (band stretched). Ghosted shows arms together in front (band slack).`,
+  },
+  {
+    id: 'band-face-pull',
+    name: 'Band Face Pull',
+    modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Side view (profile) with slight 3/4 angle, showing the pull toward the face.
+
+=== PRIMARY POSITION (SOLID - Pulled to face) ===
+BODY POSITION - STANDING, PULLING BAND TO FACE:
+- Person is standing in an athletic stance
+- Band is anchored HIGH in front of them (anchor point visible or implied)
+
+STANCE:
+- Feet staggered (one foot slightly forward)
+- Slight lean back for counterbalance against the band tension
+- Knees soft
+
+RESISTANCE BAND:
+- Band is anchored at HEAD HEIGHT or above (to a door, pole, or imaginary anchor)
+- Both hands grip the band
+
+ARMS - CRITICAL:
+- Arms are bent, pulled BACK toward the face
+- Elbows are HIGH (at or above shoulder level)
+- Elbows point OUT to the sides
+- Hands are at EAR/TEMPLE level
+- This is EXTERNAL ROTATION of the shoulders
+
+HANDS:
+- Hands are near the ears/temples
+- Palms face INWARD (toward the ears)
+- Like making "goalpost" arms with the band
+
+SHOULDERS:
+- Shoulder blades are retracted (squeezed back)
+- Shoulders are externally rotated
+- Rear deltoids are engaged
+
+TORSO:
+- Slight backward lean (counterbalance)
+- Core braced
+- Chest lifted
+
+HEAD:
+- Head neutral, not pushed forward
+- Looking at the anchor point
+
+=== GHOSTED POSITION (FADED - Arms extended forward) ===
+Show a lighter/faded version of the same figure with:
+- Arms EXTENDED straight forward toward the anchor
+- Hands close together, reaching toward anchor point
+- Band is stretched but not pulled back
+- Starting position of the movement
+
+MOVEMENT INDICATORS:
+- Red arrows at elbows showing the PULL BACK motion
+- Red curved arrows showing EXTERNAL ROTATION at shoulders
+- Dashed line showing the band path from anchor to hands
+- Arrow showing high elbow position
+
+CRITICAL: Elbows stay HIGH (at shoulder level or above). Hands pull to face level with external rotation. Solid shows pulled position, ghosted shows extended start.`,
+  },
+  {
+    id: 'band-pallof-press',
+    name: 'Pallof Press',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Front view (facing the person), anchor point is to their right side.
+
+=== PRIMARY POSITION (SOLID - Arms pressed out) ===
+BODY POSITION - STANDING, RESISTING ROTATION:
+- Person stands perpendicular to the anchor point
+- The band pulls sideways (to their right), but they resist rotation
+
+STANCE:
+- Feet shoulder-width apart or slightly wider
+- Athletic stance with soft knees
+- Hips and shoulders face FORWARD (toward camera)
+
+RESISTANCE BAND:
+- Band is anchored at CHEST HEIGHT to the person's RIGHT side
+- The anchor point creates sideways tension
+- Band wants to rotate the person's torso to the right
+
+ARMS - CRITICAL:
+- Both hands grip the band together at the CENTER of the chest initially
+- Arms are PRESSED STRAIGHT OUT in front at chest height
+- Arms are FULLY EXTENDED (elbows straight)
+- Hands remain in line with the sternum/center of chest
+
+CORE - THE KEY:
+- Core is BRACED against the rotational pull
+- Torso does NOT rotate toward the anchor
+- Hips and shoulders stay SQUARE (facing forward)
+- This is an ANTI-ROTATION exercise
+
+TORSO:
+- Torso is PERFECTLY UPRIGHT
+- No rotation, no side bending
+- Core engaged to resist the pull
+
+HEAD:
+- Looking straight ahead (forward)
+- Head neutral
+
+=== GHOSTED POSITION (FADED - Hands at chest) ===
+Show a lighter/faded version of the same figure with:
+- Same stance and body position
+- Hands pulled in close to the CENTER of the chest
+- Elbows bent, hands at sternum
+- Band has less tension in this position
+- This is the starting position before pressing out
+
+MOVEMENT INDICATORS:
+- Red arrow pointing FORWARD showing the press direction
+- Dashed line showing band tension pulling to the RIGHT
+- Arrow at core showing resistance to rotation
+- Dashed vertical line through center showing body stays aligned
+
+CRITICAL: Arms press STRAIGHT forward, hands stay at center line. Body does NOT rotate despite sideways band tension. Solid shows pressed out, ghosted shows hands at chest.`,
+  },
+  {
+    id: 'band-shoulder-dislocate',
+    name: 'Shoulder Dislocate',
+    modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Side view (profile), showing the full arc of motion.
+
+=== PRIMARY POSITION (SOLID - Band behind back) ===
+BODY POSITION - STANDING, BAND BEHIND BODY:
+- Person is standing upright
+- This is the END position of the shoulder dislocate
+
+STANCE:
+- Feet shoulder-width apart
+- Standing tall with good posture
+- Knees soft
+
+RESISTANCE BAND:
+- Person holds a resistance band with a WIDE grip (hands far apart)
+- In this position, the band is BEHIND the body
+
+ARMS - CRITICAL:
+- Arms are STRAIGHT (no bend at elbows)
+- Hands grip the band WIDE (much wider than shoulder width)
+- Arms have rotated UP and OVER the head
+- Band is now behind the back/hips
+- Arms are down by the hips/behind the body
+
+GRIP WIDTH:
+- Very wide grip is essential
+- Wider grip = easier movement
+- Narrower grip = more challenging/stretch
+
+SHOULDERS:
+- Shoulders have gone through FULL RANGE OF MOTION
+- Passed through overhead to behind the body
+
+TORSO:
+- Standing upright
+- No excessive leaning
+
+HEAD:
+- Looking forward
+- Neutral position
+
+=== GHOSTED POSITION (FADED - Band in front, arms up/overhead) ===
+Show a lighter/faded version of the same figure with:
+- Arms straight, holding band at hip level in FRONT of body
+- This is the starting position
+- Hands in same wide grip position
+
+AND ALSO show another ghosted position:
+- Arms straight OVERHEAD with band
+- This shows the middle of the movement arc
+
+MOVEMENT INDICATORS:
+- Large CURVED DASHED ARC showing the full path of the band
+- The arc goes: front (low) → overhead → behind (low)
+- Red arrow along the arc showing direction of movement
+- Arrows at shoulders showing the rotation
+- This is a continuous circular/arc motion
+
+CRITICAL: Arms stay STRAIGHT throughout the entire movement. Wide grip. Band travels in an arc from front, up overhead, to behind the body. Show the full arc with dashed line.`,
+  },
+  {
+    id: 'band-monster-walk',
+    name: 'Monster Walk',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Front view, looking at person as they face the camera (walking toward camera).
+
+=== PRIMARY POSITION (SOLID - Mid-step, leg abducted) ===
+BODY POSITION - QUARTER SQUAT, STEPPING DIAGONALLY:
+- Person is in an athletic "monster walk" position
+- Taking a diagonal step forward and outward
+
+RESISTANCE BAND PLACEMENT:
+- Mini loop band is placed ABOVE THE KNEES (on the thighs)
+- The band creates resistance against outward leg movement
+- Band is stretched by the wide stance
+
+STANCE - CRITICAL:
+- Feet are WIDER than hip-width apart (band is stretched)
+- In a QUARTER SQUAT position (knees bent ~30-45 degrees)
+- Weight is low, athletic stance
+
+STEPPING LEG (right leg):
+- Right foot is lifted, stepping FORWARD and OUTWARD (diagonal)
+- Stepping at a 45-degree angle
+- Foot is off the ground mid-step
+- This creates the "monster walk" diagonal pattern
+
+STANDING LEG (left leg):
+- Left foot is flat on ground
+- Knee bent in quarter squat
+- Supporting all weight momentarily
+
+KNEES:
+- Both knees push OUTWARD against the band
+- Knees track over toes
+- Knees do NOT cave inward
+
+TORSO:
+- Upright torso, not bent forward
+- Core engaged
+- Slight athletic lean forward is okay
+
+ARMS:
+- Arms can be at sides for balance
+- Or hands on hips
+- Relaxed position
+
+HEAD:
+- Looking forward
+- Walking direction awareness
+
+=== GHOSTED POSITION (FADED - Other leg stepping) ===
+Show a lighter/faded version of the same figure with:
+- Opposite leg (left) is now the stepping leg
+- Same diagonal forward-outward step pattern
+- Shows the alternating nature of the walk
+- Wide stance maintained throughout
+
+MOVEMENT INDICATORS:
+- Dashed diagonal lines on the ground showing the walking path
+- The path shows forward-diagonal steps (like a "V" pattern forward)
+- Red arrows at knees showing outward pressure against band
+- Arrows showing the diagonal stepping direction
+- Small arrows showing band tension between thighs
+
+CRITICAL: Band is ABOVE KNEES. Quarter squat position. Steps are DIAGONAL (forward and out). Knees push outward against band tension. Wide athletic stance.`,
+  },
+
+  // =========================================================================
   // MOBILITY EXERCISES
   // =========================================================================
   {
