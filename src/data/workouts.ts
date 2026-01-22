@@ -105,57 +105,58 @@ const KETTLEBELL_SWING: Exercise = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
-// RESISTANCE BAND EXERCISES - Upper Body & Activation (~5 min)
+// MINI BAND EXERCISES - Glute Activation & Hip Stability (~3 min)
+// Equipment: Mini loop band (place above knees unless noted)
 // ═══════════════════════════════════════════════════════════════════
 
-const BAND_PULL_APART: Exercise = {
-  id: 'band-pull-apart',
-  name: 'Band Pull-Apart',
-  cue: 'Arms straight ahead. Pull band to chest. Squeeze shoulder blades.',
-  sets: 3,
-  reps: 15,
-  restBetweenSets: 20,
-  equipment: ['resistance band'],
-};
-
-const BAND_FACE_PULL: Exercise = {
-  id: 'band-face-pull',
-  name: 'Band Face Pull',
-  cue: 'Anchor high. Pull to face. Elbows high, external rotate.',
-  sets: 3,
-  reps: 12,
-  restBetweenSets: 20,
-  equipment: ['resistance band'],
-};
-
-const BAND_PALLOF_PRESS: Exercise = {
-  id: 'band-pallof-press',
-  name: 'Pallof Press',
-  cue: 'Anchor at chest. Press out. Resist rotation.',
+const BAND_LATERAL_WALK: Exercise = {
+  id: 'band-lateral-walk',
+  name: 'Lateral Band Walk',
+  cue: 'Band above knees. Quarter squat, chest up. Small steps sideways, tension constant. 10 steps each direction.',
   sets: 2,
-  reps: '10 each',
-  restBetweenSets: 20,
-  equipment: ['resistance band'],
-};
-
-const BAND_SHOULDER_DISLOCATE: Exercise = {
-  id: 'band-shoulder-dislocate',
-  name: 'Shoulder Dislocate',
-  cue: 'Wide grip. Arms straight. Arc over head and behind.',
-  sets: 2,
-  reps: 10,
+  reps: '10 each way',
   restBetweenSets: 15,
-  equipment: ['resistance band'],
+  equipment: ['mini band'],
 };
 
 const BAND_MONSTER_WALK: Exercise = {
   id: 'band-monster-walk',
   name: 'Monster Walk',
-  cue: 'Band above knees. Quarter squat. Step diagonal.',
+  cue: 'Band above knees. Quarter squat, knees out. Step forward diagonal, stay low. Keep band taut entire time.',
   sets: 2,
-  reps: '10 each',
+  reps: '10 each leg',
+  restBetweenSets: 15,
+  equipment: ['mini band'],
+};
+
+const BAND_GLUTE_BRIDGE: Exercise = {
+  id: 'band-glute-bridge',
+  name: 'Banded Glute Bridge',
+  cue: 'Band above knees. Feet hip-width, push knees out against band. Squeeze glutes at top, 2-sec hold.',
+  sets: 2,
+  reps: 12,
   restBetweenSets: 20,
-  equipment: ['resistance band'],
+  equipment: ['mini band'],
+};
+
+const BAND_CLAMSHELL: Exercise = {
+  id: 'band-clamshell',
+  name: 'Clamshell',
+  cue: 'Side-lying, band above knees. Feet together, open top knee like a clam. Control the return, don\'t let band snap.',
+  sets: 2,
+  reps: '12 each',
+  restBetweenSets: 15,
+  equipment: ['mini band'],
+};
+
+const BAND_SQUAT: Exercise = {
+  id: 'band-squat',
+  name: 'Banded Squat',
+  cue: 'Band above knees. Feet shoulder-width, toes slightly out. Push knees out as you sit back. Depth over speed.',
+  sets: 2,
+  reps: 10,
+  restBetweenSets: 20,
+  equipment: ['mini band'],
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -246,11 +247,11 @@ export const EXERCISES: Exercise[] = [
   FARMERS_CARRY,
   KETTLEBELL_DEADLIFT,
   KETTLEBELL_SWING,
-  BAND_PULL_APART,
-  BAND_FACE_PULL,
-  BAND_PALLOF_PRESS,
-  BAND_SHOULDER_DISLOCATE,
+  BAND_LATERAL_WALK,
   BAND_MONSTER_WALK,
+  BAND_GLUTE_BRIDGE,
+  BAND_CLAMSHELL,
+  BAND_SQUAT,
   NINETY_NINETY,
   DEEP_SQUAT_HOLD,
   COUCH_STRETCH,
@@ -275,17 +276,17 @@ function getDailyWorkout(dayOfWeek: number): Exercise[] {
     ? [KETTLEBELL_DEADLIFT, KETTLEBELL_SWING]
     : [GOBLET_SQUAT, FARMERS_CARRY];
 
-  // Rotate resistance band exercises
-  // Days 0,3,6: Upper back focus (Pull-Apart + Face Pull)
-  // Days 1,4: Core anti-rotation (Pallof Press + Shoulder Dislocate)
-  // Days 2,5: Lower body activation (Monster Walk + Pull-Apart)
+  // Rotate mini band exercises (glute activation focus)
+  // Days 0,3,6: Lateral Walk + Clamshell (lateral stability)
+  // Days 1,4: Monster Walk + Banded Glute Bridge (forward/hip extension)
+  // Days 2,5: Banded Squat + Lateral Walk (squat patterning)
   let bandWork: Exercise[];
   if (dayOfWeek === 0 || dayOfWeek === 3 || dayOfWeek === 6) {
-    bandWork = [BAND_PULL_APART, BAND_FACE_PULL];
+    bandWork = [BAND_LATERAL_WALK, BAND_CLAMSHELL];
   } else if (dayOfWeek === 1 || dayOfWeek === 4) {
-    bandWork = [BAND_PALLOF_PRESS, BAND_SHOULDER_DISLOCATE];
+    bandWork = [BAND_MONSTER_WALK, BAND_GLUTE_BRIDGE];
   } else {
-    bandWork = [BAND_MONSTER_WALK, BAND_PULL_APART];
+    bandWork = [BAND_SQUAT, BAND_LATERAL_WALK];
   }
 
   // Rotate mobility exercises
