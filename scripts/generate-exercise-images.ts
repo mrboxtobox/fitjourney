@@ -616,23 +616,34 @@ CRITICAL: This is a HIP THRUST. Feet are PLANTED on the ground. Hips lift UP. It
     id: 'band-clamshell',
     name: 'Clamshell',
     modelGender: 'female',
-    formDescription: `A simple side-lying hip exercise.
+    formDescription: `CAMERA: Birds-eye view looking DOWN at a woman lying on her side.
 
-POSITION:
-- Woman lying on her side on the floor
-- Knees bent, legs stacked
-- Head resting on bottom arm
-- Red resistance band loop around both thighs above knees
+THE SCENE FROM ABOVE:
+- We are looking DOWN at the floor from above
+- A woman is lying on her RIGHT side
+- Her spine runs LEFT to RIGHT across the image
+- Her head is on the LEFT, her feet are on the RIGHT
+- We see the TOP of her body (her left shoulder, left hip, left leg on top)
 
-THE MOVEMENT (show both positions):
-- CLOSED position (ghosted): Both knees together
-- OPEN position (solid): Top knee lifted up while feet stay touching
+HER POSITION:
+- Lying on right side (right hip on floor, left hip on top)
+- Knees bent, pulled toward chest
+- Feet/heels touching each other
+- Head resting on right arm
 
-The knees open and close like a clamshell or book. The feet act as the hinge and stay together.
+THE CLAMSHELL MOVEMENT (seen from above):
+- Her LEFT knee (the top one) lifts UP toward the ceiling/camera
+- Her feet stay together as the pivot point
+- The thighs form a V-shape when open
 
-Red arrow showing the top knee lifting upward.
+SHOW:
+- Main solid figure: Knee open (lifted)
+- Ghosted figure: Knee closed (down)
 
-Vintage instructional illustration style, cream background, navy clothing, black ink lines.`,
+Red mini loop band around both thighs.
+Red curved arrow showing knee lifting up toward camera.
+
+Vintage illustration style, cream background, navy clothing.`,
   },
   {
     id: 'band-squat',

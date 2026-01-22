@@ -142,7 +142,7 @@ const BAND_GLUTE_BRIDGE: Exercise = {
 const BAND_CLAMSHELL: Exercise = {
   id: 'band-clamshell',
   name: 'Clamshell',
-  cue: 'Side-lying, band above knees. Feet together, open top knee like a clam. Control the return, don\'t let band snap.',
+  cue: 'Lie on side, knees bent, band above knees. Keep feet together. Lift top knee toward ceiling, feet stay touching. Slow down.',
   sets: 2,
   reps: '12 each',
   restBetweenSets: 15,
