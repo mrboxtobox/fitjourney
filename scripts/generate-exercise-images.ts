@@ -48,11 +48,39 @@ FIGURE REQUIREMENTS:
 - Profile or 3/4 view for clarity
 - Simple athletic wear: tank top and shorts in navy blue
 
+=== GHOSTED OVERLAY TECHNIQUE (CRITICAL) ===
+Show BOTH the start and end positions of the movement using a ghosted/phantom figure overlay:
+
+PRIMARY POSITION (solid figure):
+- The main/key position drawn with full ink weight and normal line thickness
+- Full crosshatching and shading
+- 100% opacity/presence
+
+SECONDARY/GHOSTED POSITION (phantom figure):
+- A lighter, faded version of the figure in the alternate position
+- Drawn with LIGHTER ink strokes (~30% line weight)
+- Minimal or no crosshatching - just outline
+- Appears transparent/ghosted compared to the primary figure
+- Like a "shadow" or "echo" of the movement
+
+MOVEMENT INDICATORS:
+- Bold red arrows connecting the two positions
+- Arrows show the direction of movement from start to end
+- Curved arrows for rotational movements
+- Straight arrows for linear movements
+- DASHED LINES: Use dashed/dotted lines to show:
+  * The path of movement (arc of a swing, trajectory of a limb)
+  * Guide lines showing alignment (e.g., spine alignment, limb path)
+  * Range of motion arcs
+- Dashed lines should be in black or dark gray, thinner than solid lines
+
+The ghosted figure technique shows the RANGE OF MOTION and helps users understand the complete exercise movement pattern.
+
 COMPOSITION:
-- Single figure on plain cream background
+- Both positions (solid + ghosted) on plain cream background
 - No text, labels, or watermarks
 - Square format
-- Figure fills ~70% of frame`;
+- Figures fill ~70% of frame`;
 
 // =============================================================================
 // Exercise definitions with HYPER-DETAILED form descriptions
@@ -76,6 +104,7 @@ const EXERCISES: ExerciseIllustration[] = [
 
 The man lies on his back. His head is on the left, feet on the right.
 
+=== PRIMARY POSITION (SOLID - Top of curl-up) ===
 LEG POSITIONS - ASYMMETRICAL:
 - His LEFT leg: knee bent, foot flat on floor (like sitting in a chair while lying down)
 - His RIGHT leg: completely straight, lying flat on the floor from hip to heel
@@ -85,14 +114,25 @@ HAND POSITION:
 - His lower back has a slight arch with hands filling that space
 - His elbows point outward and rest on the floor
 
-HEAD POSITION:
+HEAD/SHOULDERS:
 - His head and shoulder blades are raised just 1-2 inches off the ground
 - Looking straight up at the ceiling
 - Small movement, not a full sit-up
 
+=== GHOSTED POSITION (FADED - Start position) ===
+Show a lighter/faded version of the same figure with:
+- Head and shoulders FLAT on the ground (not lifted)
+- Same leg positions (one bent, one straight)
+- Same hand position under lower back
+- This shows the starting position before the curl-up
+
+MOVEMENT ARROWS:
+- Red curved arrow from the ghosted head position to the solid lifted position
+- Arrow shows the small upward lift of the shoulders
+
 The KEY visual is the asymmetry: one bent knee with foot on floor, one straight leg flat.
 
-Vintage pen-and-ink style, crosshatching, navy shorts, cream background. Red arrow pointing up at shoulders.`,
+Vintage pen-and-ink style, crosshatching, navy shorts, cream background.`,
   },
   {
     id: 'mcgill-side-plank',
@@ -100,6 +140,7 @@ Vintage pen-and-ink style, crosshatching, navy shorts, cream background. Red arr
     modelGender: 'female',
     formDescription: `CAMERA ANGLE: Front view, looking at the person from the front as they face the camera while in side plank.
 
+=== PRIMARY POSITION (SOLID - Held plank position) ===
 BODY POSITION - BE EXTREMELY PRECISE:
 - Person is lying on their RIGHT side, propped up on their right forearm
 - Body faces the CAMERA (viewer sees the front of their body)
@@ -128,11 +169,18 @@ HEAD:
 - Head is in neutral alignment with spine
 - Looking forward (at camera)
 
-ARROWS:
-- One red arrow pointing UPWARD at the hip area, showing the lift direction
-- Small arrow at the core area indicating bracing/engagement
+=== GHOSTED POSITION (FADED - Setup on ground) ===
+Show a lighter/faded version of the same figure with:
+- Same forearm position on ground
+- But HIPS resting on the ground (not lifted)
+- Body in the starting position before lifting into the plank
+- Shows the setup position before engaging
 
-CRITICAL: Body is a straight diagonal line from head to feet. Propped on forearm. Hips lifted. Not lying flat.`,
+MOVEMENT ARROWS:
+- Red arrow pointing UPWARD at the hip area, from ghosted to solid position
+- Shows the lift direction from ground to held plank
+
+CRITICAL: Body is a straight diagonal line from head to feet in the solid figure. Propped on forearm. Hips lifted. Ghosted figure shows hips on ground.`,
   },
   {
     id: 'mcgill-bird-dog',
@@ -140,14 +188,15 @@ CRITICAL: Body is a straight diagonal line from head to feet. Propped on forearm
     modelGender: 'male',
     formDescription: `CAMERA ANGLE: Side view (profile), looking at the person from their left side.
 
+=== PRIMARY POSITION (SOLID - Extended position) ===
 BODY POSITION - BE EXTREMELY PRECISE:
 - Person is on HANDS and KNEES (quadruped/tabletop position)
 - Back is FLAT and horizontal like a tabletop - no arching or rounding
 
 BASE OF SUPPORT (what touches the ground):
 - LEFT hand is flat on ground, directly under left shoulder
-- LEFT knee is on ground, directly under left hip
-- ONLY the left hand and left knee touch the ground
+- RIGHT knee is on ground, directly under right hip
+- ONLY the left hand and right knee touch the ground
 
 RIGHT ARM (extended):
 - Right arm extends STRAIGHT FORWARD, parallel to the ground
@@ -161,10 +210,6 @@ LEFT LEG (extended):
 - Toes point toward the ground
 - Leg is fully extended
 
-STATIONARY LIMBS:
-- Left arm: straight down from shoulder to ground, supporting body
-- Right leg: bent at 90 degrees, knee on ground under hip
-
 TORSO:
 - Back is FLAT - horizontal like a tabletop
 - No rotation in hips or shoulders - hips stay square to ground
@@ -174,11 +219,20 @@ HEAD:
 - Head in neutral position, looking at the ground
 - Neck continues the line of the spine
 
-ARROWS:
+=== GHOSTED POSITION (FADED - Start on all fours) ===
+Show a lighter/faded version of the same figure with:
+- ALL FOUR limbs on the ground (hands and knees position)
+- Both hands flat on ground under shoulders
+- Both knees on ground under hips
+- Back flat in tabletop position
+- This is the starting position before extending arm and leg
+
+MOVEMENT ARROWS:
 - Red arrow pointing FORWARD from the extended right arm
 - Red arrow pointing BACKWARD from the extended left leg
+- Arrows connect from the ghosted limb positions to the extended positions
 
-CRITICAL: ONLY ONE arm raised (right), ONLY ONE leg raised (left) - OPPOSITE arm and leg. The other arm and leg stay on the ground. This is the key to the exercise.`,
+CRITICAL: ONLY ONE arm raised (right), ONLY ONE leg raised (left) - OPPOSITE arm and leg in the solid figure. Ghosted figure shows all fours start position.`,
   },
 
   // =========================================================================
@@ -190,6 +244,7 @@ CRITICAL: ONLY ONE arm raised (right), ONLY ONE leg raised (left) - OPPOSITE arm
     modelGender: 'female',
     formDescription: `CAMERA ANGLE: 3/4 view from the front-left, so we can see both the front of the body and slight side profile.
 
+=== PRIMARY POSITION (SOLID - Bottom of squat) ===
 BODY POSITION - BOTTOM OF THE SQUAT:
 - Person is in a DEEP squat position (bottom position of the squat)
 - This is the lowest point of the movement
@@ -224,12 +279,20 @@ HEAD:
 - Head is neutral, looking forward
 - Chin is level
 
-ARROWS:
-- Red arrow pointing DOWN into the squat (showing descent)
-- Red arrow pointing UP (showing the drive to stand)
+=== GHOSTED POSITION (FADED - Standing with KB) ===
+Show a lighter/faded version of the same figure with:
+- Standing UPRIGHT at full height
+- Feet in same shoulder-width stance
+- Kettlebell held at chest in same grip
+- Knees straight (or very slightly bent)
+- This is the starting position before descending into the squat
+
+MOVEMENT ARROWS:
+- Red arrow pointing DOWN from ghosted standing figure to solid squat position
+- Shows the descent path of the movement
 - Small curved arrows at knees showing them pushing outward
 
-CRITICAL: This is a DEEP squat - hips well below knees. Heels stay flat on ground. Kettlebell at chest.`,
+CRITICAL: This is a DEEP squat - hips well below knees in solid figure. Ghosted figure shows standing start position. Heels stay flat on ground.`,
   },
   {
     id: 'farmers-carry',
@@ -237,6 +300,7 @@ CRITICAL: This is a DEEP squat - hips well below knees. Heels stay flat on groun
     modelGender: 'male',
     formDescription: `CAMERA ANGLE: Side view (profile), person walking from left to right.
 
+=== PRIMARY POSITION (SOLID - Mid-stride) ===
 BODY POSITION - MID-STRIDE:
 - Person is WALKING with perfect upright posture
 - Caught mid-step, one foot forward, one foot back
@@ -262,14 +326,18 @@ HEAD:
 - Head is up, eyes looking forward
 - Chin is level, neck is neutral
 
-CORE:
-- Core is braced to prevent side bending
-- The challenge is resisting the pull to lean toward the weight
+=== GHOSTED POSITION (FADED - Standing start) ===
+Show a lighter/faded version of the same figure with:
+- Standing still with feet together or hip-width apart
+- Same kettlebell grip position
+- Same perfect upright posture
+- This shows the starting position before walking
 
-ARROWS:
+MOVEMENT INDICATORS:
 - Red arrow pointing FORWARD showing walking direction
+- Dashed line path showing the forward movement trajectory
 - Small arrows at the shoulders showing they stay LEVEL
-- Arrow at the core showing bracing/engagement
+- Dashed horizontal line across shoulders showing alignment
 
 CRITICAL: Shoulders stay LEVEL despite holding weight on only one side. Walking with tall posture.`,
   },
@@ -279,6 +347,7 @@ CRITICAL: Shoulders stay LEVEL despite holding weight on only one side. Walking 
     modelGender: 'female',
     formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their right side.
 
+=== PRIMARY POSITION (SOLID - Bottom/hinged position) ===
 BODY POSITION - BOTTOM OF THE DEADLIFT (hinged position):
 - Person is in a HIP HINGE position - bent forward at the hips
 - This is NOT a squat - the movement is a hinge, not a sit
@@ -312,12 +381,20 @@ HEAD:
 - Head is neutral, continuing line of spine
 - Looking at a spot on the ground a few feet ahead
 
-ARROWS:
-- Curved red arrow at hips showing the hinge motion (hips going back)
-- Red arrow pointing UP along the kettlebell/arms showing lift direction
-- Arrow along the back showing it staying FLAT
+=== GHOSTED POSITION (FADED - Standing top position) ===
+Show a lighter/faded version of the same figure with:
+- Standing FULLY UPRIGHT
+- Hips fully extended (standing tall)
+- Kettlebell held at thigh level with arms straight down
+- This is the top/lockout position of the deadlift
 
-CRITICAL: This is a HIP HINGE, not a squat. Hips push back, torso tips forward, back stays flat, knees are only slightly bent. Kettlebell is on/near the ground.`,
+MOVEMENT INDICATORS:
+- Red arrow pointing UP from the kettlebell showing lift direction
+- Dashed line showing the path of the kettlebell from floor to standing
+- Dashed line along the spine showing it stays FLAT throughout
+- Curved arrow at hips showing the hinge motion (hips going back/forward)
+
+CRITICAL: This is a HIP HINGE, not a squat. Solid figure shows bottom position (hinged). Ghosted figure shows standing top position.`,
   },
   {
     id: 'kb-swing',
@@ -325,6 +402,7 @@ CRITICAL: This is a HIP HINGE, not a squat. Hips push back, torso tips forward, 
     modelGender: 'male',
     formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their right side.
 
+=== PRIMARY POSITION (SOLID - Top of swing) ===
 BODY POSITION - TOP OF THE SWING:
 - Person is at the TOP/PEAK of a kettlebell swing
 - This is the moment of full hip extension
@@ -361,12 +439,21 @@ HEAD:
 - Head neutral, eyes forward
 - Chin level
 
-ARROWS:
-- Large curved red arrow showing the ARC of the swing (from between legs up to chest height)
-- Arrow at hips showing the forward HIP SNAP/THRUST
-- Motion lines behind kettlebell showing momentum
+=== GHOSTED POSITION (FADED - Bottom of swing) ===
+Show a lighter/faded version of the same figure with:
+- Hip hinged back (butt pushed back)
+- Torso tipped forward at 45 degrees
+- Kettlebell swung BETWEEN the legs (behind the knees)
+- Arms straight, kettlebell at bottom of arc
+- This is the backswing/bottom position
 
-CRITICAL: Kettlebell is at CHEST height (NOT overhead). Arms are straight forward, parallel to ground. Body is standing STRAIGHT UP with hips thrust forward. This is NOT an overhead press.`,
+MOVEMENT INDICATORS:
+- Large CURVED DASHED LINE showing the full ARC of the swing (from between legs up to chest height)
+- Red arrow along this arc showing the swing direction
+- Arrow at hips showing the forward HIP SNAP/THRUST
+- The dashed arc is critical to show the pendulum swing path
+
+CRITICAL: Kettlebell is at CHEST height (NOT overhead) in solid figure. Ghosted figure shows bottom position between legs. Dashed arc connects the two positions.`,
   },
 
   // =========================================================================
@@ -378,6 +465,7 @@ CRITICAL: Kettlebell is at CHEST height (NOT overhead). Arms are straight forwar
     modelGender: 'female',
     formDescription: `CAMERA ANGLE: Front view, looking at the person from directly in front as they sit on the floor.
 
+=== PRIMARY POSITION (SOLID - Upright stretch position) ===
 BODY POSITION - SEATED ON FLOOR:
 - Person is SITTING on the ground
 - Buttocks/sitting bones are on the floor
@@ -408,18 +496,25 @@ TORSO:
 
 ARMS:
 - Hands rest lightly on the ground beside hips for balance
-- Or hands can rest on the front knee
 
 HEAD:
 - Head neutral, looking forward
 - Tall posture maintained
 
-ARROWS:
+=== GHOSTED POSITION (FADED - Transitioning/entry) ===
+Show a lighter/faded version of the same figure with:
+- Same leg position (90-90)
+- Torso LEANING FORWARD slightly, hinging at the hips
+- Hands reaching forward toward the front foot
+- Shows the deepening stretch variation
+
+MOVEMENT INDICATORS:
 - Curved arrow at front hip showing EXTERNAL rotation direction
 - Curved arrow at back hip showing INTERNAL rotation direction
-- Arrow at spine showing UPRIGHT posture
+- Dashed arc showing the torso hinge forward and back
+- Dashed lines at 90-degree angles showing the knee bend angles
 
-CRITICAL: Both knees at 90 degrees. Front leg externally rotated (inner thigh down). Back leg internally rotated (outer thigh down). Sitting upright.`,
+CRITICAL: Both knees at 90 degrees. Front leg externally rotated (inner thigh down). Back leg internally rotated (outer thigh down). Solid shows upright, ghosted shows forward lean.`,
   },
   {
     id: 'deep-squat-hold',
@@ -427,6 +522,7 @@ CRITICAL: Both knees at 90 degrees. Front leg externally rotated (inner thigh do
     modelGender: 'male',
     formDescription: `CAMERA ANGLE: 3/4 front view, seeing both front and slight side of the person.
 
+=== PRIMARY POSITION (SOLID - Bottom hold position) ===
 BODY POSITION - FULL DEEP SQUAT (resting position):
 - Person is in the DEEPEST possible squat position
 - This is also called an "Asian squat" or "third world squat"
@@ -455,19 +551,26 @@ TORSO:
 - Back maintains natural curve
 
 ARMS:
-- Arms are extended forward for balance, OR
 - Hands in prayer position at chest with elbows pushing knees out
 
 HEAD:
 - Head neutral, looking forward
 - Relaxed expression (this is a resting position)
 
-ARROWS:
+=== GHOSTED POSITION (FADED - Standing) ===
+Show a lighter/faded version of the same figure with:
+- Standing UPRIGHT at full height
+- Feet in same shoulder-width stance
+- Hands at sides or in front
+- This shows the starting position before descending
+
+MOVEMENT INDICATORS:
+- Red arrow showing the descent from standing to deep squat
+- Dashed vertical line showing the downward path
 - Arrows at HEELS emphasizing they stay FLAT on ground
 - Arrows at knees showing them pushing OUTWARD
-- Arrow showing hips sinking DOWN
 
-CRITICAL: This is the DEEPEST squat possible. Heels MUST be flat on the ground. Hips are very low, close to the ground. Not a half squat.`,
+CRITICAL: This is the DEEPEST squat possible. Heels MUST be flat on the ground. Hips are very low, close to the ground. Not a half squat. Ghosted figure shows standing start.`,
   },
   {
     id: 'couch-stretch',
@@ -475,6 +578,7 @@ CRITICAL: This is the DEEPEST squat possible. Heels MUST be flat on the ground. 
     modelGender: 'female',
     formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their left side. A wall is on the right side of the image.
 
+=== PRIMARY POSITION (SOLID - Full stretch position) ===
 BODY POSITION - LUNGE WITH BACK FOOT ON WALL:
 - Person is in a deep lunge position with back foot elevated against a wall
 
@@ -503,18 +607,25 @@ TORSO:
 
 ARMS:
 - Hands rest on the front knee for support
-- Or arms can be raised overhead
 
 HEAD:
 - Head neutral, looking forward
 - Tall posture
 
-ARROWS:
+=== GHOSTED POSITION (FADED - Setup position) ===
+Show a lighter/faded version of the same figure with:
+- Same lunge position but torso LEANING FORWARD with hands on ground
+- This is the easier/setup position before coming upright
+- Back knee and shin still in position against wall
+- Shows the progression into the full stretch
+
+MOVEMENT INDICATORS:
+- Dashed arc showing the torso path from forward lean to upright
 - Arrow at back hip showing the hip OPENING/EXTENDING
 - Arrow at back glute showing the SQUEEZE
-- Arrow at torso showing it staying UPRIGHT
+- Dashed vertical line at front shin showing it stays vertical
 
-CRITICAL: Back shin goes UP the wall with top of foot against wall. Knee on ground at base of wall. Front shin is vertical. Torso stays upright.`,
+CRITICAL: Back shin goes UP the wall with top of foot against wall. Knee on ground at base of wall. Solid figure is upright, ghosted figure shows setup position.`,
   },
   {
     id: 'pigeon-stretch',
@@ -522,6 +633,7 @@ CRITICAL: Back shin goes UP the wall with top of foot against wall. Knee on grou
     modelGender: 'male',
     formDescription: `CAMERA ANGLE: 3/4 front view, looking down slightly at the person on the floor.
 
+=== PRIMARY POSITION (SOLID - Full stretch position) ===
 BODY POSITION - PIGEON POSE (upright version):
 - Person is on the floor in pigeon pose/stretch
 
@@ -559,12 +671,21 @@ HEAD:
 - Head neutral, looking forward
 - Tall posture
 
-ARROWS:
+=== GHOSTED POSITION (FADED - Entry/setup position) ===
+Show a lighter/faded version of the same figure with:
+- Same leg positions on ground
+- Torso FOLDED FORWARD over the front leg
+- Arms extended forward, reaching along the ground
+- Forehead approaching or touching the ground
+- Shows the deepened stretch variation
+
+MOVEMENT INDICATORS:
+- Dashed arc showing the torso path from folded forward to upright
 - Arrow at front hip showing EXTERNAL rotation
 - Arrow at back hip showing hip flexor STRETCH
-- Arrow at torso showing UPRIGHT posture
+- Dashed line showing the back leg stays STRAIGHT
 
-CRITICAL: Front leg bent on ground with outer hip down. Back leg is STRAIGHT and FLAT on the ground behind (not bent). Torso upright.`,
+CRITICAL: Front leg bent on ground with outer hip down. Back leg is STRAIGHT and FLAT on the ground behind. Solid figure upright, ghosted figure shows forward fold variation.`,
   },
 
   // =========================================================================
@@ -576,6 +697,7 @@ CRITICAL: Front leg bent on ground with outer hip down. Back leg is STRAIGHT and
     modelGender: 'female',
     formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their left side.
 
+=== PRIMARY POSITION (SOLID - "CAT" position) ===
 BODY POSITION - "CAT" POSITION (spinal flexion):
 - Person is on HANDS and KNEES (quadruped position)
 - Showing the "CAT" portion of cat-cow
@@ -610,15 +732,22 @@ ABDOMEN:
 - Belly is pulled IN toward spine
 - Core is engaged
 
-ARROWS:
-- Large curved arrow showing spine rounding UPWARD (convex curve up)
-- Arrow at pelvis showing tailbone tucking UNDER
-- Arrow at head showing it dropping DOWN
+=== GHOSTED POSITION (FADED - "COW" position) ===
+Show a lighter/faded version of the same figure with:
+- Same hands and knees position on ground
+- Back ARCHED DOWNWARD (sway back) - spine dips toward floor
+- Head LIFTED UP, looking forward or slightly up
+- Belly relaxed and dropping toward floor
+- Tailbone tilted UP (opposite of cat)
+- This is spinal EXTENSION (arching down)
 
-OPTIONAL GHOSTED POSITION:
-- Lighter/ghosted figure showing "COW" position (back arched downward, head up) to show the contrast
+MOVEMENT INDICATORS:
+- Large curved arrow showing spine movement between positions
+- Dashed curved line showing the range of spinal motion (from rounded up to arched down)
+- Arrow at pelvis showing the tilt direction
+- Arrow at head showing the lift/drop motion
 
-CRITICAL: Back is rounded UP like an angry cat. Head down, tailbone tucked. This is spinal FLEXION (rounding up).`,
+CRITICAL: Solid figure shows CAT (rounded up). Ghosted figure shows COW (arched down). This shows the full range of the alternating movement.`,
   },
   {
     id: 'leg-swings',
@@ -626,8 +755,9 @@ CRITICAL: Back is rounded UP like an angry cat. Head down, tailbone tucked. This
     modelGender: 'male',
     formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their right side. A wall or support is on the left.
 
+=== PRIMARY POSITION (SOLID - Forward swing) ===
 BODY POSITION - DYNAMIC LEG SWING:
-- Person is standing on ONE leg, swinging the other leg forward and back
+- Person is standing on ONE leg, swinging the other leg forward
 
 SUPPORT:
 - LEFT hand touches a wall or support (on the left side of image)
@@ -639,14 +769,11 @@ STANDING LEG (left leg):
 - This leg stays STATIONARY and stable
 - All weight is on this leg
 
-SWINGING LEG (right leg) - SHOW MULTIPLE POSITIONS:
-- Right leg swings like a pendulum from the HIP
-- Show the leg in FORWARD swing position (primary)
-- Show ghosted/lighter positions showing:
-  - Leg swinging BACKWARD
-  - Neutral position (hanging straight down)
+SWINGING LEG (right leg):
+- Right leg swings FORWARD and UP (in front of the body)
+- Leg is lifted to approximately hip height or higher
 - The leg stays RELATIVELY STRAIGHT during the swing
-- Movement comes from the HIP JOINT
+- Toes point forward
 
 TORSO:
 - Torso stays UPRIGHT and STABLE
@@ -658,13 +785,21 @@ HEAD:
 - Looking forward
 - Head stays stable
 
-ARROWS:
-- Large curved DOUBLE-HEADED arrow showing the pendulum swing path (forward AND backward)
-- The arrow should arc from behind the body, down, and forward
-- Small arrow at hip showing it as the PIVOT POINT
-- Arrow at torso showing it staying STABLE
+=== GHOSTED POSITION (FADED - Back swing) ===
+Show a lighter/faded version of the same figure with:
+- Same standing leg and support hand position
+- Swinging leg extended BACKWARD (behind the body)
+- Leg straight and lifted backward at hip height
+- Shows the back swing of the pendulum motion
 
-CRITICAL: Standing on one leg, other leg swings freely from the hip like a pendulum. Upper body stays stable. Show the swinging motion with multiple leg positions or motion blur.`,
+MOVEMENT INDICATORS:
+- Large curved DASHED ARC showing the full pendulum swing path (from back to front)
+- The dashed arc connects the two leg positions
+- Double-headed red arrow along the arc showing back-and-forth motion
+- Small arrow at hip showing it as the PIVOT POINT
+- Dashed vertical line at the standing leg showing it stays stable
+
+CRITICAL: Standing on one leg, other leg swings freely from the hip like a pendulum. Solid shows forward swing, ghosted shows back swing. Dashed arc shows full range of motion.`,
   },
   {
     id: 'hip-circles',
@@ -672,6 +807,7 @@ CRITICAL: Standing on one leg, other leg swings freely from the hip like a pendu
     modelGender: 'female',
     formDescription: `CAMERA ANGLE: 3/4 front view, seeing front and slight side of person.
 
+=== PRIMARY POSITION (SOLID - One point in circle) ===
 BODY POSITION - STANDING HIP CIRCLES:
 - Person is standing upright, moving hips in a circular motion
 - Like hula hooping without a hoop
@@ -687,9 +823,8 @@ KNEES:
 - Knees may move slightly with the hip motion
 
 HIPS - THE MOVING PART:
-- Hips move in a CIRCULAR motion
-- Show hips shifted to ONE SIDE (as part of the circle)
-- The hips trace a horizontal circle/oval shape
+- Hips are shifted to the RIGHT SIDE (one point of the circle)
+- Show clear lateral hip shift in this position
 - Like stirring a pot with your hips
 
 UPPER BODY:
@@ -706,25 +841,38 @@ HEAD:
 - Head stays neutral and relatively stable
 - Looking forward
 
-ARROWS:
-- CIRCULAR arrow around the hip area showing the rotation path
-- The arrow should make a complete circle (or 3/4 circle visible)
-- Arrow can show clockwise or counterclockwise rotation
-- Small arrows showing hips shifting through different points of the circle
+=== GHOSTED POSITION (FADED - Opposite point in circle) ===
+Show a lighter/faded version of the same figure with:
+- Same standing stance and hands on hips
+- Hips shifted to the LEFT SIDE (opposite point of the circle)
+- Shows the range of hip movement side to side
 
-CRITICAL: Hands on hips. Hips move in a circle. Upper body and feet stay stable. This mobilizes the hip joints and lower back.`,
+MOVEMENT INDICATORS:
+- CIRCULAR DASHED LINE around the hip area showing the rotation path
+- The dashed circle should be clearly visible in a horizontal plane
+- Red arrow along the circle showing rotation direction (clockwise or counterclockwise)
+- Dashed vertical line through the center showing the stable axis
+
+CRITICAL: Hands on hips. Dashed circular path shows the hip rotation. Solid and ghosted figures show opposite points of the circle. Upper body and feet stay stable.`,
   },
   {
     id: 'glute-bridge-warmup',
     name: 'Glute Bridge',
     modelGender: 'male',
-    formDescription: `Illustration of a hip thrust / bridge exercise from a side view.
+    formDescription: `CAMERA ANGLE: Side view (profile), looking at person from their right side.
 
+=== PRIMARY POSITION (SOLID - Hips up/bridge position) ===
+BODY POSITION - TOP OF THE BRIDGE:
 The man's body makes a BRIDGE or RAMP shape:
 - HEAD and SHOULDERS rest on the floor
 - HIPS are thrust UP HIGH (the peak of the bridge)
+- Body forms a straight line from shoulders to knees
 - KNEES are bent at 90 degrees
 - FEET are FLAT on the floor
+
+ARMS:
+- Arms rest on the floor beside the body
+- Palms facing down for stability
 
 CRITICAL: The man's feet must be on the ground. Both soles of his feet touch the floor. His knees point toward the ceiling. His hips are the highest point.
 
@@ -732,7 +880,20 @@ The silhouette looks like a triangle: floor to shoulders (low), up to hips (high
 
 DO NOT show legs in the air. DO NOT show a leg raise. The feet MUST be on the ground.
 
-Vintage pen-and-ink illustration style. Navy shorts. Cream background. Red upward arrow at hips.`,
+=== GHOSTED POSITION (FADED - Hips down/start position) ===
+Show a lighter/faded version of the same figure with:
+- Same lying position with bent knees
+- Same feet flat on floor
+- But HIPS resting ON THE GROUND (not lifted)
+- Lower back touching the floor
+- This is the starting position before lifting
+
+MOVEMENT INDICATORS:
+- Red arrow pointing UP at the hips showing the lift direction
+- Dashed arc showing the path of hip movement from floor to top
+- Dashed line from shoulders to knees showing the straight line at top position
+
+CRITICAL: Solid figure shows top of bridge (hips up). Ghosted figure shows start position (hips down). Feet stay flat on ground throughout. Dashed arc shows hip lift path.`,
   },
 ];
 
@@ -805,6 +966,96 @@ FINAL REMINDERS:
   }
 }
 
+// =============================================================================
+// OG IMAGE GENERATION
+// =============================================================================
+async function generateOgImage(): Promise<boolean> {
+  console.log('Generating OG image...');
+
+  const ogPrompt = `Create a wide banner image (1200x630 pixels aspect ratio) for a fitness app called "Idaraya" (meaning "exercise" in Yoruba).
+
+STYLE: Vintage 1950s-1960s fitness manual illustration style
+- Traditional pen and ink illustration with crosshatching
+- Clean, professional instructional manual quality
+- Bold black ink lines
+
+COLOR PALETTE:
+- Background: Warm cream/off-white (#F5F0E6)
+- Figures: Black ink linework with crosshatching
+- Clothing: Deep navy blue (#1a3a5c)
+- Accent arrows: Bold red (#c41e3a)
+
+COMPOSITION:
+- Wide banner format (landscape, approximately 1200x630 proportions)
+- Show 3-4 small exercise vignettes arranged horizontally across the image
+- Examples: kettlebell swing silhouette, deep squat figure, plank position, hip hinge
+- Each figure is a small vintage-style illustration
+- Figures should be evenly spaced across the width
+- Leave some negative space between figures
+
+VISUAL ELEMENTS:
+- Decorative vintage border or frame around the edge (thin black line, possibly with corner ornaments)
+- Small red accent arrows showing movement direction on 1-2 figures
+- Dashed lines showing movement paths
+- Each figure shows both solid and ghosted positions to indicate movement
+- Overall feel: classic, timeless, professional fitness instruction
+
+NO TEXT - just illustrations. The app name will be overlaid separately.
+
+Make it look like a beautiful vintage fitness manual illustration spread.`;
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GOOGLE_AI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: ogPrompt }] }],
+          generationConfig: {
+            responseModalities: ['image', 'text'],
+            responseMimeType: 'text/plain',
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error(`  API error: ${response.status} - ${error}`);
+      return false;
+    }
+
+    const data = (await response.json()) as {
+      candidates?: Array<{
+        content?: {
+          parts?: Array<{
+            inlineData?: { data: string; mimeType: string };
+          }>;
+        };
+      }>;
+    };
+
+    const parts = data.candidates?.[0]?.content?.parts || [];
+
+    for (const part of parts) {
+      if (part.inlineData) {
+        const imageBuffer = Buffer.from(part.inlineData.data, 'base64');
+        const ogPath = path.join(process.cwd(), 'public', 'og-image.png');
+        fs.writeFileSync(ogPath, imageBuffer);
+        console.log('  ✓ Saved: og-image.png');
+        return true;
+      }
+    }
+
+    console.error('  ✗ No OG image generated');
+    return false;
+  } catch (error) {
+    console.error('  ✗ Error generating OG image:', error);
+    return false;
+  }
+}
+
 async function main() {
   console.log('\n========================================');
   console.log('EXERCISE ILLUSTRATION GENERATOR');
@@ -813,8 +1064,15 @@ async function main() {
   console.log(`Output: ${OUTPUT_DIR}`);
   console.log('========================================\n');
 
-  // Parse command line args to regenerate specific exercises
+  // Parse command line args to regenerate specific exercises or OG image
   const args = process.argv.slice(2);
+
+  // Handle --og flag for OG image only
+  if (args.includes('--og')) {
+    await generateOgImage();
+    return;
+  }
+
   const exercisesToGenerate = args.length > 0
     ? EXERCISES.filter(e => args.includes(e.id))
     : EXERCISES;
@@ -838,11 +1096,17 @@ async function main() {
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
 
+  // Also generate OG image if generating all exercises
+  if (args.length === 0) {
+    console.log('\n--- Generating OG Image ---');
+    await generateOgImage();
+  }
+
   console.log('\n========================================');
   console.log('RESULTS');
   console.log('========================================');
-  console.log(`Success: ${success}/${exercisesToGenerate.length}`);
-  console.log(`Failed: ${failed}/${exercisesToGenerate.length}`);
+  console.log(`Exercises - Success: ${success}/${exercisesToGenerate.length}`);
+  console.log(`Exercises - Failed: ${failed}/${exercisesToGenerate.length}`);
   console.log(`Output: ${OUTPUT_DIR}`);
   console.log('========================================\n');
 }
