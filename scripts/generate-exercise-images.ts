@@ -1077,59 +1077,30 @@ CRITICAL: Both knees at 90 degrees. Front leg externally rotated (inner thigh do
   },
   {
     id: 'deep-squat-hold',
-    name: 'Deep Squat Hold',
+    name: 'Supported Squat Hold',
     modelGender: 'male',
-    formDescription: `CAMERA ANGLE: 3/4 front view, seeing both front and slight side of the person.
+    formDescription: `CAMERA ANGLE: Side/3-4 view showing the person holding a vertical support.
 
-=== PRIMARY POSITION (SOLID - Bottom hold position) ===
-BODY POSITION - FULL DEEP SQUAT (resting position):
-- Person is in the DEEPEST possible squat position
-- This is also called an "Asian squat" or "third world squat"
-- This is a RESTING position, held statically
+=== PRIMARY POSITION (SOLID - supported squat hold) ===
+A man holding a comfortable squat while HOLDING ONTO A VERTICAL SUPPORT for assistance (this is a knee-friendly, assisted mobility hold):
+- A VERTICAL POLE, DOORFRAME EDGE, or sturdy RAIL drawn in front of him
+- BOTH hands grip the support at about chest/shoulder height
+- He uses the support to take weight off the knees and stay balanced
+- Squatting down to a COMFORTABLE depth — hips around knee height, NOT slammed to the bottom (depth is moderate, knee-friendly)
+- HEELS FLAT on the ground
+- Feet shoulder-width, toes slightly out, knees tracking over toes
+- Torso upright (the support helps keep the chest tall)
+- Calm, relaxed expression — this is a held stretch
 
-FEET - CRITICAL:
-- Feet are shoulder-width apart or slightly wider
-- HEELS are FLAT ON THE GROUND (not raised!)
-- Entire foot including heel maintains contact with floor
-- Toes point outward at about 30 degrees
-
-KNEES:
-- Knees are FULLY bent (maximum flexion)
-- Knees push OUTWARD, tracking over toes
-- Knees are wide apart
-
-HIPS:
-- Hips are dropped AS LOW AS POSSIBLE
-- Buttocks are very close to the ground (almost touching heels)
-- Hips are BELOW knee level by a significant amount
-
-TORSO:
-- Torso is as UPRIGHT as flexibility allows
-- Chest is lifted
-- Some forward lean is natural, but try to stay upright
-- Back maintains natural curve
-
-ARMS:
-- Hands in prayer position at chest with elbows pushing knees out
-
-HEAD:
-- Head neutral, looking forward
-- Relaxed expression (this is a resting position)
-
-=== GHOSTED POSITION (FADED - Standing) ===
-Show a lighter/faded version of the same figure with:
-- Standing UPRIGHT at full height
-- Feet in same shoulder-width stance
-- Hands at sides or in front
-- This shows the starting position before descending
+=== GHOSTED POSITION (FADED - standing) ===
+Lighter version standing tall, still lightly holding the support, before sinking into the squat.
 
 MOVEMENT INDICATORS:
-- Red arrow showing the descent from standing to deep squat
-- Dashed vertical line showing the downward path
-- Arrows at HEELS emphasizing they stay FLAT on ground
-- Arrows at knees showing them pushing OUTWARD
+- Bold red arrow showing the hips descending to the squat
+- Dashed line at the heels emphasizing they stay FLAT
+- Dashed horizontal line at hip/knee height showing the moderate (not maximal) depth
 
-CRITICAL: This is the DEEPEST squat possible. Heels MUST be flat on the ground. Hips are very low, close to the ground. Not a half squat. Ghosted figure shows standing start.`,
+CRITICAL: He is HOLDING A VERTICAL SUPPORT (pole/doorframe/rail) with both hands for assistance. Depth is MODERATE and comfortable, not the deepest possible squat — this is the knee-friendly version. Heels stay flat. Show the support clearly.`,
   },
   {
     id: 'couch-stretch',

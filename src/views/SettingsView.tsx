@@ -122,10 +122,12 @@ export function SettingsView({ startDate, onBack, onStartDateChange }: SettingsV
       <section class="mt-8">
         <h2 class="section-header">About</h2>
         <p class="text-sm" style={{ color: 'var(--text-muted)' }}>
-          Idaraya: minimalist movement practice.
+          Idaraya: a daily 20-minute practice that builds glutes and core,
+          tones the arms, and stays knee-friendly.
         </p>
         <p class="text-xs mt-2" style={{ color: 'var(--text-dim)' }}>
-          McGill Big 3 + Goblet Squat + Farmer's Carry + Hip Mobility
+          Glutes &amp; core first, then abs and arms — a gradual ramp from
+          Foundation to Sustain over the year.
         </p>
       </section>
     </div>
