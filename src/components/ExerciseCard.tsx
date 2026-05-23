@@ -1,26 +1,45 @@
 import { useState } from 'preact/hooks';
-import { Check, Play, Pause, RotateCcw, Minus, Plus, Maximize2 } from 'lucide-preact';
+import { Check, Play, Pause, RotateCcw, Minus, Plus, Maximize2, ShieldCheck } from 'lucide-preact';
 import type { Exercise, WarmupExercise } from '../data/workouts';
 import { useTimer } from '../hooks/useTimer';
 
 // Map exercise IDs to their image paths
 const EXERCISE_IMAGES: Record<string, string> = {
+  // Core & abs
   'mcgill-curl-up': '/exercises/mcgill-curl-up.png',
   'mcgill-side-plank': '/exercises/mcgill-side-plank.png',
   'mcgill-bird-dog': '/exercises/mcgill-bird-dog.png',
+  'dead-bug': '/exercises/dead-bug.png',
+  'front-plank': '/exercises/front-plank.png',
+  'hollow-hold': '/exercises/hollow-hold.png',
+  'pallof-press': '/exercises/pallof-press.png',
+  // Strength (glutes / lower)
+  'glute-bridge': '/exercises/glute-bridge.png',
+  'band-glute-bridge': '/exercises/band-glute-bridge.png',
+  'hip-thrust': '/exercises/hip-thrust.png',
+  'single-leg-glute-bridge': '/exercises/single-leg-glute-bridge.png',
+  'kb-deadlift': '/exercises/kb-deadlift.png',
+  'db-rdl': '/exercises/db-rdl.png',
+  'box-squat': '/exercises/box-squat.png',
   'goblet-squat': '/exercises/goblet-squat.png',
   'farmers-carry': '/exercises/farmers-carry.png',
-  'kb-deadlift': '/exercises/kb-deadlift.png',
   'kb-swing': '/exercises/kb-swing.png',
   'band-lateral-walk': '/exercises/band-lateral-walk.png',
   'band-monster-walk': '/exercises/band-monster-walk.png',
-  'band-glute-bridge': '/exercises/band-glute-bridge.png',
   'band-clamshell': '/exercises/band-clamshell.png',
-  'band-squat': '/exercises/band-squat.png',
+  // Arms
+  'db-bicep-curl': '/exercises/db-bicep-curl.png',
+  'db-overhead-press': '/exercises/db-overhead-press.png',
+  'db-tricep-kickback': '/exercises/db-tricep-kickback.png',
+  'db-lateral-raise': '/exercises/db-lateral-raise.png',
+  'push-up': '/exercises/push-up.png',
+  'band-pull-apart': '/exercises/band-pull-apart.png',
+  // Mobility
   '90-90': '/exercises/90-90.png',
   'deep-squat-hold': '/exercises/deep-squat-hold.png',
   'couch-stretch': '/exercises/couch-stretch.png',
   'pigeon-stretch': '/exercises/pigeon-stretch.png',
+  // Warmup
   'cat-cow': '/exercises/cat-cow.png',
   'leg-swings': '/exercises/leg-swings.png',
   'hip-circles': '/exercises/hip-circles.png',
@@ -165,6 +184,17 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
             <span> · {exercise.restBetweenSets}s rest</span>
           )}
         </p>
+
+        {/* Knee-friendly note */}
+        {exercise.kneeNote && (
+          <p
+            class="text-xs mt-2 ml-6 flex items-start gap-1.5"
+            style={{ color: 'var(--text-dim)' }}
+          >
+            <ShieldCheck size={13} class="flex-shrink-0 mt-0.5" style={{ color: 'var(--check)' }} />
+            <span>{exercise.kneeNote}</span>
+          </p>
+        )}
 
         {/* Expanded exercise illustration */}
         {imagePath && expanded && (

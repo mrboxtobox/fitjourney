@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
-import { getWorkoutForDate, getAllExercises, getCurrentWeek } from '../data/workouts';
-import type { WorkoutDay } from '../data/workouts';
+import { getWorkoutForDate, getAllExercises, getCurrentWeek, getPhaseInfo } from '../data/workouts';
+import type { WorkoutDay, Block, Exercise } from '../data/workouts';
 import { ExerciseItem, WarmupItem } from '../components/ExerciseCard';
 import { DateNav } from '../components/Navigation';
 import { useDate, formatDateString } from '../hooks/useDate';
@@ -43,6 +43,15 @@ export function TodayView({ startDate }: TodayViewProps) {
   const isComplete = completedCount === totalCount && totalCount > 0;
 
   const week = getCurrentWeek(startDate);
+  const phase = getPhaseInfo(week);
+
+  const BLOCK_LABELS: Record<Block, string> = {
+    core: 'Core & Abs',
+    strength: 'Glutes & Strength',
+    arms: 'Arms',
+    mobility: 'Mobility',
+  };
+  const BLOCK_ORDER: Block[] = ['core', 'strength', 'arms', 'mobility'];
 
   const handleToggle = async (exerciseId: string) => {
     const existing = logs.find((l) => l.exerciseId === exerciseId);
@@ -106,7 +115,7 @@ export function TodayView({ startDate }: TodayViewProps) {
         <div class="mb-4">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs" style={{ color: 'var(--text-dim)' }}>
-              Week {week}
+              Week {week} · {phase.name}
             </span>
             <span class="text-xs" style={{ color: isComplete ? 'var(--check)' : 'var(--text-dim)' }}>
               {completedCount}/{totalCount}
@@ -154,23 +163,29 @@ export function TodayView({ startDate }: TodayViewProps) {
             </section>
           )}
 
-          {/* Main exercises */}
-          <section>
-            <h2 class="section-header">Exercises</h2>
-            <div>
-              {workout.exercises.map((exercise) => {
-                const log = getExerciseLog(exercise.id);
-                return (
-                  <ExerciseItem
-                    key={exercise.id}
-                    exercise={exercise}
-                    completed={log?.completed ?? false}
-                    onToggle={() => handleToggle(exercise.id)}
-                  />
-                );
-              })}
-            </div>
-          </section>
+          {/* Main exercises grouped by block */}
+          {BLOCK_ORDER.map((block) => {
+            const items = workout.exercises.filter((e: Exercise) => e.block === block);
+            if (items.length === 0) return null;
+            return (
+              <section key={block}>
+                <h2 class="section-header">{BLOCK_LABELS[block]}</h2>
+                <div>
+                  {items.map((exercise) => {
+                    const log = getExerciseLog(exercise.id);
+                    return (
+                      <ExerciseItem
+                        key={exercise.id}
+                        exercise={exercise}
+                        completed={log?.completed ?? false}
+                        onToggle={() => handleToggle(exercise.id)}
+                      />
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })}
         </>
       )}
     </div>

@@ -15,6 +15,10 @@ if (!GOOGLE_AI_API_KEY) {
   process.exit(1);
 }
 
+// Nano Banana Pro — Gemini 3 Pro Image. Strongest model for instruction-following
+// and clean line art. See https://ai.google.dev/gemini-api/docs/image-generation
+const IMAGE_MODEL = 'gemini-3-pro-image-preview';
+
 const OUTPUT_DIR = path.join(process.cwd(), 'public', 'exercises');
 
 // Ensure output directory exists
@@ -645,65 +649,370 @@ Red arrow showing knee rotating up/back.
 
 Vintage illustration, cream background, navy clothing, black ink.`,
   },
+
+  // =========================================================================
+  // NEW STRENGTH — glute-focused, knee-friendly
+  // =========================================================================
   {
-    id: 'band-squat',
-    name: 'Banded Squat',
+    id: 'glute-bridge',
+    name: 'Glute Bridge',
     modelGender: 'female',
-    formDescription: `CAMERA ANGLE: 3/4 front view, showing both depth and knee position.
+    formDescription: `CAMERA ANGLE: Side view (profile). Head/shoulders on the LEFT, feet on the RIGHT.
 
-=== PRIMARY POSITION (SOLID - Bottom of squat) ===
-BODY POSITION - DEEP SQUAT WITH BAND:
-- Person is at the bottom of a squat with band resistance
+=== PRIMARY POSITION (SOLID - top of bridge) ===
+A woman lying on her back, hips lifted into a bridge:
+- Head, shoulders and upper back flat on the floor
+- Arms resting flat on the floor beside the hips, palms down
+- HIPS lifted HIGH so the body forms a straight ramp from shoulders to knees
+- KNEES bent about 90 degrees, pointing up
+- FEET flat on the floor, hip-width apart, directly under the knees
+- Glutes visibly squeezed at the top
 
-MINI LOOP BAND PLACEMENT - CRITICAL:
-- Small elastic LOOP BAND is placed ABOVE THE KNEES (on lower thighs)
-- Band is RED or visible color, clearly stretched
-- Band creates inward pull that must be resisted
-
-STANCE:
-- Feet shoulder-width apart or slightly wider
-- Toes pointed slightly outward (15-30 degrees)
-- Full foot contact with ground, heels DOWN
-
-SQUAT DEPTH:
-- Hips are below parallel (deep squat)
-- Thighs at least parallel to ground, preferably below
-- This is a FULL squat, not a half squat
-
-KNEES - THE KEY:
-- Knees track OUTWARD over toes
-- Knees push OUT against the band resistance
-- The band tries to pull knees inward, person resists
-- This activates glutes and teaches proper knee tracking
-
-TORSO:
-- Chest UP and proud
-- Back straight (neutral spine)
-- Some forward lean is natural and okay
-- Core braced
-
-ARMS:
-- Arms extended forward for counterbalance
-- OR hands in prayer position at chest
-
-HEAD:
-- Looking forward or slightly up
-- Neutral neck position
-
-=== GHOSTED POSITION (FADED - Standing tall) ===
-Show a lighter/faded version with:
-- Standing fully upright
-- Same band position above knees
-- Knees still pushing out slightly
-- This is the top/start position
+=== GHOSTED POSITION (faded - start) ===
+Lighter version with the hips resting DOWN on the floor, knees still bent, feet planted.
 
 MOVEMENT INDICATORS:
-- Red arrow pointing DOWN showing the squat descent
-- Red arrows at BOTH knees pointing OUTWARD
-- Dashed line showing band between thighs
-- Dashed vertical line showing depth (hips below knees)
+- Bold red arrow at the hips pointing UP
+- Dashed arc showing the hip path from floor to top
+- Dashed straight line from shoulders to knees showing the locked-out top line
 
-CRITICAL: Mini loop band ABOVE KNEES. Deep squat (hips below parallel). Knees push OUT against band throughout. Heels stay down. Chest up.`,
+CRITICAL: Feet stay flat on the floor the whole time. No weights, no band. Hips drive straight up. This is pure bodyweight glute work.`,
+  },
+  {
+    id: 'hip-thrust',
+    name: 'Hip Thrust',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile). Bench/couch on the LEFT, feet on the RIGHT.
+
+=== PRIMARY POSITION (SOLID - top of thrust) ===
+A woman performing a dumbbell hip thrust with upper back supported on a low bench/couch edge:
+- UPPER BACK / shoulder blades resting against the edge of a low bench or couch
+- HIPS lifted HIGH, torso roughly horizontal, forming a tabletop from shoulders to knees
+- KNEES bent 90 degrees, SHINS VERTICAL
+- FEET flat on the floor, hip-width
+- One DUMBBELL held across the front of the hips/lap with both hands
+- Chin slightly tucked, ribs down
+
+=== GHOSTED POSITION (faded - start) ===
+Lighter version with the hips lowered toward the floor, dumbbell still across the hips, back still on the bench.
+
+MOVEMENT INDICATORS:
+- Bold red arrow at the hips pointing UP
+- Dashed arc showing the hip path
+- Dashed horizontal line at the top showing the level tabletop
+
+CRITICAL: Upper back braced on the bench, shins vertical, dumbbell across the hips, hips drive up to a flat tabletop. Feet stay planted.`,
+  },
+  {
+    id: 'single-leg-glute-bridge',
+    name: 'Single-Leg Glute Bridge',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile). Head/shoulders on the LEFT, planted foot on the RIGHT.
+
+=== PRIMARY POSITION (SOLID - top) ===
+A woman doing a single-leg glute bridge:
+- Head, shoulders, upper back flat on the floor
+- Arms flat on the floor beside the body
+- HIPS lifted high, body in a straight line from shoulder to the lifted leg
+- ONE foot planted flat on the floor, knee bent ~90 degrees (the working leg)
+- The OTHER leg extended straight out, in line with the torso, lifted off the floor
+- Hips level (not dropped to one side)
+
+=== GHOSTED POSITION (faded - start) ===
+Lighter version with the hips lowered toward the floor, one leg still extended.
+
+MOVEMENT INDICATORS:
+- Bold red arrow at the hips pointing UP
+- Dashed line showing the straight body-to-leg line at the top
+
+CRITICAL: Exactly two legs — one planted with bent knee, one extended straight. Hips lift evenly. Bodyweight only.`,
+  },
+  {
+    id: 'db-rdl',
+    name: 'Dumbbell RDL',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile).
+
+=== PRIMARY POSITION (SOLID - hinged position) ===
+A woman performing a dumbbell Romanian deadlift, hinged forward:
+- Standing, feet hip-width
+- HINGED at the hips: butt pushed far BACK, torso leaning forward to about 45 degrees
+- Back FLAT (neutral spine), not rounded
+- KNEES only slightly bent (soft) — SHINS NEARLY VERTICAL
+- A DUMBBELL in each hand, arms straight, dumbbells hanging just below the knees, close to the shins
+- Head neutral, eyes down and slightly forward
+
+=== GHOSTED POSITION (faded - standing tall) ===
+Lighter version standing fully upright, dumbbells at the front of the thighs, glutes squeezed.
+
+MOVEMENT INDICATORS:
+- Bold red arrow at the hips showing the hinge (hips travel back and up)
+- Dashed line along the flat back showing neutral spine
+- Dashed horizontal line showing hips traveling backward
+
+CRITICAL: This is a HIP HINGE, not a squat. Knees barely bend, hips push back, back stays flat. A dumbbell in EACH hand (two dumbbells).`,
+  },
+  {
+    id: 'box-squat',
+    name: 'Box Squat',
+    modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Side view (profile). A sturdy box/chair on the RIGHT.
+
+=== PRIMARY POSITION (SOLID - seated/touch on box) ===
+A man squatting back to lightly touch a box/chair:
+- A sturdy BOX or CHAIR behind him
+- Hips sitting BACK and DOWN until the butt lightly touches the top of the box
+- Thighs roughly PARALLEL to the floor (NOT a deep squat — depth is capped by the box)
+- KNEES bent, tracking over the toes, shins fairly upright
+- Feet flat, shoulder-width
+- Chest up, back flat, arms extended forward for balance
+
+=== GHOSTED POSITION (faded - standing) ===
+Lighter version standing tall in front of the box, arms down.
+
+MOVEMENT INDICATORS:
+- Bold red arrow showing hips travelling DOWN and BACK toward the box
+- Dashed horizontal line at the box top showing where depth stops
+- Dashed line showing the back angle
+
+CRITICAL: The box CAPS the depth at about parallel — this is a knee-friendly squat. Hips sit back to the box, chest stays up. Show the box/chair clearly.`,
+  },
+
+  // =========================================================================
+  // CORE & ABS (new)
+  // =========================================================================
+  {
+    id: 'dead-bug',
+    name: 'Dead Bug',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile), looking at the person lying on their back.
+
+=== PRIMARY POSITION (SOLID) ===
+A woman doing the dead bug core exercise:
+- Lying flat on her BACK on the floor, low back pressed down
+- BOTH arms reaching straight UP toward the ceiling at the start
+- ONE arm reaches back overhead toward the floor (extended) while the OPPOSITE leg extends straight out low, hovering just above the floor
+- The other arm stays pointing up and the other knee stays bent over the hip (90/90)
+- Low back stays flat on the floor throughout
+
+=== GHOSTED POSITION (faded) ===
+Lighter version showing both arms up and both knees bent over the hips (the start/center position).
+
+MOVEMENT INDICATORS:
+- Red arrows showing the opposite arm reaching back and opposite leg extending out
+- Dashed line under the low back showing it stays pressed to the floor
+
+CRITICAL: Exactly two arms and two legs. Opposite arm and leg extend together. Low back glued to the floor. Bodyweight, on the back.`,
+  },
+  {
+    id: 'front-plank',
+    name: 'Front Plank',
+    modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Side view (profile).
+
+=== PRIMARY POSITION (SOLID) ===
+A man holding a forearm front plank:
+- FOREARMS flat on the floor, elbows directly under the shoulders
+- Body in ONE STRAIGHT LINE from the heels through the hips to the head
+- Hips neither sagging down nor piked up
+- Toes on the floor, legs straight
+- Neck neutral, looking at the floor
+- Glutes and abs braced
+
+MOVEMENT INDICATORS:
+- Dashed straight line running from heels to head showing the rigid plank line
+- Small red arrows at the belly (pulling up/braced) and at the glutes (squeeze)
+
+CRITICAL: Perfectly straight body line, forearms down, elbows under shoulders. A held static position. No ghosted second position needed — show one clean strong plank.`,
+  },
+  {
+    id: 'hollow-hold',
+    name: 'Hollow Hold',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile).
+
+=== PRIMARY POSITION (SOLID) ===
+A woman in a gymnastic hollow hold:
+- Lying on her BACK
+- Low back PRESSED firmly into the floor
+- Shoulders and head lifted slightly off the floor
+- ARMS extended straight overhead, just off the floor
+- LEGS straight and together, lifted to a low hover off the floor
+- Body forms a shallow banana/dish shape
+
+=== GHOSTED POSITION (faded - easier regression) ===
+Lighter version with the KNEES BENT (tucked) instead of legs straight — the easier version.
+
+MOVEMENT INDICATORS:
+- Dashed line under the low back showing it stays pressed down
+- Small red arrows showing shoulders and legs lifted off the floor
+
+CRITICAL: Low back stays flat on the floor (this is the whole point). Shallow dish shape. Arms overhead, legs hovering low.`,
+  },
+  {
+    id: 'pallof-press',
+    name: 'Pallof Press',
+    modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Front view (facing the viewer), band anchored to the side.
+
+=== PRIMARY POSITION (SOLID - pressed out) ===
+A man performing a banded Pallof press (anti-rotation):
+- Standing tall, feet shoulder-width, knees soft
+- A RED resistance band runs horizontally from an anchor point at one SIDE (at chest height) into both hands
+- BOTH hands grip the band together at the center of the chest, then PRESS the band STRAIGHT OUT in front of the chest, arms fully extended
+- The band pulls him toward the anchor, but his torso stays SQUARE and does NOT rotate
+- Core braced, ribs down
+
+=== GHOSTED POSITION (faded - hands at chest) ===
+Lighter version with the hands drawn back IN to the chest (start position).
+
+MOVEMENT INDICATORS:
+- Bold red arrow showing the hands pressing straight OUT from the chest
+- Curved dashed arrow showing the band's sideways pull that the body resists
+- Dashed vertical line through the torso showing it stays square (no twist)
+
+CRITICAL: Band comes from the SIDE. Hands press straight forward from the chest. The whole point is the torso resists twisting. Show the side anchor and the band tension.`,
+  },
+
+  // =========================================================================
+  // ARMS (new)
+  // =========================================================================
+  {
+    id: 'db-bicep-curl',
+    name: 'Dumbbell Curl',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile) or slight 3/4 front.
+
+=== PRIMARY POSITION (SOLID - top of curl) ===
+A woman doing a standing dumbbell biceps curl:
+- Standing tall, feet hip-width
+- UPPER ARMS pinned vertically against the sides of the torso (elbows do not drift forward)
+- A DUMBBELL in EACH hand
+- Forearms curled UP so the dumbbells are near the shoulders, palms facing the body/up
+- Wrists straight, shoulders down
+
+=== GHOSTED POSITION (faded - arms extended) ===
+Lighter version with the arms hanging straight down, dumbbells at the thighs (bottom of the curl).
+
+MOVEMENT INDICATORS:
+- Bold red curved arrows at both forearms showing the curl arc upward
+- Dashed line showing the elbow staying fixed at the side
+
+CRITICAL: Elbows stay pinned to the sides. A dumbbell in EACH hand (two dumbbells). Only the forearms move.`,
+  },
+  {
+    id: 'db-overhead-press',
+    name: 'Overhead Press',
+    modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Front view (facing viewer).
+
+=== PRIMARY POSITION (SOLID - locked out overhead) ===
+A man pressing two dumbbells overhead:
+- Standing tall, feet hip-width, core braced, ribs down (no back arch)
+- A DUMBBELL in EACH hand
+- Arms pressed STRAIGHT UP overhead, dumbbells above the shoulders, elbows nearly locked
+- Wrists stacked over the shoulders
+
+=== GHOSTED POSITION (faded - racked at shoulders) ===
+Lighter version with the dumbbells racked at shoulder height, elbows bent and tucked (start position).
+
+MOVEMENT INDICATORS:
+- Bold red arrows on both sides pointing UP showing the press
+- Dashed vertical lines showing the dumbbells travel straight up over the shoulders
+
+CRITICAL: A dumbbell in EACH hand (two dumbbells). Press straight overhead. Two arms only. No excessive back arch.`,
+  },
+  {
+    id: 'db-tricep-kickback',
+    name: 'Triceps Kickback',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile).
+
+=== PRIMARY POSITION (SOLID - arm extended back) ===
+A woman doing a dumbbell triceps kickback:
+- Hinged forward at the hips to about 45 degrees, flat back, soft knees
+- UPPER ARM pinned HIGH and parallel to the torso (elbow up near the ribs)
+- A DUMBBELL in the hand
+- FOREARM extended STRAIGHT BACK so the whole arm is straight and parallel to the floor, dumbbell behind the body
+- Other hand can rest on the thigh for support
+
+=== GHOSTED POSITION (faded - elbow bent) ===
+Lighter version with the forearm hanging down, elbow bent 90 degrees (start position).
+
+MOVEMENT INDICATORS:
+- Bold red curved arrow showing the forearm extending straight back
+- Dashed line showing the upper arm staying fixed and parallel to the torso
+
+CRITICAL: Upper arm stays pinned and still; only the forearm swings back to lock out. Hinged-forward torso with flat back.`,
+  },
+  {
+    id: 'db-lateral-raise',
+    name: 'Lateral Raise',
+    modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Front view (facing viewer).
+
+=== PRIMARY POSITION (SOLID - arms raised to sides) ===
+A man doing dumbbell lateral raises:
+- Standing tall, feet hip-width
+- A DUMBBELL in EACH hand
+- Both arms raised OUT TO THE SIDES to shoulder height, forming a "T"
+- Slight bend in the elbows, leading with the elbows
+- Palms facing down, shoulders not shrugged up
+
+=== GHOSTED POSITION (faded - arms down) ===
+Lighter version with the arms hanging at the sides, dumbbells by the thighs (start position).
+
+MOVEMENT INDICATORS:
+- Bold red arrows on both sides arcing UP and OUT to shoulder height
+- Dashed horizontal line at shoulder height showing the top of the raise
+
+CRITICAL: A dumbbell in EACH hand (two dumbbells). Arms raise out to the sides to shoulder height only (not above). Two arms.`,
+  },
+  {
+    id: 'push-up',
+    name: 'Push-Up',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile).
+
+=== PRIMARY POSITION (SOLID - bottom of push-up) ===
+A woman at the bottom of a push-up:
+- Body in ONE STRAIGHT LINE from heels to head
+- Hands flat on the floor under the shoulders, slightly wider than shoulders
+- Elbows bent, tracking back at roughly 45 degrees from the body
+- Chest lowered to just above the floor
+- Toes on the floor, legs straight, glutes braced
+
+=== GHOSTED POSITION (faded - top) ===
+Lighter version at the top with the arms straight, body still in a straight line.
+
+MOVEMENT INDICATORS:
+- Bold red arrow showing the body pressing UP
+- Dashed straight line from heels to head showing the rigid body line
+
+CRITICAL: Straight body line throughout (no sagging hips). Hands under shoulders. Show one clear strong push-up from the side.`,
+  },
+  {
+    id: 'band-pull-apart',
+    name: 'Band Pull-Apart',
+    modelGender: 'male',
+    formDescription: `CAMERA ANGLE: Front view (facing viewer).
+
+=== PRIMARY POSITION (SOLID - band pulled apart) ===
+A man doing a band pull-apart:
+- Standing tall, feet hip-width
+- ARMS extended STRAIGHT out in front at chest height
+- A RED resistance band held taut between BOTH hands
+- Hands pulled APART out to the sides so the band stretches across the chest, arms forming a wide shape
+- Shoulder blades squeezed together, chest proud
+
+=== GHOSTED POSITION (faded - hands together) ===
+Lighter version with the arms straight out front and the hands close together, band relaxed (start position).
+
+MOVEMENT INDICATORS:
+- Bold red arrows showing both hands pulling OUTWARD to the sides
+- Dashed line showing the band stretching across the chest
+
+CRITICAL: Arms stay straight out at chest height; the hands pull apart sideways, stretching the band across the chest. Show the band clearly held in both hands.`,
   },
 
   // =========================================================================
@@ -1166,15 +1475,15 @@ FINAL REMINDERS:
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GOOGLE_AI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${IMAGE_MODEL}:generateContent?key=${GOOGLE_AI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: {
-            responseModalities: ['image', 'text'],
-            responseMimeType: 'text/plain',
+            responseModalities: ['TEXT', 'IMAGE'],
+            imageConfig: { aspectRatio: '1:1', imageSize: '2K' },
           },
         }),
       }
@@ -1256,15 +1565,15 @@ Make it look like a beautiful vintage fitness manual illustration spread.`;
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GOOGLE_AI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${IMAGE_MODEL}:generateContent?key=${GOOGLE_AI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: ogPrompt }] }],
           generationConfig: {
-            responseModalities: ['image', 'text'],
-            responseMimeType: 'text/plain',
+            responseModalities: ['TEXT', 'IMAGE'],
+            imageConfig: { aspectRatio: '16:9', imageSize: '2K' },
           },
         }),
       }
@@ -1310,7 +1619,7 @@ async function main() {
   console.log('\n========================================');
   console.log('EXERCISE ILLUSTRATION GENERATOR');
   console.log('Style: Vintage Instructional (Art of Manliness)');
-  console.log('Model: Gemini 2.0 Flash (Nano Banana)');
+  console.log(`Model: ${IMAGE_MODEL} (Nano Banana Pro)`);
   console.log(`Output: ${OUTPUT_DIR}`);
   console.log('========================================\n');
 

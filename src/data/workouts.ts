@@ -1,17 +1,22 @@
 // Idaraya - Minimalist Movement Practice
-// 20-minute daily workout
-// Focus: Core strength, legs, hip mobility
-// Equipment: Bodyweight + Kettlebell only
+// ~20-25 minute daily workout
+// Goals (in priority): glutes, core & abs, toned arms
+// Constraints: knee-friendly (low-impact, hinge-dominant, controlled range), gradual ramp
+// Equipment: bodyweight, kettlebell, dumbbells, mini loop bands
+
+export type Block = 'core' | 'strength' | 'arms' | 'mobility';
 
 export interface Exercise {
   id: string;
   name: string;
   cue: string; // Single line coaching cue
+  block: Block;
   sets: number;
   reps: number | string;
   hold?: number; // seconds for static holds
   restBetweenSets?: number; // seconds of rest between sets
   equipment?: string[];
+  kneeNote?: string; // shown when relevant — how to keep it knee-friendly
 }
 
 export interface WarmupExercise {
@@ -28,13 +33,15 @@ export interface WorkoutDay {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// McGILL BIG 3 - Spine Health Foundation (~4 min)
+// CORE & ABS
+// McGill Big 3 (anti-movement stability) + direct ab work.
 // ═══════════════════════════════════════════════════════════════════
 
 const MCGILL_CURL_UP: Exercise = {
   id: 'mcgill-curl-up',
   name: 'Curl-Up',
-  cue: 'Hands under low back. Lift head and shoulders slightly. Hold.',
+  cue: 'Hands under low back. Lift head and shoulders slightly. Brace, hold.',
+  block: 'core',
   sets: 3,
   reps: '10s hold',
   hold: 10,
@@ -44,75 +51,193 @@ const MCGILL_CURL_UP: Exercise = {
 const MCGILL_SIDE_PLANK: Exercise = {
   id: 'mcgill-side-plank',
   name: 'Side Plank',
-  cue: 'Elbow under shoulder. Hips stacked. Hold. Both sides.',
+  cue: 'Elbow under shoulder. Hips stacked and lifted. Both sides.',
+  block: 'core',
   sets: 2,
   reps: '10s each',
   hold: 10,
   restBetweenSets: 10,
+  kneeNote: 'Drop to bottom knee bent if a straight-leg plank bothers you.',
 };
 
 const MCGILL_BIRD_DOG: Exercise = {
   id: 'mcgill-bird-dog',
   name: 'Bird Dog',
-  cue: 'Opposite arm and leg extend. Square hips. Slow.',
+  cue: 'Opposite arm and leg extend. Square hips. Slow and controlled.',
+  block: 'core',
   sets: 2,
   reps: '6 each',
   restBetweenSets: 10,
 };
 
+const DEAD_BUG: Exercise = {
+  id: 'dead-bug',
+  name: 'Dead Bug',
+  cue: 'On back, arms up, knees over hips. Lower opposite arm and leg. Low back stays flat.',
+  block: 'core',
+  sets: 2,
+  reps: '8 each',
+  restBetweenSets: 15,
+};
+
+const FRONT_PLANK: Exercise = {
+  id: 'front-plank',
+  name: 'Front Plank',
+  cue: 'Forearms down, body one line. Squeeze glutes, brace abs. Breathe.',
+  block: 'core',
+  sets: 2,
+  reps: '20s hold',
+  hold: 20,
+  restBetweenSets: 20,
+  kneeNote: 'Knees down for an easier version — keep the straight line from knees to head.',
+};
+
+const HOLLOW_HOLD: Exercise = {
+  id: 'hollow-hold',
+  name: 'Hollow Hold',
+  cue: 'On back, low back pressed to floor. Lift shoulders and legs slightly. Bend knees to regress.',
+  block: 'core',
+  sets: 3,
+  reps: '15s hold',
+  hold: 15,
+  restBetweenSets: 20,
+};
+
+const PALLOF_PRESS: Exercise = {
+  id: 'pallof-press',
+  name: 'Pallof Press',
+  cue: 'Band anchored at side, chest height. Press straight out, resist the twist. Both sides.',
+  block: 'core',
+  sets: 2,
+  reps: '10 each',
+  restBetweenSets: 15,
+  equipment: ['mini band'],
+};
+
 // ═══════════════════════════════════════════════════════════════════
-// STRENGTH - Goblet Squat & Farmer's Carry (~8 min)
+// STRENGTH — Glute-focused, knee-friendly (hinge & bridge dominant)
 // ═══════════════════════════════════════════════════════════════════
 
-const GOBLET_SQUAT: Exercise = {
-  id: 'goblet-squat',
-  name: 'Goblet Squat',
-  cue: 'Bell at chest. Elbows between knees. Sit deep.',
+const GLUTE_BRIDGE: Exercise = {
+  id: 'glute-bridge',
+  name: 'Glute Bridge',
+  cue: 'Feet flat, hip-width. Drive through heels, squeeze glutes at top. 2-sec hold.',
+  block: 'strength',
+  sets: 3,
+  reps: 12,
+  restBetweenSets: 20,
+  kneeNote: 'Knee-friendly: no knee load, pure glute work.',
+};
+
+const BAND_GLUTE_BRIDGE: Exercise = {
+  id: 'band-glute-bridge',
+  name: 'Banded Glute Bridge',
+  cue: 'Band above knees. Push knees out against band. Squeeze glutes at top, 2-sec hold.',
+  block: 'strength',
+  sets: 2,
+  reps: 12,
+  restBetweenSets: 20,
+  equipment: ['mini band'],
+};
+
+const HIP_THRUST: Exercise = {
+  id: 'hip-thrust',
+  name: 'Hip Thrust',
+  cue: 'Upper back on couch edge, weight across hips. Drive hips up, ribs down, squeeze hard.',
+  block: 'strength',
+  sets: 3,
+  reps: 10,
+  restBetweenSets: 45,
+  equipment: ['dumbbell'],
+  kneeNote: 'Top glute builder with almost no knee strain.',
+};
+
+const SINGLE_LEG_GLUTE_BRIDGE: Exercise = {
+  id: 'single-leg-glute-bridge',
+  name: 'Single-Leg Glute Bridge',
+  cue: 'One foot planted, other leg extended. Drive through the heel, keep hips level.',
+  block: 'strength',
+  sets: 2,
+  reps: '8 each',
+  restBetweenSets: 30,
+  kneeNote: 'Knee-friendly: builds single-leg glute strength without squatting.',
+};
+
+const KETTLEBELL_DEADLIFT: Exercise = {
+  id: 'kb-deadlift',
+  name: 'Kettlebell Deadlift',
+  cue: 'Hinge at hips, push butt back. Flat back. Bell between feet. Stand tall, squeeze glutes.',
+  block: 'strength',
   sets: 3,
   reps: 8,
   restBetweenSets: 45,
   equipment: ['kettlebell'],
+  kneeNote: 'Hinge from the hips, not the knees — shins stay near vertical.',
+};
+
+const DB_RDL: Exercise = {
+  id: 'db-rdl',
+  name: 'Dumbbell RDL',
+  cue: 'Soft knees, push hips back, dumbbells slide down thighs. Feel the hamstrings. Stand, squeeze.',
+  block: 'strength',
+  sets: 3,
+  reps: 10,
+  restBetweenSets: 45,
+  equipment: ['dumbbell'],
+  kneeNote: 'Hip hinge — minimal knee bend, great for glutes and hamstrings.',
+};
+
+const BOX_SQUAT: Exercise = {
+  id: 'box-squat',
+  name: 'Box Squat',
+  cue: 'Stand in front of a chair. Sit back to lightly touch, drive up. Control the depth.',
+  block: 'strength',
+  sets: 3,
+  reps: 10,
+  restBetweenSets: 40,
+  kneeNote: 'Knee-friendly squat: the box caps your depth so the knee never overloads.',
+};
+
+const GOBLET_SQUAT: Exercise = {
+  id: 'goblet-squat',
+  name: 'Goblet Squat',
+  cue: 'Bell at chest, elbows inside knees. Sit back and down only as far as feels good.',
+  block: 'strength',
+  sets: 3,
+  reps: 8,
+  restBetweenSets: 45,
+  equipment: ['kettlebell'],
+  kneeNote: 'Stop at the depth where the knee stays quiet. Keep knees tracking over toes.',
 };
 
 const FARMERS_CARRY: Exercise = {
   id: 'farmers-carry',
   name: "Farmer's Carry",
-  cue: 'Shoulders packed. Walk tall. 40 steps.',
+  cue: 'Shoulders packed, ribs down. Walk tall and slow. 40 steps.',
+  block: 'strength',
   sets: 2,
   reps: '40 steps',
   restBetweenSets: 30,
   equipment: ['kettlebell'],
 };
 
-const KETTLEBELL_DEADLIFT: Exercise = {
-  id: 'kb-deadlift',
-  name: 'Kettlebell Deadlift',
-  cue: 'Hinge at hips. Flat back. Bell between feet.',
-  sets: 3,
-  reps: 8,
-  restBetweenSets: 45,
-  equipment: ['kettlebell'],
-};
-
 const KETTLEBELL_SWING: Exercise = {
   id: 'kb-swing',
   name: 'Kettlebell Swing',
-  cue: 'Hinge, snap hips. Power from glutes, not arms.',
+  cue: 'Hinge, snap hips to float the bell. Power from glutes, not arms. Soft knees.',
+  block: 'strength',
   sets: 3,
   reps: 10,
   restBetweenSets: 30,
   equipment: ['kettlebell'],
+  kneeNote: 'A hip hinge, not a squat — the knees barely bend.',
 };
-
-// ═══════════════════════════════════════════════════════════════════
-// MINI BAND EXERCISES - Glute Activation & Hip Stability (~3 min)
-// Equipment: Mini loop band (place above knees unless noted)
-// ═══════════════════════════════════════════════════════════════════
 
 const BAND_LATERAL_WALK: Exercise = {
   id: 'band-lateral-walk',
   name: 'Lateral Band Walk',
-  cue: 'Band above knees. Quarter squat, chest up. Small steps sideways, tension constant. 10 steps each direction.',
+  cue: 'Band above knees, quarter squat, chest up. Small steps sideways, tension constant.',
+  block: 'strength',
   sets: 2,
   reps: '10 each way',
   restBetweenSets: 15,
@@ -122,51 +247,105 @@ const BAND_LATERAL_WALK: Exercise = {
 const BAND_MONSTER_WALK: Exercise = {
   id: 'band-monster-walk',
   name: 'Monster Walk',
-  cue: 'Band above knees. Quarter squat, knees out. Step forward diagonal, stay low. Keep band taut entire time.',
+  cue: 'Band above knees, quarter squat, knees out. Step diagonally forward, stay low.',
+  block: 'strength',
   sets: 2,
   reps: '10 each leg',
   restBetweenSets: 15,
   equipment: ['mini band'],
 };
 
-const BAND_GLUTE_BRIDGE: Exercise = {
-  id: 'band-glute-bridge',
-  name: 'Banded Glute Bridge',
-  cue: 'Band above knees. Feet hip-width, push knees out against band. Squeeze glutes at top, 2-sec hold.',
-  sets: 2,
-  reps: 12,
-  restBetweenSets: 20,
-  equipment: ['mini band'],
-};
-
 const BAND_CLAMSHELL: Exercise = {
   id: 'band-clamshell',
   name: 'Clamshell',
-  cue: 'Lie on side, knees bent, band above knees. Keep feet together. Lift top knee toward ceiling, feet stay touching. Slow down.',
+  cue: 'On side, knees bent, band above knees. Lift top knee, feet stay touching. Slow.',
+  block: 'strength',
   sets: 2,
   reps: '12 each',
   restBetweenSets: 15,
   equipment: ['mini band'],
+  kneeNote: 'Knee-friendly: targets the side glute with no load through the joint.',
 };
 
-const BAND_SQUAT: Exercise = {
-  id: 'band-squat',
-  name: 'Banded Squat',
-  cue: 'Band above knees. Feet shoulder-width, toes slightly out. Push knees out as you sit back. Depth over speed.',
-  sets: 2,
+// ═══════════════════════════════════════════════════════════════════
+// ARMS — toning, dumbbell + band + bodyweight
+// ═══════════════════════════════════════════════════════════════════
+
+const DB_BICEP_CURL: Exercise = {
+  id: 'db-bicep-curl',
+  name: 'Dumbbell Curl',
+  cue: 'Elbows pinned to sides. Curl up slow, lower slower. No swinging.',
+  block: 'arms',
+  sets: 3,
+  reps: 12,
+  restBetweenSets: 30,
+  equipment: ['dumbbell'],
+};
+
+const DB_OVERHEAD_PRESS: Exercise = {
+  id: 'db-overhead-press',
+  name: 'Overhead Press',
+  cue: 'Dumbbells at shoulders. Brace, press straight overhead. Ribs down, no arch.',
+  block: 'arms',
+  sets: 3,
   reps: 10,
+  restBetweenSets: 35,
+  equipment: ['dumbbell'],
+};
+
+const DB_TRICEP_KICKBACK: Exercise = {
+  id: 'db-tricep-kickback',
+  name: 'Triceps Kickback',
+  cue: 'Hinge forward, upper arms pinned high. Straighten elbows back, squeeze. Slow return.',
+  block: 'arms',
+  sets: 3,
+  reps: 12,
+  restBetweenSets: 30,
+  equipment: ['dumbbell'],
+};
+
+const DB_LATERAL_RAISE: Exercise = {
+  id: 'db-lateral-raise',
+  name: 'Lateral Raise',
+  cue: 'Soft elbows. Raise dumbbells to shoulder height, lead with elbows. Lower slow.',
+  block: 'arms',
+  sets: 3,
+  reps: 12,
+  restBetweenSets: 30,
+  equipment: ['dumbbell'],
+};
+
+const PUSH_UP: Exercise = {
+  id: 'push-up',
+  name: 'Push-Up',
+  cue: 'Body one line, hands under shoulders. Lower with control, press up. Squeeze glutes.',
+  block: 'arms',
+  sets: 3,
+  reps: 8,
+  restBetweenSets: 35,
+  kneeNote: 'Hands on a counter or knees down to scale it — keep the straight line.',
+};
+
+const BAND_PULL_APART: Exercise = {
+  id: 'band-pull-apart',
+  name: 'Band Pull-Apart',
+  cue: 'Band at chest height, arms straight. Pull apart, squeeze shoulder blades. Slow return.',
+  block: 'arms',
+  sets: 2,
+  reps: 15,
   restBetweenSets: 20,
   equipment: ['mini band'],
 };
 
 // ═══════════════════════════════════════════════════════════════════
-// HIP MOBILITY - Gabby Thomas / Squat University Inspired (~5 min)
+// MOBILITY
 // ═══════════════════════════════════════════════════════════════════
 
 const NINETY_NINETY: Exercise = {
   id: '90-90',
   name: '90/90 Hip Stretch',
-  cue: 'Both knees at 90°. Tall spine. Rotate to each side.',
+  cue: 'Both knees at 90°. Tall spine. Rotate gently side to side.',
+  block: 'mobility',
   sets: 1,
   reps: '30s each',
   hold: 30,
@@ -175,28 +354,33 @@ const NINETY_NINETY: Exercise = {
 
 const DEEP_SQUAT_HOLD: Exercise = {
   id: 'deep-squat-hold',
-  name: 'Deep Squat Hold',
-  cue: 'Heels down. Chest up. Breathe.',
+  name: 'Supported Squat Hold',
+  cue: 'Hold a doorframe or rail for support. Sit into a comfortable squat. Heels down, breathe.',
+  block: 'mobility',
   sets: 1,
-  reps: '60s',
-  hold: 60,
+  reps: '45s',
+  hold: 45,
   restBetweenSets: 0,
+  kneeNote: 'Hold support and stay above any depth that pinches the knee.',
 };
 
 const COUCH_STRETCH: Exercise = {
   id: 'couch-stretch',
   name: 'Couch Stretch',
-  cue: 'Back knee to wall. Squeeze glute. Tall torso.',
+  cue: 'Back knee padded against a wall. Squeeze glute, tall torso. Ease in gently.',
+  block: 'mobility',
   sets: 1,
   reps: '30s each',
   hold: 30,
   restBetweenSets: 0,
+  kneeNote: 'Pad the back knee. Reduce the stretch if it pinches.',
 };
 
 const PIGEON_STRETCH: Exercise = {
   id: 'pigeon-stretch',
   name: 'Pigeon Stretch',
-  cue: 'Front shin parallel. Sink hips. Breathe deep.',
+  cue: 'Front shin angled, hips square. Sink gently, breathe deep.',
+  block: 'mobility',
   sets: 1,
   reps: '45s each',
   hold: 45,
@@ -212,122 +396,36 @@ const WARMUP: WarmupExercise[] = [
     id: 'cat-cow',
     name: 'Cat-Cow',
     duration: 45,
-    cue: 'Breathe. Round and arch spine.',
+    cue: 'Breathe. Round and arch the spine slowly.',
   },
   {
     id: 'leg-swings',
     name: 'Leg Swings',
     duration: 30,
-    cue: 'Front-back, 10 each leg',
+    cue: 'Front-back, 10 each leg. Hold support.',
   },
   {
     id: 'hip-circles',
     name: 'Hip Circles',
     duration: 30,
-    cue: '10 circles each direction',
+    cue: '10 circles each direction.',
   },
   {
     id: 'glute-bridge-warmup',
     name: 'Glute Bridge',
     duration: 30,
-    cue: '10 reps, squeeze at top',
+    cue: '10 reps, squeeze at top.',
   },
 ];
 
 // ═══════════════════════════════════════════════════════════════════
-// DAILY 20-MINUTE WORKOUT STRUCTURE
+// PHASED PROGRESSION — gradual ramp over the year
 // ═══════════════════════════════════════════════════════════════════
 
-// All exercises available
-export const EXERCISES: Exercise[] = [
-  MCGILL_CURL_UP,
-  MCGILL_SIDE_PLANK,
-  MCGILL_BIRD_DOG,
-  GOBLET_SQUAT,
-  FARMERS_CARRY,
-  KETTLEBELL_DEADLIFT,
-  KETTLEBELL_SWING,
-  BAND_LATERAL_WALK,
-  BAND_MONSTER_WALK,
-  BAND_GLUTE_BRIDGE,
-  BAND_CLAMSHELL,
-  BAND_SQUAT,
-  NINETY_NINETY,
-  DEEP_SQUAT_HOLD,
-  COUCH_STRETCH,
-  PIGEON_STRETCH,
-];
-
-// Daily workout - ~20 minutes total
-// Warmup: 3 min
-// McGill Big 3: 4 min
-// Strength (2 exercises): 8 min
-// Accessory (bands): 2 min
-// Mobility (2 exercises): 3 min
-function getDailyWorkout(dayOfWeek: number): Exercise[] {
-  // McGill Big 3 every day (spine health is non-negotiable)
-  const mcgillBig3 = [MCGILL_CURL_UP, MCGILL_SIDE_PLANK, MCGILL_BIRD_DOG];
-
-  // Rotate strength exercises
-  // Days 0,2,4,6 (Sun,Tue,Thu,Sat): Goblet Squat + Farmer's Carry
-  // Days 1,3,5 (Mon,Wed,Fri): KB Deadlift + KB Swing
-  const isDeadliftDay = dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5;
-  const strength = isDeadliftDay
-    ? [KETTLEBELL_DEADLIFT, KETTLEBELL_SWING]
-    : [GOBLET_SQUAT, FARMERS_CARRY];
-
-  // Rotate mini band exercises (glute activation focus)
-  // Days 0,3,6: Lateral Walk + Clamshell (lateral stability)
-  // Days 1,4: Monster Walk + Banded Glute Bridge (forward/hip extension)
-  // Days 2,5: Banded Squat + Lateral Walk (squat patterning)
-  let bandWork: Exercise[];
-  if (dayOfWeek === 0 || dayOfWeek === 3 || dayOfWeek === 6) {
-    bandWork = [BAND_LATERAL_WALK, BAND_CLAMSHELL];
-  } else if (dayOfWeek === 1 || dayOfWeek === 4) {
-    bandWork = [BAND_MONSTER_WALK, BAND_GLUTE_BRIDGE];
-  } else {
-    bandWork = [BAND_SQUAT, BAND_LATERAL_WALK];
-  }
-
-  // Rotate mobility exercises
-  // Alternate between 90/90 + Deep Squat and Couch + Pigeon
-  const isPigeonDay = dayOfWeek % 2 === 0;
-  const mobility = isPigeonDay
-    ? [COUCH_STRETCH, PIGEON_STRETCH]
-    : [NINETY_NINETY, DEEP_SQUAT_HOLD];
-
-  return [...mcgillBig3, ...strength, ...bandWork, ...mobility];
-}
-
-// Every day is a workout day - 20 minutes daily
-export function getWorkoutForDate(date: Date, _startDate: Date): WorkoutDay {
-  const dayOfWeek = date.getDay();
-
-  return {
-    type: 'workout',
-    warmup: WARMUP,
-    exercises: getDailyWorkout(dayOfWeek),
-  };
-}
-
-// Get current week (1-52)
-export function getCurrentWeek(startDate: Date): number {
-  const now = new Date();
-  const diffTime = now.getTime() - startDate.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  const week = Math.floor(diffDays / 7) + 1;
-  return Math.min(Math.max(week, 1), 52);
-}
-
-// Get all exercises for a workout (for counting)
-export function getAllExercises(workout: WorkoutDay): (Exercise | WarmupExercise)[] {
-  return [...workout.warmup, ...workout.exercises];
-}
-
-// Simplified phase info
-export type Phase = 'practice';
+export type Phase = 'foundation' | 'build' | 'strength' | 'sustain';
 
 export interface PhaseInfo {
+  key: Phase;
   name: string;
   weeks: string;
   description: string;
@@ -335,24 +433,192 @@ export interface PhaseInfo {
 }
 
 export const PHASES: Record<Phase, PhaseInfo> = {
-  practice: {
-    name: 'Practice',
-    weeks: '1-52',
-    description: '20 minutes daily',
-    focus: ['McGill Big 3', 'Kettlebell', 'Resistance Bands', 'Hip Mobility'],
+  foundation: {
+    key: 'foundation',
+    name: 'Foundation',
+    weeks: '1-4',
+    description: 'Wake up the glutes and core. Light, controlled, knee-friendly.',
+    focus: ['Glute activation', 'Core stability', 'Hip hinge', 'Mobility'],
+  },
+  build: {
+    key: 'build',
+    name: 'Build',
+    weeks: '5-12',
+    description: 'Add load and volume. Direct ab and arm work enters.',
+    focus: ['Hip thrust', 'Loaded hinge', 'Abs', 'Dumbbell arms'],
+  },
+  strength: {
+    key: 'strength',
+    name: 'Strength',
+    weeks: '13-26',
+    description: 'Single-leg glute work and controlled power. Fuller arm volume.',
+    focus: ['Single-leg glutes', 'KB swing', 'Plank progression', 'Arms'],
+  },
+  sustain: {
+    key: 'sustain',
+    name: 'Sustain',
+    weeks: '27-52',
+    description: 'Full balanced program. Keep showing up.',
+    focus: ['Glutes', 'Core & abs', 'Arms', 'Mobility'],
   },
 };
 
-export function getPhaseInfo(_week: number): PhaseInfo {
-  return PHASES.practice;
+const PHASE_ORDER: Phase[] = ['foundation', 'build', 'strength', 'sustain'];
+
+export function getPhaseForWeek(week: number): Phase {
+  if (week <= 4) return 'foundation';
+  if (week <= 12) return 'build';
+  if (week <= 26) return 'strength';
+  return 'sustain';
 }
 
-// No weight suggestions for minimalist approach
+export function getPhaseInfo(week: number): PhaseInfo {
+  return PHASES[getPhaseForWeek(week)];
+}
+
+// All exercises (for image map / counting reference)
+export const EXERCISES: Exercise[] = [
+  MCGILL_CURL_UP,
+  MCGILL_SIDE_PLANK,
+  MCGILL_BIRD_DOG,
+  DEAD_BUG,
+  FRONT_PLANK,
+  HOLLOW_HOLD,
+  PALLOF_PRESS,
+  GLUTE_BRIDGE,
+  BAND_GLUTE_BRIDGE,
+  HIP_THRUST,
+  SINGLE_LEG_GLUTE_BRIDGE,
+  KETTLEBELL_DEADLIFT,
+  DB_RDL,
+  BOX_SQUAT,
+  GOBLET_SQUAT,
+  FARMERS_CARRY,
+  KETTLEBELL_SWING,
+  BAND_LATERAL_WALK,
+  BAND_MONSTER_WALK,
+  BAND_CLAMSHELL,
+  DB_BICEP_CURL,
+  DB_OVERHEAD_PRESS,
+  DB_TRICEP_KICKBACK,
+  DB_LATERAL_RAISE,
+  PUSH_UP,
+  BAND_PULL_APART,
+  NINETY_NINETY,
+  DEEP_SQUAT_HOLD,
+  COUCH_STRETCH,
+  PIGEON_STRETCH,
+];
+
+// Reduce volume gently early, add a touch later. Reps stay constant (some are strings).
+function scaleForPhase(ex: Exercise, phase: Phase): Exercise {
+  if (phase === 'foundation' && ex.sets > 2) {
+    return { ...ex, sets: ex.sets - 1 };
+  }
+  return ex;
+}
+
+function pick<T>(arr: T[], dayOfWeek: number, offset = 0): T {
+  return arr[(dayOfWeek + offset) % arr.length];
+}
+
+// Build the day's exercises for a given phase, rotating by day of week.
+function getDailyWorkout(dayOfWeek: number, phase: Phase): Exercise[] {
+  // ── CORE & ABS ──────────────────────────────────────────────
+  // McGill Big 3 is the daily foundation; a rotating 4th adds direct ab work.
+  const core: Exercise[] = [MCGILL_CURL_UP, MCGILL_SIDE_PLANK, MCGILL_BIRD_DOG];
+  const abPool: Exercise[] =
+    phase === 'foundation'
+      ? [DEAD_BUG, FRONT_PLANK]
+      : [DEAD_BUG, FRONT_PLANK, HOLLOW_HOLD, PALLOF_PRESS];
+  core.push(pick(abPool, dayOfWeek));
+
+  // ── STRENGTH (glute-focused) ────────────────────────────────
+  // 1 hinge + 1 bridge/thrust + 1 banded accessory.
+  const hingePool: Exercise[] =
+    phase === 'foundation'
+      ? [KETTLEBELL_DEADLIFT, DB_RDL, BOX_SQUAT]
+      : phase === 'build'
+        ? [KETTLEBELL_DEADLIFT, DB_RDL, BOX_SQUAT, GOBLET_SQUAT]
+        : [KETTLEBELL_DEADLIFT, DB_RDL, GOBLET_SQUAT, KETTLEBELL_SWING, FARMERS_CARRY];
+
+  const bridgePool: Exercise[] =
+    phase === 'foundation'
+      ? [GLUTE_BRIDGE, BAND_GLUTE_BRIDGE]
+      : phase === 'build'
+        ? [GLUTE_BRIDGE, BAND_GLUTE_BRIDGE, HIP_THRUST]
+        : [HIP_THRUST, SINGLE_LEG_GLUTE_BRIDGE, BAND_GLUTE_BRIDGE];
+
+  const bandPool: Exercise[] = [BAND_LATERAL_WALK, BAND_CLAMSHELL, BAND_MONSTER_WALK];
+
+  const strength: Exercise[] = [
+    pick(hingePool, dayOfWeek),
+    pick(bridgePool, dayOfWeek, 1),
+    pick(bandPool, dayOfWeek),
+  ];
+
+  // ── ARMS ────────────────────────────────────────────────────
+  // Foundation: one gentle move. Later: two rotating dumbbell/bodyweight moves.
+  const arms: Exercise[] = [];
+  if (phase === 'foundation') {
+    arms.push(pick([BAND_PULL_APART, PUSH_UP], dayOfWeek));
+  } else {
+    const armPool = [
+      DB_BICEP_CURL,
+      DB_OVERHEAD_PRESS,
+      DB_TRICEP_KICKBACK,
+      DB_LATERAL_RAISE,
+      PUSH_UP,
+      BAND_PULL_APART,
+    ];
+    arms.push(pick(armPool, dayOfWeek), pick(armPool, dayOfWeek, 3));
+  }
+
+  // ── MOBILITY ────────────────────────────────────────────────
+  const mobilityPool: Exercise[][] = [
+    [COUCH_STRETCH, PIGEON_STRETCH],
+    [NINETY_NINETY, DEEP_SQUAT_HOLD],
+  ];
+  const mobility = mobilityPool[dayOfWeek % 2];
+
+  return [...core, ...strength, ...arms, ...mobility].map((ex) => scaleForPhase(ex, phase));
+}
+
+export function getWorkoutForDate(date: Date, startDate: Date): WorkoutDay {
+  const dayOfWeek = date.getDay();
+  const week = getCurrentWeekFor(date, startDate);
+  const phase = getPhaseForWeek(week);
+
+  return {
+    type: 'workout',
+    warmup: WARMUP,
+    exercises: getDailyWorkout(dayOfWeek, phase),
+  };
+}
+
+// Week number (1-52) for an arbitrary date relative to start.
+function getCurrentWeekFor(date: Date, startDate: Date): number {
+  const diffDays = Math.floor((date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  const week = Math.floor(diffDays / 7) + 1;
+  return Math.min(Math.max(week, 1), 52);
+}
+
+// Current week (1-52) relative to today.
+export function getCurrentWeek(startDate: Date): number {
+  return getCurrentWeekFor(new Date(), startDate);
+}
+
+// All exercises for a workout (for counting)
+export function getAllExercises(workout: WorkoutDay): (Exercise | WarmupExercise)[] {
+  return [...workout.warmup, ...workout.exercises];
+}
+
+// No prescribed weights — go by feel, add load when reps feel easy.
 export function getSuggestedWeight(_week: number, _exerciseId?: string): number {
   return 0;
 }
 
-// Coaching tips - minimal
+// Coaching tips — rotate per phase.
 export interface CoachingTip {
   id: string;
   title: string;
@@ -363,17 +629,27 @@ export const COACHING_TIPS: CoachingTip[] = [
   {
     id: 'consistency',
     title: '20 Minutes',
-    message: 'Show up daily. 20 minutes. No excuses.',
+    message: 'Show up daily. Twenty minutes beats an hour you skip.',
   },
   {
-    id: 'spine-first',
-    title: 'Spine Health',
-    message: 'McGill Big 3 protects your back. Every day.',
+    id: 'glutes',
+    title: 'Squeeze',
+    message: 'On every bridge and thrust, squeeze the glutes hard at the top.',
   },
   {
-    id: 'mobility',
-    title: 'Mobility',
-    message: 'You cannot strengthen what you cannot access.',
+    id: 'knees',
+    title: 'Knees First',
+    message: 'Hinge from the hips, cap your squat depth. Pain is a stop sign, not a challenge.',
+  },
+  {
+    id: 'tempo',
+    title: 'Slow Wins',
+    message: 'Lower slower than you lift. Control builds tone.',
+  },
+  {
+    id: 'progress',
+    title: 'Add Slowly',
+    message: 'When the last rep feels easy, add a little load next week.',
   },
 ];
 
@@ -382,4 +658,4 @@ export function getCoachingTip(week: number): CoachingTip | null {
   return COACHING_TIPS[tipIndex];
 }
 
-export { WARMUP };
+export { WARMUP, PHASE_ORDER };
