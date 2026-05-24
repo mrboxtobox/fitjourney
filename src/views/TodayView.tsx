@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import { getWorkoutForDate, getAllExercises, getCurrentWeek, getPhaseInfo } from '../data/workouts';
 import type { WorkoutDay, Block, Exercise } from '../data/workouts';
 import { ExerciseItem, WarmupItem } from '../components/ExerciseCard';
@@ -21,6 +21,24 @@ interface TodayViewProps {
 export function TodayView({ startDate }: TodayViewProps) {
   const { currentDate, displayDate, isToday, goToToday, goToNext, goPrev } = useDate();
   const dateString = formatDateString(currentDate);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  // Swipe horizontally to change day (ignored while the guided session is open).
+  const onTouchStart = (e: TouchEvent) => {
+    const t = e.changedTouches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+  const onTouchEnd = (e: TouchEvent) => {
+    if (!touchStart.current || sessionOpen) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.current.x;
+    const dy = t.clientY - touchStart.current.y;
+    touchStart.current = null;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8) {
+      if (dx < 0) goToNext();
+      else goPrev();
+    }
+  };
 
   const [workout, setWorkout] = useState<WorkoutDay | null>(null);
   const [logs, setLogs] = useState<WorkoutLog[]>([]);
@@ -121,7 +139,7 @@ export function TodayView({ startDate }: TodayViewProps) {
   }
 
   return (
-    <div class="container-app pb-safe-nav">
+    <div class="container-app pb-safe-nav" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <DateNav
         displayText={displayDate}
         onPrev={goPrev}

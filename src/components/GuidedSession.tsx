@@ -50,9 +50,21 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
 
   const mutedRef = useRef(muted);
   mutedRef.current = muted;
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const step = steps[idx];
   const timed = stepDuration(step) > 0;
+
+  const goPrev = () => setIdx((i) => Math.max(0, i - 1));
+
+  const toggleMute = () => {
+    setMuted((m) => {
+      const next = !m;
+      localStorage.setItem(MUTE_KEY, next ? '1' : '0');
+      if (!next) initAudio();
+      return next;
+    });
+  };
 
   const beep = (fn: () => void) => {
     if (!mutedRef.current) fn();
@@ -107,6 +119,63 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remaining]);
 
+  // Keyboard navigation: ←/→ seek, space/enter = primary action, M mute, Esc close.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (finished) {
+        if (e.key === 'Enter' || e.key === 'Escape' || e.key === ' ') {
+          e.preventDefault();
+          onClose();
+        }
+        return;
+      }
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          goPrev();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          advance(false);
+          break;
+        case ' ':
+        case 'Enter':
+          e.preventDefault();
+          if (step.kind === 'rest') advance(false);
+          else if (timed) setPaused((p) => !p);
+          else advance(true);
+          break;
+        case 'm':
+        case 'M':
+          toggleMute();
+          break;
+        case 'Escape':
+          onClose();
+          break;
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idx, finished, timed, step]);
+
+  // Swipe: left = next/skip, right = previous.
+  const onTouchStart = (e: TouchEvent) => {
+    const t = e.changedTouches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+  const onTouchEnd = (e: TouchEvent) => {
+    if (!touchStart.current) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.current.x;
+    const dy = t.clientY - touchStart.current.y;
+    touchStart.current = null;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0) advance(false);
+      else goPrev();
+    }
+  };
+
   const completedExercises = useMemo(() => {
     const ids = new Set<string>();
     steps.slice(0, idx).forEach((s) => {
@@ -143,7 +212,7 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
     step.kind === 'warmup' ? 'Warm-up' : step.kind === 'rest' ? 'Rest' : `Set ${step.set} of ${step.sets}`;
 
   return (
-    <div class="session-overlay">
+    <div class="session-overlay" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       {/* Top bar */}
       <div class="session-top">
         <button onClick={onClose} class="session-icon-btn" aria-label="Close session">
@@ -153,12 +222,7 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
           {idx + 1} / {total}
         </span>
         <button
-          onClick={() => {
-            const next = !muted;
-            setMuted(next);
-            localStorage.setItem(MUTE_KEY, next ? '1' : '0');
-            if (!next) initAudio();
-          }}
+          onClick={toggleMute}
           class="session-icon-btn"
           aria-label={muted ? 'Unmute' : 'Mute'}
         >
@@ -200,7 +264,7 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
 
       {/* Controls */}
       <div class="session-controls">
-        <button onClick={() => setIdx(Math.max(0, idx - 1))} class="session-icon-btn" disabled={idx === 0} aria-label="Previous">
+        <button onClick={goPrev} class="session-icon-btn" disabled={idx === 0} aria-label="Previous">
           <ChevronLeft size={22} />
         </button>
 
