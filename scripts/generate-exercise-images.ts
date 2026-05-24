@@ -236,7 +236,9 @@ MOVEMENT ARROWS:
 - Red arrow pointing BACKWARD from the extended left leg
 - Arrows connect from the ghosted limb positions to the extended positions
 
-CRITICAL: ONLY ONE arm raised (right), ONLY ONE leg raised (left) - OPPOSITE arm and leg in the solid figure. Ghosted figure shows all fours start position.`,
+WHAT THIS IS NOT: NOT lying flat on the stomach. NOT a "superman" (which has both arms forward and both legs back while lying down). The torso is HELD UP HORIZONTALLY, supported on ONE hand and the OPPOSITE knee — the body is lifted off the floor in a tabletop, not lying on the ground.
+
+CRITICAL: ONLY ONE arm raised (right), ONLY ONE leg raised (left) - OPPOSITE arm and leg in the solid figure. The left hand and right knee stay planted, holding the torso up off the floor. Ghosted figure shows all fours start position.`,
   },
 
   // =========================================================================
@@ -871,7 +873,7 @@ MOVEMENT INDICATORS:
 - Curved dashed arrow showing the band's sideways pull that the body resists
 - Dashed vertical line through the torso showing it stays square (no twist)
 
-CRITICAL: Band comes from the SIDE. Hands press straight forward from the chest. The whole point is the torso resists twisting. Show the side anchor and the band tension.`,
+CRITICAL: You MUST clearly DRAW the red resistance band as a visible line running horizontally from a fixed anchor point at one SIDE of the figure (at chest height) into both hands. The band must be visible and taut — it is the key piece of equipment. Hands press straight forward from the chest. The whole point is the torso resists twisting.`,
   },
 
   // =========================================================================
@@ -943,7 +945,7 @@ MOVEMENT INDICATORS:
 - Bold red curved arrow showing the forearm extending straight back
 - Dashed line showing the upper arm staying fixed and parallel to the torso
 
-CRITICAL: Upper arm stays pinned and still; only the forearm swings back to lock out. Hinged-forward torso with flat back.`,
+CRITICAL: Upper arm stays pinned and still; only the forearm swings back to lock out. Hinged-forward torso with flat back. The ONLY object in the hand is ONE dumbbell — do NOT add any balls, spheres, kettlebells, or other objects anywhere in the image.`,
   },
   {
     id: 'db-lateral-raise',
@@ -1022,11 +1024,14 @@ CRITICAL: Arms stay straight out at chest height; the hands pull apart sideways,
     id: '90-90',
     name: '90/90 Hip Stretch',
     modelGender: 'female',
-    formDescription: `CAMERA ANGLE: Front view, looking at the person from directly in front as they sit on the floor.
+    formDescription: `CAMERA ANGLE: Elevated 3/4 view from above and in front, looking DOWN at a person SEATED ON THE FLOOR so both bent legs are clearly visible.
+
+CRITICAL — WHAT THIS IS NOT: This is NOT a lunge. NOT a half-kneeling position. NOT standing. NOT one knee on the ground with the other foot forward. The person is SITTING on the floor with BOTH legs bent on the ground in front of them.
 
 === PRIMARY POSITION (SOLID - Upright stretch position) ===
 BODY POSITION - SEATED ON FLOOR:
-- Person is SITTING on the ground
+- Person is SITTING on the ground, both sitting bones on the floor
+- BOTH legs are bent and resting flat on the floor in front of the body
 - Buttocks/sitting bones are on the floor
 
 FRONT LEG (closer to camera):
@@ -1073,7 +1078,7 @@ MOVEMENT INDICATORS:
 - Dashed arc showing the torso hinge forward and back
 - Dashed lines at 90-degree angles showing the knee bend angles
 
-CRITICAL: Both knees at 90 degrees. Front leg externally rotated (inner thigh down). Back leg internally rotated (outer thigh down). Solid shows upright, ghosted shows forward lean.`,
+CRITICAL: Seated on the floor. BOTH knees bent (one leg folded in front with the shin across the body, the other leg folded out to the side behind) — both lower legs resting flat on the floor, forming a Z shape. Spine tall and upright. ABSOLUTELY NO text, NO numbers, NO "90" labels, NO degree symbols anywhere in the image — illustration only.`,
   },
   {
     id: 'deep-squat-hold',

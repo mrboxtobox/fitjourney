@@ -1,49 +1,50 @@
 import { useState } from 'preact/hooks';
-import { Check, Play, Pause, RotateCcw, Minus, Plus, Maximize2, ShieldCheck } from 'lucide-preact';
+import { Check, Play, Pause, RotateCcw, Minus, Plus, Maximize2, ShieldCheck, Target } from 'lucide-preact';
 import type { Exercise, WarmupExercise } from '../data/workouts';
+import { getMuscleFocus } from '../data/workouts';
 import { useTimer } from '../hooks/useTimer';
 
 // Map exercise IDs to their image paths
 const EXERCISE_IMAGES: Record<string, string> = {
   // Core & abs
-  'mcgill-curl-up': '/exercises/mcgill-curl-up.png',
-  'mcgill-side-plank': '/exercises/mcgill-side-plank.png',
-  'mcgill-bird-dog': '/exercises/mcgill-bird-dog.png',
-  'dead-bug': '/exercises/dead-bug.png',
-  'front-plank': '/exercises/front-plank.png',
-  'hollow-hold': '/exercises/hollow-hold.png',
-  'pallof-press': '/exercises/pallof-press.png',
+  'mcgill-curl-up': '/exercises/mcgill-curl-up.webp',
+  'mcgill-side-plank': '/exercises/mcgill-side-plank.webp',
+  'mcgill-bird-dog': '/exercises/mcgill-bird-dog.webp',
+  'dead-bug': '/exercises/dead-bug.webp',
+  'front-plank': '/exercises/front-plank.webp',
+  'hollow-hold': '/exercises/hollow-hold.webp',
+  'pallof-press': '/exercises/pallof-press.webp',
   // Strength (glutes / lower)
-  'glute-bridge': '/exercises/glute-bridge.png',
-  'band-glute-bridge': '/exercises/band-glute-bridge.png',
-  'hip-thrust': '/exercises/hip-thrust.png',
-  'single-leg-glute-bridge': '/exercises/single-leg-glute-bridge.png',
-  'kb-deadlift': '/exercises/kb-deadlift.png',
-  'db-rdl': '/exercises/db-rdl.png',
-  'box-squat': '/exercises/box-squat.png',
-  'goblet-squat': '/exercises/goblet-squat.png',
-  'farmers-carry': '/exercises/farmers-carry.png',
-  'kb-swing': '/exercises/kb-swing.png',
-  'band-lateral-walk': '/exercises/band-lateral-walk.png',
-  'band-monster-walk': '/exercises/band-monster-walk.png',
-  'band-clamshell': '/exercises/band-clamshell.png',
+  'glute-bridge': '/exercises/glute-bridge.webp',
+  'band-glute-bridge': '/exercises/band-glute-bridge.webp',
+  'hip-thrust': '/exercises/hip-thrust.webp',
+  'single-leg-glute-bridge': '/exercises/single-leg-glute-bridge.webp',
+  'kb-deadlift': '/exercises/kb-deadlift.webp',
+  'db-rdl': '/exercises/db-rdl.webp',
+  'box-squat': '/exercises/box-squat.webp',
+  'goblet-squat': '/exercises/goblet-squat.webp',
+  'farmers-carry': '/exercises/farmers-carry.webp',
+  'kb-swing': '/exercises/kb-swing.webp',
+  'band-lateral-walk': '/exercises/band-lateral-walk.webp',
+  'band-monster-walk': '/exercises/band-monster-walk.webp',
+  'band-clamshell': '/exercises/band-clamshell.webp',
   // Arms
-  'db-bicep-curl': '/exercises/db-bicep-curl.png',
-  'db-overhead-press': '/exercises/db-overhead-press.png',
-  'db-tricep-kickback': '/exercises/db-tricep-kickback.png',
-  'db-lateral-raise': '/exercises/db-lateral-raise.png',
-  'push-up': '/exercises/push-up.png',
-  'band-pull-apart': '/exercises/band-pull-apart.png',
+  'db-bicep-curl': '/exercises/db-bicep-curl.webp',
+  'db-overhead-press': '/exercises/db-overhead-press.webp',
+  'db-tricep-kickback': '/exercises/db-tricep-kickback.webp',
+  'db-lateral-raise': '/exercises/db-lateral-raise.webp',
+  'push-up': '/exercises/push-up.webp',
+  'band-pull-apart': '/exercises/band-pull-apart.webp',
   // Mobility
-  '90-90': '/exercises/90-90.png',
-  'deep-squat-hold': '/exercises/deep-squat-hold.png',
-  'couch-stretch': '/exercises/couch-stretch.png',
-  'pigeon-stretch': '/exercises/pigeon-stretch.png',
+  '90-90': '/exercises/90-90.webp',
+  'deep-squat-hold': '/exercises/deep-squat-hold.webp',
+  'couch-stretch': '/exercises/couch-stretch.webp',
+  'pigeon-stretch': '/exercises/pigeon-stretch.webp',
   // Warmup
-  'cat-cow': '/exercises/cat-cow.png',
-  'leg-swings': '/exercises/leg-swings.png',
-  'hip-circles': '/exercises/hip-circles.png',
-  'glute-bridge-warmup': '/exercises/glute-bridge-warmup.png',
+  'cat-cow': '/exercises/cat-cow.webp',
+  'leg-swings': '/exercises/leg-swings.webp',
+  'hip-circles': '/exercises/hip-circles.webp',
+  'glute-bridge-warmup': '/exercises/glute-bridge-warmup.webp',
 };
 
 interface ExerciseItemProps {
@@ -57,6 +58,8 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
   const [expanded, setExpanded] = useState(false);
   const hasHold = exercise.hold && exercise.hold > 0;
   const imagePath = EXERCISE_IMAGES[exercise.id];
+  const muscle = getMuscleFocus(exercise.id);
+  const musclePath = muscle ? `/exercises/muscles/${exercise.id}.webp` : undefined;
 
   // Timer for timed holds
   const timer = useTimer({
@@ -196,7 +199,33 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
           </p>
         )}
 
-        {/* Expanded exercise illustration */}
+        {/* Target muscles + squeeze cue */}
+        {muscle && (
+          <div class="ml-6 mt-2">
+            <div class="flex items-center gap-3">
+              {musclePath && (
+                <button
+                  onClick={() => setExpanded(!expanded)}
+                  class="muscle-map-thumb-btn"
+                  aria-label="Show target muscles"
+                >
+                  <img src={musclePath} alt={`${exercise.name} target muscles`} class="muscle-map-thumb" loading="lazy" />
+                </button>
+              )}
+              <div class="flex flex-wrap gap-1.5">
+                {muscle.targets.map((t) => (
+                  <span key={t} class="muscle-chip">{t}</span>
+                ))}
+              </div>
+            </div>
+            <p class="text-xs mt-1.5 flex items-start gap-1.5" style={{ color: 'var(--text-dim)' }}>
+              <Target size={13} class="flex-shrink-0 mt-0.5" style={{ color: 'var(--accent)' }} />
+              <span>{muscle.squeeze}</span>
+            </p>
+          </div>
+        )}
+
+        {/* Expanded illustrations: form + target muscles */}
         {imagePath && expanded && (
           <div class="exercise-image-container" onClick={() => setExpanded(false)}>
             <img
@@ -204,6 +233,16 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
               alt={`${exercise.name} form demonstration`}
               class="exercise-image"
             />
+            {musclePath && (
+              <>
+                <p class="exercise-image-caption">Muscles worked</p>
+                <img
+                  src={musclePath}
+                  alt={`${exercise.name} target muscles`}
+                  class="exercise-image"
+                />
+              </>
+            )}
           </div>
         )}
       </div>

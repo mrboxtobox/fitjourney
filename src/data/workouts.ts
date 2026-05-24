@@ -510,6 +510,57 @@ export const EXERCISES: Exercise[] = [
   PIGEON_STRETCH,
 ];
 
+// ═══════════════════════════════════════════════════════════════════
+// MUSCLE FOCUS — what each exercise targets, what to squeeze, where to feel it
+// Drives the muscle-activation illustration and the on-card cue.
+// ═══════════════════════════════════════════════════════════════════
+
+export interface MuscleFocus {
+  targets: string[]; // primary muscles worked (short labels for chips)
+  squeeze: string; // the active cue — what to contract / where to feel it
+}
+
+export const EXERCISE_MUSCLES: Record<string, MuscleFocus> = {
+  // Core & abs
+  'mcgill-curl-up': { targets: ['Abs'], squeeze: 'Brace the abs like bracing for a punch — no movement, just tension.' },
+  'mcgill-side-plank': { targets: ['Obliques', 'Side core'], squeeze: 'Feel the down-side waist fire to hold the hips up.' },
+  'mcgill-bird-dog': { targets: ['Deep core', 'Glutes'], squeeze: 'Squeeze the reaching-leg glute; keep the trunk dead still.' },
+  'dead-bug': { targets: ['Lower abs', 'Deep core'], squeeze: 'Feel the low abs as the back stays pinned flat.' },
+  'front-plank': { targets: ['Abs', 'Glutes'], squeeze: 'Squeeze abs and glutes together — one rigid line.' },
+  'hollow-hold': { targets: ['Lower abs'], squeeze: 'Feel the deep lower abs pressing the back down.' },
+  'pallof-press': { targets: ['Obliques', 'Core'], squeeze: 'Brace the sides of the core to refuse the twist.' },
+  // Strength (glutes / lower)
+  'glute-bridge': { targets: ['Glutes'], squeeze: 'Squeeze the glutes hard at the top, ribs down.' },
+  'band-glute-bridge': { targets: ['Glutes', 'Outer hip'], squeeze: 'Squeeze glutes up and push knees out against the band.' },
+  'hip-thrust': { targets: ['Glutes', 'Hamstrings'], squeeze: 'Drive through heels, squeeze the glutes to lock the top.' },
+  'single-leg-glute-bridge': { targets: ['Glutes', 'Hamstrings'], squeeze: 'Feel the working-side glute do all the lifting.' },
+  'kb-deadlift': { targets: ['Glutes', 'Hamstrings', 'Back'], squeeze: 'Feel the hamstrings load, squeeze glutes to stand tall.' },
+  'db-rdl': { targets: ['Hamstrings', 'Glutes'], squeeze: 'Feel the hamstrings stretch, then squeeze glutes up.' },
+  'box-squat': { targets: ['Quads', 'Glutes'], squeeze: 'Drive up off the box and squeeze the glutes.' },
+  'goblet-squat': { targets: ['Quads', 'Glutes'], squeeze: 'Push the floor away, squeeze glutes at the top.' },
+  'farmers-carry': { targets: ['Grip', 'Traps', 'Core'], squeeze: 'Grip hard, brace the core, stay tall.' },
+  'kb-swing': { targets: ['Glutes', 'Hamstrings'], squeeze: 'Snap the glutes to float the bell — power from the hips.' },
+  'band-lateral-walk': { targets: ['Outer hip', 'Glutes'], squeeze: 'Feel the side glute on the leading leg with each step.' },
+  'band-monster-walk': { targets: ['Glutes', 'Outer hip'], squeeze: 'Keep glutes switched on, knees out against the band.' },
+  'band-clamshell': { targets: ['Outer hip'], squeeze: 'Feel the side glute open the knee — keep the hip still.' },
+  // Arms
+  'db-bicep-curl': { targets: ['Biceps'], squeeze: 'Squeeze the biceps at the top; lower slow.' },
+  'db-overhead-press': { targets: ['Shoulders', 'Triceps'], squeeze: 'Feel the shoulders press; lock out without arching.' },
+  'db-tricep-kickback': { targets: ['Triceps'], squeeze: 'Squeeze the back of the arm straight; pause at lockout.' },
+  'db-lateral-raise': { targets: ['Side shoulders'], squeeze: 'Feel the side delts lift — lead with the elbows.' },
+  'push-up': { targets: ['Chest', 'Triceps', 'Shoulders'], squeeze: 'Push the floor away; squeeze the chest at the top.' },
+  'band-pull-apart': { targets: ['Upper back', 'Rear shoulders'], squeeze: 'Squeeze the shoulder blades together.' },
+  // Mobility (where to feel the stretch)
+  '90-90': { targets: ['Hips', 'Glutes'], squeeze: 'Feel the stretch deep in the hip rotators.' },
+  'deep-squat-hold': { targets: ['Hips', 'Ankles'], squeeze: 'Feel the hips and ankles open; breathe and relax.' },
+  'couch-stretch': { targets: ['Hip flexors', 'Quads'], squeeze: 'Squeeze the back glute to deepen the front-hip stretch.' },
+  'pigeon-stretch': { targets: ['Glutes'], squeeze: 'Feel the deep stretch in the front-leg glute.' },
+};
+
+export function getMuscleFocus(id: string): MuscleFocus | undefined {
+  return EXERCISE_MUSCLES[id];
+}
+
 // Reduce volume gently early, add a touch later. Reps stay constant (some are strings).
 function scaleForPhase(ex: Exercise, phase: Phase): Exercise {
   if (phase === 'foundation' && ex.sets > 2) {
@@ -652,6 +703,61 @@ export const COACHING_TIPS: CoachingTip[] = [
     message: 'When the last rep feels easy, add a little load next week.',
   },
 ];
+
+// ═══════════════════════════════════════════════════════════════════
+// GUIDED SESSION — flatten a workout into timed work/rest steps
+// ═══════════════════════════════════════════════════════════════════
+
+export type SessionStep =
+  | { kind: 'warmup'; id: string; name: string; cue: string; duration: number }
+  | {
+      kind: 'work';
+      id: string;
+      name: string;
+      cue: string;
+      set: number;
+      sets: number;
+      reps: number | string;
+      hold?: number;
+      isLastSet: boolean;
+    }
+  | { kind: 'rest'; duration: number; nextName: string };
+
+// Build the full ordered step list: warmups, then each exercise's sets with
+// rests between sets and a short transition rest before the next exercise.
+export function buildSessionSteps(workout: WorkoutDay): SessionStep[] {
+  const steps: SessionStep[] = [];
+
+  for (const w of workout.warmup) {
+    steps.push({ kind: 'warmup', id: w.id, name: w.name, cue: w.cue, duration: w.duration });
+  }
+
+  workout.exercises.forEach((ex, exIdx) => {
+    const next = workout.exercises[exIdx + 1];
+    for (let s = 1; s <= ex.sets; s++) {
+      const isLastSet = s === ex.sets;
+      steps.push({
+        kind: 'work',
+        id: ex.id,
+        name: ex.name,
+        cue: ex.cue,
+        set: s,
+        sets: ex.sets,
+        reps: ex.reps,
+        hold: ex.hold,
+        isLastSet,
+      });
+      const rest = ex.restBetweenSets ?? 0;
+      if (!isLastSet && rest > 0) {
+        steps.push({ kind: 'rest', duration: rest, nextName: `${ex.name} · set ${s + 1}` });
+      } else if (isLastSet && next && rest > 0) {
+        steps.push({ kind: 'rest', duration: rest, nextName: next.name });
+      }
+    }
+  });
+
+  return steps;
+}
 
 export function getCoachingTip(week: number): CoachingTip | null {
   const tipIndex = (week - 1) % COACHING_TIPS.length;

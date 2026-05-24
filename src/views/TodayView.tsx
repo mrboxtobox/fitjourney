@@ -2,7 +2,10 @@ import { useState, useEffect } from 'preact/hooks';
 import { getWorkoutForDate, getAllExercises, getCurrentWeek, getPhaseInfo } from '../data/workouts';
 import type { WorkoutDay, Block, Exercise } from '../data/workouts';
 import { ExerciseItem, WarmupItem } from '../components/ExerciseCard';
+import { GuidedSession } from '../components/GuidedSession';
 import { DateNav } from '../components/Navigation';
+import { Play } from 'lucide-preact';
+import { initAudio } from '../lib/sound';
 import { useDate, formatDateString } from '../hooks/useDate';
 import {
   getWorkoutLogsForDate,
@@ -22,6 +25,7 @@ export function TodayView({ startDate }: TodayViewProps) {
   const [workout, setWorkout] = useState<WorkoutDay | null>(null);
   const [logs, setLogs] = useState<WorkoutLog[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sessionOpen, setSessionOpen] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -81,6 +85,22 @@ export function TodayView({ startDate }: TodayViewProps) {
 
   const getExerciseLog = (exerciseId: string) => logs.find((l) => l.exerciseId === exerciseId);
 
+  // Mark an exercise complete (idempotent) — used by the guided session.
+  const markComplete = async (exerciseId: string) => {
+    const existing = logs.find((l) => l.exerciseId === exerciseId);
+    if (existing?.completed) return;
+    await toggleExercise(dateString, exerciseId, true);
+    setLogs((prev) => {
+      const idx = prev.findIndex((l) => l.exerciseId === exerciseId);
+      if (idx >= 0) {
+        const updated = [...prev];
+        updated[idx] = { ...updated[idx], completed: true };
+        return updated;
+      }
+      return [...prev, { date: dateString, exerciseId, completed: true }];
+    });
+  };
+
   if (loading) {
     return (
       <div class="container-app py-12">
@@ -131,6 +151,28 @@ export function TodayView({ startDate }: TodayViewProps) {
             />
           </div>
         </div>
+      )}
+
+      {/* Start guided session */}
+      {workout.type === 'workout' && totalCount > 0 && !isComplete && (
+        <button
+          class="start-session-btn"
+          onClick={() => {
+            initAudio();
+            setSessionOpen(true);
+          }}
+        >
+          <Play size={18} fill="currentColor" />
+          {completedCount > 0 ? 'Resume guided session' : 'Start guided session'}
+        </button>
+      )}
+
+      {sessionOpen && (
+        <GuidedSession
+          workout={workout}
+          onClose={() => setSessionOpen(false)}
+          onExerciseComplete={markComplete}
+        />
       )}
 
       {/* Rest day */}
