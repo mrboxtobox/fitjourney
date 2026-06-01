@@ -351,7 +351,8 @@ interface FinisherItemProps {
 export function FinisherItem({ finisher, completed, onToggle }: FinisherItemProps) {
   const [expanded, setExpanded] = useState(false);
   const [best, setBest] = useState<number | null>(null);
-  const imagePath = `/exercises/${finisher.exerciseId}.webp`;
+  // Each finisher has its own circuit diagram, named after the finisher id.
+  const imagePath = `/exercises/${finisher.id}.webp`;
 
   useEffect(() => {
     getBestFinisherScore(finisher.id).then(setBest);

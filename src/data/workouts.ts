@@ -39,7 +39,6 @@ export interface Finisher {
   id: string;
   name: string; // bold display name
   tagline: string; // the challenge, in one line
-  exerciseId: string; // existing exercise whose illustration + form we reuse
   format: 'intervals' | 'amrap';
   // intervals: rounds × (work + rest)
   workSeconds?: number;
@@ -81,13 +80,13 @@ const MCGILL_CURL_UP: Exercise = {
 const MCGILL_SIDE_PLANK: Exercise = {
   id: 'mcgill-side-plank',
   name: 'Side Plank',
-  cue: 'Elbow under shoulder. Hips stacked and lifted. Both sides.',
+  cue: 'Forearm or hand under the shoulder. Hips stacked and lifted, body one line. Both sides.',
   block: 'core',
   sets: 2,
   reps: '10s each',
   hold: 10,
   restBetweenSets: 10,
-  kneeNote: 'Drop to bottom knee bent if a straight-leg plank bothers you.',
+  kneeNote: 'Forearm version is easier on the wrist. Drop to the bottom knee to scale it down.',
 };
 
 const MCGILL_BIRD_DOG: Exercise = {
@@ -451,7 +450,6 @@ export const FINISHERS: Finisher[] = [
     id: 'swing-storm',
     name: 'Swing Storm',
     tagline: 'Six rounds of swings. Power from the hips, every single rep.',
-    exerciseId: 'kb-swing',
     format: 'intervals',
     workSeconds: 30,
     restSeconds: 15,
@@ -465,7 +463,6 @@ export const FINISHERS: Finisher[] = [
     id: 'the-burner',
     name: 'The Burner',
     tagline: 'Band on. Walk, walk, kick. No rest until the clock stops.',
-    exerciseId: 'band-lateral-walk',
     format: 'amrap',
     durationSeconds: 240,
     task: '10 lateral steps each way · 10 monster steps · 10 kickbacks each leg',
@@ -478,7 +475,6 @@ export const FINISHERS: Finisher[] = [
     id: 'carry-heavy',
     name: 'Carry Heavy',
     tagline: 'Pick it up. Walk tall. Repeat until the clock saves you.',
-    exerciseId: 'farmers-carry',
     format: 'intervals',
     workSeconds: 40,
     restSeconds: 20,
@@ -491,7 +487,6 @@ export const FINISHERS: Finisher[] = [
     id: 'bridge-inferno',
     name: 'Bridge Inferno',
     tagline: 'Four minutes. Glutes only. Feel the burn build.',
-    exerciseId: 'glute-bridge',
     format: 'amrap',
     durationSeconds: 240,
     task: '15 glute bridges (2s hold) · 10 banded kickbacks each leg',
@@ -504,7 +499,6 @@ export const FINISHERS: Finisher[] = [
     id: 'hinge-and-drive',
     name: 'Hinge & Drive',
     tagline: 'Deadlift fast, stand tall, go again.',
-    exerciseId: 'kb-deadlift',
     format: 'intervals',
     workSeconds: 30,
     restSeconds: 20,

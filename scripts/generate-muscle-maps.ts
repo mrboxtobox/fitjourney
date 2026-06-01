@@ -59,7 +59,8 @@ const MAPS: MuscleMap[] = [
   { id: 'mcgill-side-plank', view: 'front', primary: 'the external obliques (the muscles on both sides of the waist)' },
   { id: 'mcgill-bird-dog', view: 'back', primary: 'the gluteus maximus (buttocks) and the spinal erectors along the lower back' },
   { id: 'dead-bug', view: 'front', primary: 'the lower rectus abdominis and deep transverse abdominis (lower belly / deep core)' },
-  { id: 'front-plank', view: 'front', primary: 'the rectus abdominis (front abs)', secondary: 'the gluteus area' },
+  // Note: secondaries must be visible from the chosen view — no glutes on a front view.
+  { id: 'front-plank', view: 'front', primary: 'the rectus abdominis (front abs)' },
   { id: 'hollow-hold', view: 'front', primary: 'the lower rectus abdominis (lower abs)' },
   { id: 'pallof-press', view: 'front', primary: 'the external obliques on both sides of the waist (the anti-rotation core)' },
   // Strength (glutes / lower)
@@ -70,13 +71,23 @@ const MAPS: MuscleMap[] = [
   { id: 'kb-deadlift', view: 'back', primary: 'the gluteus maximus and the hamstrings (back of thighs)', secondary: 'the spinal erectors (lower back)' },
   { id: 'db-rdl', view: 'back', primary: 'the hamstrings (back of the thighs)', secondary: 'the gluteus maximus' },
   { id: 'b-stance-rdl', view: 'back', primary: 'the gluteus maximus and the hamstrings (back of the thigh)', secondary: 'the spinal erectors (lower back)' },
-  { id: 'box-squat', view: 'back', primary: 'the gluteus maximus (buttocks)', secondary: 'the quadriceps and hamstrings (thighs)' },
-  { id: 'goblet-squat', view: 'back', primary: 'the gluteus maximus (buttocks)', secondary: 'the quadriceps (front of thighs)' },
+  { id: 'box-squat', view: 'back', primary: 'the gluteus maximus (buttocks)', secondary: 'the hamstrings (back of thighs)' },
+  { id: 'goblet-squat', view: 'back', primary: 'the gluteus maximus (buttocks)', secondary: 'the hamstrings (back of thighs)' },
   { id: 'farmers-carry', view: 'back', primary: 'the trapezius (upper back) and the forearm muscles', secondary: 'the spinal erectors and core' },
   { id: 'kb-swing', view: 'back', primary: 'the gluteus maximus and hamstrings', secondary: 'the spinal erectors' },
-  { id: 'band-lateral-walk', view: 'back', primary: 'the gluteus medius (the upper outer hip, side of the buttocks)' },
+  {
+    id: 'band-lateral-walk',
+    view: 'back',
+    primary:
+      'ONLY the gluteus medius: a small fan-shaped muscle at the UPPER OUTER corner of each hip, sitting just below the waistline on the SIDE of the pelvis, ABOVE and to the OUTSIDE of the main buttock. Do NOT color the large central buttock muscles (gluteus maximus) — they stay plain ink. Only the two small upper-outer-hip regions glow red',
+  },
   { id: 'band-monster-walk', view: 'back', primary: 'the gluteus maximus and gluteus medius (buttocks and outer hip)' },
-  { id: 'band-clamshell', view: 'back', primary: 'the gluteus medius (the upper outer hip on the side of the buttocks)' },
+  {
+    id: 'band-clamshell',
+    view: 'back',
+    primary:
+      'ONLY the gluteus medius: a small fan-shaped muscle at the UPPER OUTER corner of each hip, sitting just below the waistline on the SIDE of the pelvis, ABOVE and to the OUTSIDE of the main buttock. Do NOT color the large central buttock muscles (gluteus maximus) — they stay plain ink. Only the two small upper-outer-hip regions glow red',
+  },
   { id: 'band-kickback', view: 'back', primary: 'the gluteus maximus (the buttocks)', secondary: 'the hamstrings (back of the thigh)' },
   // Arms
   { id: 'db-bicep-curl', view: 'front', primary: 'the biceps (front of both upper arms)' },

@@ -354,6 +354,12 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
               <Flame size={28} strokeWidth={2.25} />
             </div>
             <h2 class="session-name">{step.finisher.name}</h2>
+            <img
+              src={`/exercises/${step.finisher.id}.webp`}
+              alt={`${step.finisher.name} circuit`}
+              class="session-image"
+              loading="eager"
+            />
             <p class="session-cue">{step.finisher.tagline}</p>
             <div class="finisher-spec">
               {step.finisher.format === 'intervals' ? (
@@ -380,8 +386,8 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
           <>
             <h2 class="session-name">{step.finisher.name}</h2>
             <img
-              src={`/exercises/${step.finisher.exerciseId}.webp`}
-              alt={step.finisher.name}
+              src={`/exercises/${step.finisher.id}.webp`}
+              alt={`${step.finisher.name} circuit`}
               class="session-image"
               loading="eager"
             />

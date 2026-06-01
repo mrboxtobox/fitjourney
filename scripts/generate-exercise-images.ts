@@ -99,6 +99,128 @@ interface ExerciseIllustration {
 
 const EXERCISES: ExerciseIllustration[] = [
   // =========================================================================
+  // FINISHERS — scored metabolic blocks. These diagrams must read as a
+  // CIRCUIT or repeated effort, not a single static exercise.
+  // =========================================================================
+  {
+    id: 'swing-storm',
+    name: 'Finisher: Swing Storm',
+    modelGender: 'female',
+    formDescription: `A dynamic, high-energy illustration of repeated kettlebell swings — this is an INTERVAL WORKOUT diagram, not a single rep.
+
+CAMERA ANGLE: Side view (profile).
+
+THE COMPOSITION — REPEATED EFFORT:
+- ONE woman shown in THREE overlapping positions of the kettlebell swing arc:
+  1. SOLID figure (full ink): top of the swing — standing tall, hips locked out, arms straight, kettlebell floating at chest height
+  2. GHOSTED figure (light): mid-swing — hinged slightly, bell at hip height
+  3. GHOSTED figure (lighter): bottom of the swing — deep hip hinge, bell swung back between the legs
+- All three positions overlap/cascade so the eye reads continuous, repeated swinging
+- A bold dashed ARC traces the full pendulum path of the kettlebell from between the legs up to chest height
+- Multiple bold red arrows along the arc, both directions, showing the bell swings up AND down — over and over
+- Small motion/speed lines around the bell and hips conveying explosive power and pace
+
+ENERGY: This must look INTENSE — a sweat-dripping conditioning effort, not a calm demonstration. Strong dynamic lines, powerful hip drive.
+
+CRITICAL: Hip hinge, not a squat. Flat back in every position. The kettlebell never goes above chest height.`,
+  },
+  {
+    id: 'the-burner',
+    name: 'Finisher: The Burner',
+    modelGender: 'female',
+    formDescription: `A THREE-PANEL CIRCUIT diagram showing a mini-band glute circuit — like a vintage fitness manual's circuit chart.
+
+LAYOUT — THREE VIGNETTES IN A HORIZONTAL ROW, equal size, clearly separated by white space:
+
+PANEL 1 (left) — LATERAL BAND WALK:
+- Front view of a woman in a quarter squat, red mini loop band around both lower thighs just above the knees
+- She steps sideways, band stretched taut between her legs
+- Small red arrow pointing sideways
+
+PANEL 2 (center) — MONSTER WALK:
+- 3/4 view of the same woman in a quarter squat, same red band above the knees
+- She steps diagonally forward, knees pushed out
+- Small red arrow pointing diagonally forward
+
+PANEL 3 (right) — STANDING KICKBACK:
+- Side view of the same woman standing tall holding a chair back, red band around both ankles
+- One leg kicked straight back, glute squeezed
+- Small red arrow showing the leg sweeping back
+
+CONNECTING THE CIRCUIT:
+- A bold red arrow flows from panel 1 to panel 2, and from panel 2 to panel 3
+- A curved dashed arrow loops from panel 3 back around/under to panel 1 — showing the circuit REPEATS continuously
+
+CRITICAL: Three separate small vignettes of the SAME woman, arranged left to right, connected by arrows into a repeating loop. Each vignette is simple and clear. The red mini loop band is visible in all three.`,
+  },
+  {
+    id: 'carry-heavy',
+    name: 'Finisher: Carry Heavy',
+    modelGender: 'male',
+    formDescription: `A dynamic illustration of a farmer's carry SHUTTLE — walking back and forth with a kettlebell, as a conditioning effort.
+
+CAMERA ANGLE: Side view (profile).
+
+THE COMPOSITION — BACK-AND-FORTH SHUTTLE:
+- ONE man shown TWICE:
+  1. SOLID figure: walking left-to-right, mid-stride, carrying a kettlebell in one hand at his side — perfect tall posture, shoulders level
+  2. GHOSTED figure (lighter, smaller, further away): the same man walking back the other direction (right-to-left), having turned around
+- A long dashed PATH on the floor runs the width of the image, with arrows on BOTH ends showing he walks down, turns, and walks back — a shuttle
+- A curved red U-TURN arrow at the far end of the path showing the turnaround
+- Bold red arrow showing his current walking direction
+- His posture is rigid and upright: shoulders packed and level despite the weight on one side
+
+ENERGY: Brisk, purposeful walking under load — gritty effort, not a stroll.
+
+CRITICAL: ONE kettlebell carried in one hand, hanging at the side with a straight arm. Shoulders stay perfectly level. The dashed shuttle path with arrows at both ends + the U-turn arrow are essential — they show this is a back-and-forth carry.`,
+  },
+  {
+    id: 'bridge-inferno',
+    name: 'Finisher: Bridge Inferno',
+    modelGender: 'female',
+    formDescription: `A TWO-PANEL CIRCUIT diagram showing a glute bridge + kickback circuit — like a vintage fitness manual's circuit chart.
+
+LAYOUT — TWO VIGNETTES SIDE BY SIDE, equal size, separated by white space:
+
+PANEL 1 (left) — GLUTE BRIDGE:
+- Side view of a woman lying on her back, hips thrust UP high, knees bent, feet flat
+- Body forms a straight ramp from shoulders to knees, glutes squeezed at the top
+- A small red arrow at the hips pointing up
+- A red mini loop band around both thighs just above the knees
+
+PANEL 2 (right) — STANDING KICKBACK:
+- Side view of the same woman standing tall holding a chair back, red band around both ankles
+- One leg kicked straight back behind her, glute squeezed, knee straight
+- A small red curved arrow showing the leg sweeping back
+
+CONNECTING THE CIRCUIT:
+- A bold red arrow flows from panel 1 to panel 2
+- A curved dashed arrow loops from panel 2 back to panel 1 — the circuit repeats continuously
+
+CRITICAL: Two separate vignettes of the SAME woman side by side, connected by arrows into a repeating loop. The red band appears in both panels.`,
+  },
+  {
+    id: 'hinge-and-drive',
+    name: 'Finisher: Hinge & Drive',
+    modelGender: 'female',
+    formDescription: `A dynamic, high-energy illustration of FAST repeated kettlebell deadlifts — an interval conditioning diagram, not a single calm rep.
+
+CAMERA ANGLE: Side view (profile).
+
+THE COMPOSITION — REPEATED FAST REPS:
+- ONE woman shown in TWO overlapping positions of the kettlebell deadlift:
+  1. SOLID figure: standing fully tall at lockout — hips forward, glutes squeezed, kettlebell hanging from both hands in front of the thighs
+  2. GHOSTED figure (lighter): hinged at the bottom — hips far back, flat back, kettlebell at mid-shin between her feet
+- A bold DOUBLE-HEADED red arrow (pointing both up and down) beside her showing the bell travels up and down rapidly, rep after rep
+- A dashed vertical line tracing the bell's straight up-down path
+- Small motion/speed lines around the hips and the bell conveying speed and effort
+
+ENERGY: Quick, powerful, repeated — this is conditioning. Strong lines, dynamic feel.
+
+CRITICAL: A hip hinge — flat back, shins near vertical, hips push back. The double-headed arrow showing up-AND-down repeated movement is essential.`,
+  },
+
+  // =========================================================================
   // McGILL BIG 3
   // =========================================================================
   {
@@ -149,45 +271,29 @@ Vintage pen-and-ink style, crosshatching, navy shorts, cream background.`,
     id: 'mcgill-side-plank',
     name: 'McGill Side Plank',
     modelGender: 'female',
-    formDescription: `A woman holding a SIDE PLANK on her forearm — a classic isometric core exercise.
+    formDescription: `A woman holding a FOREARM SIDE PLANK — also called an ELBOW SIDE PLANK. This is the low side plank variation done resting on the elbow and forearm, NOT the high variation on a straight arm.
 
-CAMERA ANGLE: Front view. The woman lies on her RIGHT side facing the camera, so the viewer sees the front of her body.
+CAMERA ANGLE: Front view — she lies on her right side, her chest facing the viewer.
 
-THE SHAPE OF THE POSE (this is the most important part):
-Think of her body as a rigid wooden board propped up at an angle:
-- Her FEET are the low end of the board, resting on the floor at the image's left
-- Her HEAD is the high end of the board, up in the air at the image's right
-- The board (her body) is perfectly straight from feet to head, tilted at roughly 20-30 degrees from the floor
-- Underneath her, holding the board up, is her RIGHT FOREARM — like a kickstand
+THE POSE:
+- She is propped up on her RIGHT ELBOW and FOREARM: the elbow is bent at 90 degrees, the forearm lies flat on the ground, and her weight rests on it
+- Her right elbow sits directly below her right shoulder
+- Her body forms ONE straight diagonal line from her stacked feet (low, image left) through her lifted hips up to her head (high, image right)
+- Her hips are lifted well off the floor — clear open space under her hip
+- Her feet are stacked, the side of the bottom foot on the floor
+- Her LEFT hand rests on her left hip, elbow pointing up
+- Head in line with her spine, looking at the viewer
 
-THE SUPPORTING ARM — THE MOST IMPORTANT DETAIL:
-Her body weight rests on her right ELBOW and FOREARM, which lie flat on the floor:
-- Her right ELBOW touches the floor directly underneath her right shoulder
-- From the elbow, her right FOREARM lies flat on the floor pointing FORWARD — in the same direction her head points (toward the image's right side) — so the entire forearm is visible lying along the ground, ending in a flat hand
-- Her right UPPER ARM is vertical: it goes straight up from the floor-elbow to her shoulder
-- The arm forms a clear L-shape: vertical upper arm, horizontal forearm on the floor
-- Her shoulder sits LOW — only one forearm's length above the floor
-- HER WEIGHT IS ON THE ELBOW/FOREARM. There is NO straight locked arm. The hand alone does NOT support her.
-
-ONLY TWO THINGS TOUCH THE FLOOR:
-1. The side of her right foot (with her left foot stacked on top of it)
-2. Her right ELBOW and FOREARM, lying flat pointing forward (described above)
-
-THERE IS CLEAR OPEN SPACE between her hip and the floor — her hips are lifted high. Nothing else touches the ground: not her hip, not her thigh, not her hand.
-
-HER LEFT (top) ARM: hand resting on her left hip, elbow pointing up.
-
-HER HEAD: in line with her spine, looking at the camera.
+Think: "a forearm plank, turned sideways." The bent supporting elbow is what defines this exercise.
 
 VISUAL AIDS:
-- ONE dashed straight line running from her feet through her hips to her head, showing the body is a straight board
-- A small red arrow under her hip pointing UP, showing the hips stay lifted
+- ONE dashed straight line from feet through hips to head, proving the body is straight
+- A small red arrow under the hips pointing up
 
 CRITICAL CHECKS:
-- ONE figure only. NO ghosted second figure.
-- Her supporting arm is bent at the elbow with the FOREARM flat on the floor (an L-shape) — NOT a straight locked arm
-- Her hips are HIGH off the floor with visible open space underneath
-- Her body is perfectly straight from feet to head`,
+- ONE figure only, no ghosted second figure
+- The supporting arm MUST be bent at the elbow with the forearm flat along the ground (an L-shape). A straight, locked arm with only the hand on the floor is the WRONG exercise.
+- Hips high, body straight, feet stacked`,
   },
   {
     id: 'mcgill-bird-dog',
@@ -835,11 +941,14 @@ CRITICAL: The box CAPS the depth at about parallel — this is a knee-friendly s
 === PRIMARY POSITION (SOLID - hinged position) ===
 A woman performing a B-stance (kickstand) Romanian deadlift with a kettlebell:
 
-THE B-STANCE (STAGGERED FEET) — THE KEY DETAIL:
-- Her FRONT foot (working leg) is planted FLAT on the floor, carrying nearly all her weight
-- Her BACK foot is placed slightly behind: only the TOES/BALL of the back foot touch the floor, the back heel is UP
-- The toes of the back foot line up roughly with the HEEL of the front foot — a short, narrow stagger (NOT a long lunge stance)
-- The back leg is just a "kickstand" for balance — it stays relaxed and slightly bent
+THE B-STANCE (STAGGERED FEET) — THE SINGLE MOST IMPORTANT DETAIL OF THIS IMAGE:
+The HINGED (solid, full-ink) figure must clearly show the staggered "kickstand" stance:
+- Her FRONT foot (working leg, closer to the viewer) is planted FLAT on the floor, carrying nearly all her weight
+- Her BACK foot sits about half a foot-length BEHIND the front foot, and ONLY THE TOES/BALL of the back foot touch the floor — the back HEEL is clearly LIFTED UP off the ground, visibly raised
+- Draw visible empty space between the lifted back heel and the floor
+- The back knee is slightly bent, the back leg relaxed — it is just a "kickstand" for balance
+- A small dashed circle highlights the BACK foot of the SOLID figure, drawing attention to the raised heel
+- DO NOT draw both feet flat side by side. DO NOT draw the feet level with each other. The raised back heel on the solid hinged figure is what makes this a B-stance RDL.
 
 THE HINGE:
 - HINGED at the hips: butt pushed far BACK, torso leaning forward to about 45 degrees
@@ -854,9 +963,8 @@ Lighter version standing fully upright in the same staggered stance, kettlebell 
 MOVEMENT INDICATORS:
 - Bold red arrow at the hips showing the hinge (hips travel back and up)
 - Dashed line along the flat back showing neutral spine
-- Small dashed circle highlighting the back foot showing only the toes touch (heel up)
 
-CRITICAL: This is a HIP HINGE on mostly ONE leg. The staggered "B-stance" is the key visual: front foot flat, back foot on toes only with heel up, back foot slightly behind the front heel. Kettlebell held in BOTH hands.`,
+CRITICAL: This is a HIP HINGE on mostly ONE leg. The staggered "B-stance" on the SOLID hinged figure is the key visual: front foot flat, back foot on TOES ONLY with the HEEL CLEARLY LIFTED off the floor, back foot slightly behind the front foot. Kettlebell held in BOTH hands. If both feet are drawn flat and even, the image is WRONG.`,
   },
 
   // =========================================================================
@@ -935,28 +1043,27 @@ CRITICAL: Low back stays flat on the floor (this is the whole point). Shallow di
     id: 'pallof-press',
     name: 'Pallof Press',
     modelGender: 'male',
-    formDescription: `CAMERA ANGLE: Viewed from ABOVE and slightly behind at a 3/4 angle (high three-quarter view), so we can see BOTH the direction the man faces AND the band coming from his side.
+    formDescription: `THIS IS A BIRD'S-EYE VIEW DIAGRAM — the camera looks STRAIGHT DOWN from the ceiling at a man standing on the floor below. We see the top of his head, the tops of his shoulders, and his arms from above. Classic instructional-manual overhead diagram.
 
-=== PRIMARY POSITION (SOLID - pressed out) ===
-A man performing a banded Pallof press (anti-rotation):
-- Standing tall, feet shoulder-width, knees soft
-- The man FACES FORWARD (toward the top of the image)
-- A RED resistance band comes from an anchor point (a vertical post/door) far off to his LEFT SIDE at chest height
-- The band runs HORIZONTALLY from the anchor straight to his hands
-- BOTH hands hold the end of the band, clasped together, and his arms are FULLY EXTENDED STRAIGHT OUT IN FRONT of his chest — pointing the same direction his chest faces
-- KEY GEOMETRY: his arms point FORWARD (the way he faces), but the band pulls SIDEWAYS toward the anchor — the band and his arms form roughly a 90-degree angle at his hands
-- His torso stays SQUARE facing forward and does NOT rotate toward the anchor
-- Core braced, ribs down
+=== THE OVERHEAD SCENE ===
+Looking straight down from above:
+- The MAN stands in the center-right of the image. From above we see: the top of his head (dark hair), his two shoulders either side of it, and his feet peeking out below
+- A vertical POST/POLE is at the far LEFT edge of the image (seen from above as a small circle/column top)
+- A taut RED BAND runs in a straight horizontal line from the post on the left to the man's hands
 
-=== GHOSTED POSITION (faded - hands at chest) ===
-Lighter version with the hands pulled back IN against the center of his chest, elbows bent (start position). The band still runs to the side anchor.
+=== THE KEY GEOMETRY (the entire point of this diagram) ===
+- The man's CHEST FACES UP (toward the top of the image) — his shoulders form a horizontal line, his head above them
+- His ARMS are extended STRAIGHT UP the image (the direction his chest faces) — both arms together, hands clasped, pointing toward the TOP of the image
+- The BAND runs from his clasped hands toward the LEFT edge of the image (to the anchor post)
+- So: ARMS point UP the image, BAND runs LEFT across the image — they form a clear 90-DEGREE "L" SHAPE at his hands
+- The band is taut and pulls his hands toward the left; small red arrows on his torso show he RESISTS rotating
 
-MOVEMENT INDICATORS:
-- Bold red arrow showing the hands pressing straight OUT from the chest (forward)
-- Dashed line showing the band running sideways to the anchor
-- Dashed vertical line through the torso showing it stays square (no twist)
+=== MOVEMENT INDICATORS ===
+- A bold red arrow along his arms showing the press direction (up the image, away from his chest)
+- A dashed line tracing the band to the anchor (left)
+- A small curved arrow near his torso with an "X" or crossed-out styling is NOT needed — instead show two small red arrows at his shoulders pointing inward, showing his torso staying square
 
-CRITICAL GEOMETRY CHECK: The arms extend FORWARD from the chest. The band runs SIDEWAYS to an anchor. Arms and band are PERPENDICULAR to each other. Do NOT draw the arms pointing toward the anchor. Do NOT draw the arms out to his side. The drawing must clearly show: anchor at his side, band horizontal, hands pressed straight out in front of the chest.`,
+CRITICAL: This is an OVERHEAD/TOP-DOWN diagram. The 90-degree angle between the extended arms (pointing up the image) and the band (running left to the anchor) must be unmistakable. NO text or labels.`,
   },
 
   // =========================================================================
