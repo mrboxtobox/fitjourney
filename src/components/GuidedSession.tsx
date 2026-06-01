@@ -1,8 +1,22 @@
 import { useState, useEffect, useMemo, useRef } from 'preact/hooks';
-import { X, Play, Pause, Check, ChevronLeft, ChevronRight, Volume2, VolumeX, Plus } from 'lucide-preact';
+import {
+  X,
+  Play,
+  Pause,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Volume2,
+  VolumeX,
+  Plus,
+  Minus,
+  Flame,
+  Trophy,
+} from 'lucide-preact';
 import { buildSessionSteps, type WorkoutDay, type SessionStep } from '../data/workouts';
-import { initAudio, cueGo, cueRest, cueDone } from '../lib/sound';
+import { initAudio, cueGo, cueRest, cueDone, cueTick } from '../lib/sound';
 import { celebrate } from '../lib/confetti';
+import { getBestFinisherScore, saveFinisherScore } from '../db';
 
 const REST_ENCOURAGEMENT = [
   'Breathe. Shake it out.',
@@ -19,8 +33,15 @@ const DONE_LINES = [
   'Consistency is the superpower. Nice work.',
 ];
 
+const FINISHER_REST_LINES = [
+  'Shake it out. Back in a few seconds.',
+  'Breathe hard, recover fast.',
+  'Halfway is just a number. Keep counting.',
+];
+
 interface GuidedSessionProps {
   workout: WorkoutDay;
+  dateString: string; // YYYY-MM-DD — for logging finisher scores
   onClose: () => void;
   onExerciseComplete: (exerciseId: string) => void;
 }
@@ -37,10 +58,11 @@ function stepDuration(step: SessionStep): number {
   if (step.kind === 'warmup') return step.duration;
   if (step.kind === 'rest') return step.duration;
   if (step.kind === 'work' && step.hold) return step.hold;
-  return 0; // rep-based work: untimed, tap Done
+  if (step.kind === 'finisher-work' || step.kind === 'finisher-rest') return step.duration;
+  return 0; // rep-based work, finisher intro, score entry: untimed
 }
 
-export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSessionProps) {
+export function GuidedSession({ workout, dateString, onClose, onExerciseComplete }: GuidedSessionProps) {
   const steps = useMemo(() => buildSessionSteps(workout), [workout]);
   const [idx, setIdx] = useState(0);
   const [remaining, setRemaining] = useState(() => stepDuration(steps[0]));
@@ -48,12 +70,23 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
   const [finished, setFinished] = useState(false);
   const [muted, setMuted] = useState(() => localStorage.getItem(MUTE_KEY) === '1');
 
+  // Finisher scoring state
+  const [bestScore, setBestScore] = useState<number | null>(null);
+  const [score, setScore] = useState(0);
+  const [prResult, setPrResult] = useState<{ isPR: boolean; previousBest: number | null } | null>(null);
+
   const mutedRef = useRef(muted);
   mutedRef.current = muted;
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   const step = steps[idx];
   const timed = stepDuration(step) > 0;
+
+  // Load the score to beat once per session.
+  useEffect(() => {
+    if (!workout.finisher) return;
+    getBestFinisherScore(workout.finisher.id).then(setBestScore);
+  }, [workout.finisher]);
 
   const goPrev = () => setIdx((i) => Math.max(0, i - 1));
 
@@ -79,9 +112,11 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
     if (finished) return;
     setRemaining(stepDuration(step));
     setPaused(false);
-    if (step.kind === 'rest') {
+    if (step.kind === 'rest' || step.kind === 'finisher-rest') {
       beep(cueRest);
       buzz(20);
+    } else if (step.kind === 'finisher-score') {
+      // quiet — let them catch their breath and count
     } else {
       beep(cueGo);
       buzz(30);
@@ -103,6 +138,20 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
     }
   };
 
+  // Save the finisher score, check for a PR, then advance.
+  const submitScore = async () => {
+    if (step.kind !== 'finisher-score') return;
+    const result = await saveFinisherScore(dateString, step.finisher.id, score);
+    setPrResult(result);
+    onExerciseComplete(step.finisher.id);
+    if (result.isPR) {
+      beep(cueDone);
+      buzz([80, 50, 80, 50, 160]);
+      celebrate(2400);
+    }
+    advance(false);
+  };
+
   // Countdown tick for timed steps.
   useEffect(() => {
     if (finished || !timed || paused) return;
@@ -113,9 +162,11 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx, paused, timed, finished]);
 
-  // When a timed step hits zero, advance (auto-completing the set).
+  // Last-3-seconds tick cue, then advance at zero (auto-completing the set).
   useEffect(() => {
-    if (!finished && timed && remaining <= 0) advance(true);
+    if (finished || !timed) return;
+    if (remaining > 0 && remaining <= 3) beep(cueTick);
+    if (remaining <= 0) advance(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remaining]);
 
@@ -141,7 +192,9 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
         case ' ':
         case 'Enter':
           e.preventDefault();
-          if (step.kind === 'rest') advance(false);
+          if (step.kind === 'finisher-score') submitScore();
+          else if (step.kind === 'rest' || step.kind === 'finisher-rest' || step.kind === 'finisher-intro')
+            advance(false);
           else if (timed) setPaused((p) => !p);
           else advance(true);
           break;
@@ -157,7 +210,7 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idx, finished, timed, step]);
+  }, [idx, finished, timed, step, score]);
 
   // Swipe: left = next/skip, right = previous.
   const onTouchStart = (e: TouchEvent) => {
@@ -180,6 +233,7 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
     const ids = new Set<string>();
     steps.slice(0, idx).forEach((s) => {
       if (s.kind === 'work' && s.isLastSet) ids.add(s.id);
+      if (s.kind === 'finisher-score') ids.add(s.finisher.id);
     });
     return ids.size;
   }, [steps, idx]);
@@ -189,9 +243,20 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
       <div class="session-overlay">
         <div class="session-done">
           <div class="session-done-check">
-            <Check size={40} strokeWidth={3} style={{ color: 'var(--check)' }} />
+            {prResult?.isPR ? (
+              <Trophy size={40} strokeWidth={2.5} style={{ color: 'var(--check)' }} />
+            ) : (
+              <Check size={40} strokeWidth={3} style={{ color: 'var(--check)' }} />
+            )}
           </div>
-          <h2 class="text-2xl font-semibold mt-4">Session complete</h2>
+          <h2 class="text-2xl font-semibold mt-4">
+            {prResult?.isPR ? 'New record!' : 'Session complete'}
+          </h2>
+          {prResult?.isPR && workout.finisher && (
+            <p class="mt-2 font-medium" style={{ color: 'var(--check)' }}>
+              {score} {workout.finisher.scoreUnit} — previous best was {prResult.previousBest}.
+            </p>
+          )}
           <p class="mt-2" style={{ color: 'var(--text-dim)' }}>
             {DONE_LINES[completedExercises % DONE_LINES.length]}
           </p>
@@ -207,9 +272,29 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
   }
 
   const total = steps.length;
-  const isRest = step.kind === 'rest';
+  const isRest = step.kind === 'rest' || step.kind === 'finisher-rest';
+  const isFinisherStep =
+    step.kind === 'finisher-intro' ||
+    step.kind === 'finisher-work' ||
+    step.kind === 'finisher-rest' ||
+    step.kind === 'finisher-score';
+
   const phaseLabel =
-    step.kind === 'warmup' ? 'Warm-up' : step.kind === 'rest' ? 'Rest' : `Set ${step.set} of ${step.sets}`;
+    step.kind === 'warmup'
+      ? 'Warm-up'
+      : step.kind === 'rest'
+        ? 'Rest'
+        : step.kind === 'work'
+          ? (step.supersetLabel ?? `Set ${step.set} of ${step.sets}`)
+          : step.kind === 'finisher-intro'
+            ? 'Finisher'
+            : step.kind === 'finisher-work'
+              ? step.rounds > 1
+                ? `Finisher · Round ${step.round} of ${step.rounds}`
+                : 'Finisher · Go'
+              : step.kind === 'finisher-rest'
+                ? `Finisher · Rest ${step.round} of ${step.rounds - 1}`
+                : 'Finisher · Score';
 
   return (
     <div class="session-overlay" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
@@ -236,17 +321,112 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
 
       {/* Body */}
       <div class="session-body">
-        <p class="session-phase" style={{ color: isRest ? 'var(--check)' : 'var(--text-dim)' }}>
+        <p
+          class="session-phase"
+          style={{
+            color: isRest ? 'var(--check)' : isFinisherStep ? 'var(--flame)' : 'var(--text-dim)',
+          }}
+        >
           {phaseLabel}
         </p>
 
-        {isRest ? (
+        {step.kind === 'rest' ? (
           <>
             <p class="session-encourage">{REST_ENCOURAGEMENT[idx % REST_ENCOURAGEMENT.length]}</p>
             <div class="session-timer">{fmt(remaining)}</div>
             <p class="session-next" style={{ color: 'var(--text-dim)' }}>
               Next: {step.nextName}
             </p>
+          </>
+        ) : step.kind === 'finisher-rest' ? (
+          <>
+            <p class="session-encourage">
+              {FINISHER_REST_LINES[step.round % FINISHER_REST_LINES.length]}
+            </p>
+            <div class="session-timer">{fmt(remaining)}</div>
+            <p class="session-next" style={{ color: 'var(--text-dim)' }}>
+              Next: Round {step.round + 1} of {step.rounds}
+            </p>
+          </>
+        ) : step.kind === 'finisher-intro' ? (
+          <>
+            <div class="finisher-flame">
+              <Flame size={28} strokeWidth={2.25} />
+            </div>
+            <h2 class="session-name">{step.finisher.name}</h2>
+            <p class="session-cue">{step.finisher.tagline}</p>
+            <div class="finisher-spec">
+              {step.finisher.format === 'intervals' ? (
+                <span>
+                  {step.finisher.rounds} × {step.finisher.workSeconds}s on / {step.finisher.restSeconds}s off
+                </span>
+              ) : (
+                <span>
+                  {Math.round((step.finisher.durationSeconds ?? 240) / 60)} min AMRAP · {step.finisher.task}
+                </span>
+              )}
+            </div>
+            <p class="finisher-target">
+              {bestScore !== null ? (
+                <>
+                  Score to beat: <strong>{bestScore} {step.finisher.scoreUnit}</strong>
+                </>
+              ) : (
+                <>First time — set the bar. Count your {step.finisher.scoreUnit}.</>
+              )}
+            </p>
+          </>
+        ) : step.kind === 'finisher-work' ? (
+          <>
+            <h2 class="session-name">{step.finisher.name}</h2>
+            <img
+              src={`/exercises/${step.finisher.exerciseId}.webp`}
+              alt={step.finisher.name}
+              class="session-image"
+              loading="eager"
+            />
+            <div class="session-timer">{fmt(remaining)}</div>
+            <p class="session-cue">
+              {step.finisher.format === 'amrap' ? step.finisher.task : step.finisher.scoreCue}
+            </p>
+          </>
+        ) : step.kind === 'finisher-score' ? (
+          <>
+            <h2 class="session-name">How many {step.finisher.scoreUnit}?</h2>
+            <div class="score-stepper">
+              <button
+                class="score-stepper-btn"
+                onClick={() => setScore((s) => Math.max(0, s - 1))}
+                aria-label="Decrease score"
+              >
+                <Minus size={22} />
+              </button>
+              <input
+                class="score-stepper-value"
+                type="text"
+                inputMode="numeric"
+                value={score}
+                onInput={(e) => {
+                  const v = parseInt((e.target as HTMLInputElement).value, 10);
+                  setScore(Number.isNaN(v) ? 0 : Math.max(0, v));
+                }}
+              />
+              <button
+                class="score-stepper-btn"
+                onClick={() => setScore((s) => s + 1)}
+                aria-label="Increase score"
+              >
+                <Plus size={22} />
+              </button>
+            </div>
+            {bestScore !== null && (
+              <p class="finisher-target">
+                Best: {bestScore} {step.finisher.scoreUnit}
+                {score > bestScore && (
+                  <span style={{ color: 'var(--check)' }}> — that’s a new record</span>
+                )}
+              </p>
+            )}
           </>
         ) : (
           <>
@@ -268,7 +448,15 @@ export function GuidedSession({ workout, onClose, onExerciseComplete }: GuidedSe
           <ChevronLeft size={22} />
         </button>
 
-        {isRest ? (
+        {step.kind === 'finisher-intro' ? (
+          <button onClick={() => advance(false)} class="session-btn-primary session-btn-wide">
+            <Flame size={18} /> Go
+          </button>
+        ) : step.kind === 'finisher-score' ? (
+          <button onClick={submitScore} class="session-btn-primary session-btn-wide">
+            <Check size={18} /> Save score
+          </button>
+        ) : isRest ? (
           <>
             <button onClick={() => setRemaining((r) => r + 15)} class="session-btn-secondary" aria-label="Add 15 seconds">
               <Plus size={16} /> 15s

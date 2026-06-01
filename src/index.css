@@ -15,6 +15,7 @@
     --border: #e0e0e0;
     --accent: #1a1a1a;
     --check: #10b981;
+    --flame: #c41e3a; /* finisher red — matches the illustration arrows */
   }
 
   /* Dark mode - elegant dark theme */
@@ -28,6 +29,7 @@
       --border: #262626;
       --accent: #fafafa;
       --check: #10b981;
+      --flame: #f87171; /* lighter red for contrast on dark */
     }
   }
 
@@ -629,4 +631,82 @@ html {
   font-weight: 500;
   color: var(--text);
   max-width: 22rem;
+}
+
+/* ─── Streak & finisher ─────────────────────────────────────────── */
+.streak-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  background: var(--bg-alt);
+  color: var(--flame);
+  font-weight: 600;
+  font-size: 0.6875rem;
+}
+
+.finisher-flame {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-alt);
+  color: var(--flame);
+}
+
+.finisher-spec {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: var(--bg-alt);
+}
+
+.finisher-target {
+  font-size: 0.9375rem;
+  color: var(--text-dim);
+}
+.finisher-target strong {
+  color: var(--flame);
+  font-weight: 700;
+}
+
+/* Score entry stepper */
+.score-stepper {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.score-stepper-btn {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-alt);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.15s ease;
+}
+.score-stepper-btn:hover { background: var(--border); }
+.score-stepper-btn:active { transform: scale(0.95); }
+
+.score-stepper-value {
+  width: 7rem;
+  text-align: center;
+  font-size: 4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  background: transparent;
+  color: var(--text);
+  border: none;
+  outline: none;
 }

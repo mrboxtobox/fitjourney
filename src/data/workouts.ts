@@ -1,6 +1,6 @@
 // Idaraya - Minimalist Movement Practice
-// ~20-25 minute daily workout
-// Goals (in priority): glutes, core & abs, toned arms
+// ~30 minute daily workout: supersets for density + a scored metabolic finisher
+// Goals (in priority): glutes, core & abs, toned arms, real sweat
 // Constraints: knee-friendly (low-impact, hinge-dominant, controlled range), gradual ramp
 // Equipment: bodyweight, kettlebell, dumbbells, mini loop bands
 
@@ -26,9 +26,39 @@ export interface WarmupExercise {
   cue: string;
 }
 
+// A superset pairs two non-competing exercises done back-to-back;
+// rest comes only after the pair. This is what keeps the heart rate up.
+export interface SupersetPair {
+  exerciseIds: [string, string];
+  restAfterPair: number; // seconds of rest after completing both
+}
+
+// A finisher is a short, scored metabolic block at the end of the workout.
+// All finishers are hinge/bridge-based and knee-friendly.
+export interface Finisher {
+  id: string;
+  name: string; // bold display name
+  tagline: string; // the challenge, in one line
+  exerciseId: string; // existing exercise whose illustration + form we reuse
+  format: 'intervals' | 'amrap';
+  // intervals: rounds × (work + rest)
+  workSeconds?: number;
+  restSeconds?: number;
+  rounds?: number;
+  // amrap: one continuous block, repeat the task
+  durationSeconds?: number;
+  task?: string;
+  scoreUnit: string; // what the user counts: 'swings', 'rounds', 'steps', 'reps'
+  scoreCue: string;
+  equipment?: string[];
+  kneeNote?: string;
+}
+
 export interface WorkoutDay {
   type: 'workout' | 'rest';
   exercises: Exercise[];
+  supersets: SupersetPair[];
+  finisher: Finisher | null;
   warmup: WarmupExercise[];
 }
 
@@ -147,7 +177,7 @@ const HIP_THRUST: Exercise = {
   block: 'strength',
   sets: 3,
   reps: 10,
-  restBetweenSets: 45,
+  restBetweenSets: 30,
   equipment: ['dumbbell'],
   kneeNote: 'Top glute builder with almost no knee strain.',
 };
@@ -159,7 +189,7 @@ const SINGLE_LEG_GLUTE_BRIDGE: Exercise = {
   block: 'strength',
   sets: 2,
   reps: '8 each',
-  restBetweenSets: 30,
+  restBetweenSets: 20,
   kneeNote: 'Knee-friendly: builds single-leg glute strength without squatting.',
 };
 
@@ -170,7 +200,7 @@ const KETTLEBELL_DEADLIFT: Exercise = {
   block: 'strength',
   sets: 3,
   reps: 8,
-  restBetweenSets: 45,
+  restBetweenSets: 30,
   equipment: ['kettlebell'],
   kneeNote: 'Hinge from the hips, not the knees — shins stay near vertical.',
 };
@@ -182,7 +212,7 @@ const DB_RDL: Exercise = {
   block: 'strength',
   sets: 3,
   reps: 10,
-  restBetweenSets: 45,
+  restBetweenSets: 30,
   equipment: ['dumbbell'],
   kneeNote: 'Hip hinge — minimal knee bend, great for glutes and hamstrings.',
 };
@@ -194,7 +224,7 @@ const B_STANCE_RDL: Exercise = {
   block: 'strength',
   sets: 3,
   reps: '8 each',
-  restBetweenSets: 45,
+  restBetweenSets: 30,
   equipment: ['kettlebell'],
   kneeNote: 'A hip hinge — soft front knee, shin stays vertical. The back leg is just a kickstand.',
 };
@@ -206,7 +236,7 @@ const BOX_SQUAT: Exercise = {
   block: 'strength',
   sets: 3,
   reps: 10,
-  restBetweenSets: 40,
+  restBetweenSets: 30,
   kneeNote: 'Knee-friendly squat: the box caps your depth so the knee never overloads.',
 };
 
@@ -217,7 +247,7 @@ const GOBLET_SQUAT: Exercise = {
   block: 'strength',
   sets: 3,
   reps: 8,
-  restBetweenSets: 45,
+  restBetweenSets: 30,
   equipment: ['kettlebell'],
   kneeNote: 'Stop at the depth where the knee stays quiet. Keep knees tracking over toes.',
 };
@@ -229,7 +259,7 @@ const FARMERS_CARRY: Exercise = {
   block: 'strength',
   sets: 2,
   reps: '40 steps',
-  restBetweenSets: 30,
+  restBetweenSets: 20,
   equipment: ['kettlebell'],
 };
 
@@ -240,7 +270,7 @@ const KETTLEBELL_SWING: Exercise = {
   block: 'strength',
   sets: 3,
   reps: 10,
-  restBetweenSets: 30,
+  restBetweenSets: 20,
   equipment: ['kettlebell'],
   kneeNote: 'A hip hinge, not a squat — the knees barely bend.',
 };
@@ -302,7 +332,7 @@ const DB_BICEP_CURL: Exercise = {
   block: 'arms',
   sets: 3,
   reps: 12,
-  restBetweenSets: 30,
+  restBetweenSets: 20,
   equipment: ['dumbbell'],
 };
 
@@ -313,7 +343,7 @@ const DB_OVERHEAD_PRESS: Exercise = {
   block: 'arms',
   sets: 3,
   reps: 10,
-  restBetweenSets: 35,
+  restBetweenSets: 25,
   equipment: ['dumbbell'],
 };
 
@@ -324,7 +354,7 @@ const DB_TRICEP_KICKBACK: Exercise = {
   block: 'arms',
   sets: 3,
   reps: 12,
-  restBetweenSets: 30,
+  restBetweenSets: 20,
   equipment: ['dumbbell'],
 };
 
@@ -335,7 +365,7 @@ const DB_LATERAL_RAISE: Exercise = {
   block: 'arms',
   sets: 3,
   reps: 12,
-  restBetweenSets: 30,
+  restBetweenSets: 20,
   equipment: ['dumbbell'],
 };
 
@@ -346,7 +376,7 @@ const PUSH_UP: Exercise = {
   block: 'arms',
   sets: 3,
   reps: 8,
-  restBetweenSets: 35,
+  restBetweenSets: 25,
   kneeNote: 'Hands on a counter or knees down to scale it — keep the straight line.',
 };
 
@@ -410,6 +440,95 @@ const PIGEON_STRETCH: Exercise = {
   hold: 45,
   restBetweenSets: 0,
 };
+
+// ═══════════════════════════════════════════════════════════════════
+// FINISHERS — 4-6 minute scored metabolic blocks. The sweat lives here.
+// All knee-friendly: hinges, bridges, carries, band work. No jumping.
+// ═══════════════════════════════════════════════════════════════════
+
+export const FINISHERS: Finisher[] = [
+  {
+    id: 'swing-storm',
+    name: 'Swing Storm',
+    tagline: 'Six rounds of swings. Power from the hips, every single rep.',
+    exerciseId: 'kb-swing',
+    format: 'intervals',
+    workSeconds: 30,
+    restSeconds: 15,
+    rounds: 6,
+    scoreUnit: 'swings',
+    scoreCue: 'Count every swing across all six rounds.',
+    equipment: ['kettlebell'],
+    kneeNote: 'A hip hinge, not a squat — the knees barely bend.',
+  },
+  {
+    id: 'the-burner',
+    name: 'The Burner',
+    tagline: 'Band on. Walk, walk, kick. No rest until the clock stops.',
+    exerciseId: 'band-lateral-walk',
+    format: 'amrap',
+    durationSeconds: 240,
+    task: '10 lateral steps each way · 10 monster steps · 10 kickbacks each leg',
+    scoreUnit: 'rounds',
+    scoreCue: 'Move continuously. Count completed rounds.',
+    equipment: ['mini band'],
+    kneeNote: 'Stay in a shallow quarter squat — knees track over toes.',
+  },
+  {
+    id: 'carry-heavy',
+    name: 'Carry Heavy',
+    tagline: 'Pick it up. Walk tall. Repeat until the clock saves you.',
+    exerciseId: 'farmers-carry',
+    format: 'intervals',
+    workSeconds: 40,
+    restSeconds: 20,
+    rounds: 5,
+    scoreUnit: 'steps',
+    scoreCue: 'Count total steps across all five carries.',
+    equipment: ['kettlebell'],
+  },
+  {
+    id: 'bridge-inferno',
+    name: 'Bridge Inferno',
+    tagline: 'Four minutes. Glutes only. Feel the burn build.',
+    exerciseId: 'glute-bridge',
+    format: 'amrap',
+    durationSeconds: 240,
+    task: '15 glute bridges (2s hold) · 10 banded kickbacks each leg',
+    scoreUnit: 'rounds',
+    scoreCue: 'Squeeze hard at the top of every rep. Count rounds.',
+    equipment: ['mini band'],
+    kneeNote: 'Zero knee load — pure glutes.',
+  },
+  {
+    id: 'hinge-and-drive',
+    name: 'Hinge & Drive',
+    tagline: 'Deadlift fast, stand tall, go again.',
+    exerciseId: 'kb-deadlift',
+    format: 'intervals',
+    workSeconds: 30,
+    restSeconds: 20,
+    rounds: 6,
+    scoreUnit: 'reps',
+    scoreCue: 'Crisp reps — count every lockout.',
+    equipment: ['kettlebell'],
+    kneeNote: 'Hips back, shins vertical. Stop if form breaks.',
+  },
+];
+
+// Foundation phase gets a scaled-down finisher (fewer rounds / shorter clock)
+// so the ramp stays gentle. Build onward gets the full dose.
+function scaleFinisherForPhase(finisher: Finisher, phase: Phase): Finisher {
+  if (phase !== 'foundation') return finisher;
+  if (finisher.format === 'intervals') {
+    return { ...finisher, rounds: Math.max(3, (finisher.rounds ?? 6) - 2) };
+  }
+  return { ...finisher, durationSeconds: Math.max(120, (finisher.durationSeconds ?? 240) - 60) };
+}
+
+export function getFinisherForDate(dayOfWeek: number, phase: Phase): Finisher {
+  return scaleFinisherForPhase(FINISHERS[dayOfWeek % FINISHERS.length], phase);
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // WARMUP (~3 min)
@@ -601,16 +720,20 @@ function pick<T>(arr: T[], dayOfWeek: number, offset = 0): T {
   return arr[(dayOfWeek + offset) % arr.length];
 }
 
-// Build the day's exercises for a given phase, rotating by day of week.
-function getDailyWorkout(dayOfWeek: number, phase: Phase): Exercise[] {
+// Build the day's exercises + superset pairing for a given phase, rotating by day of week.
+// Pairing rule: non-competing muscle groups go back-to-back, rest only after the pair.
+function getDailyWorkout(
+  dayOfWeek: number,
+  phase: Phase
+): { exercises: Exercise[]; supersets: SupersetPair[] } {
   // ── CORE & ABS ──────────────────────────────────────────────
   // McGill Big 3 is the daily foundation; a rotating 4th adds direct ab work.
-  const core: Exercise[] = [MCGILL_CURL_UP, MCGILL_SIDE_PLANK, MCGILL_BIRD_DOG];
   const abPool: Exercise[] =
     phase === 'foundation'
       ? [DEAD_BUG, FRONT_PLANK]
       : [DEAD_BUG, FRONT_PLANK, HOLLOW_HOLD, PALLOF_PRESS];
-  core.push(pick(abPool, dayOfWeek));
+  const abMove = pick(abPool, dayOfWeek);
+  const core: Exercise[] = [MCGILL_CURL_UP, MCGILL_SIDE_PLANK, MCGILL_BIRD_DOG, abMove];
 
   // ── STRENGTH (glute-focused) ────────────────────────────────
   // 1 hinge + 1 bridge/thrust + 1 banded accessory.
@@ -630,11 +753,10 @@ function getDailyWorkout(dayOfWeek: number, phase: Phase): Exercise[] {
 
   const bandPool: Exercise[] = [BAND_LATERAL_WALK, BAND_CLAMSHELL, BAND_MONSTER_WALK, BAND_KICKBACK];
 
-  const strength: Exercise[] = [
-    pick(hingePool, dayOfWeek),
-    pick(bridgePool, dayOfWeek, 1),
-    pick(bandPool, dayOfWeek),
-  ];
+  const hinge = pick(hingePool, dayOfWeek);
+  const bridge = pick(bridgePool, dayOfWeek, 1);
+  const band = pick(bandPool, dayOfWeek);
+  const strength: Exercise[] = [hinge, bridge, band];
 
   // ── ARMS ────────────────────────────────────────────────────
   // Foundation: one gentle move. Later: two rotating dumbbell/bodyweight moves.
@@ -653,25 +775,39 @@ function getDailyWorkout(dayOfWeek: number, phase: Phase): Exercise[] {
     arms.push(pick(armPool, dayOfWeek), pick(armPool, dayOfWeek, 3));
   }
 
-  // ── MOBILITY ────────────────────────────────────────────────
-  const mobilityPool: Exercise[][] = [
-    [COUCH_STRETCH, PIGEON_STRETCH],
-    [NINETY_NINETY, DEEP_SQUAT_HOLD],
-  ];
-  const mobility = mobilityPool[dayOfWeek % 2];
+  // ── MOBILITY (cooldown — one stretch, the warmup covers the rest) ──
+  const mobilityPool: Exercise[] = [COUCH_STRETCH, NINETY_NINETY, PIGEON_STRETCH, DEEP_SQUAT_HOLD];
+  const mobility = [pick(mobilityPool, dayOfWeek)];
 
-  return [...core, ...strength, ...arms, ...mobility].map((ex) => scaleForPhase(ex, phase));
+  // ── SUPERSETS ───────────────────────────────────────────────
+  // Core pairs rest 20s; strength/arm pairs rest 30s. Anything unpaired
+  // (second arm move, mobility) runs as straight sets.
+  const supersets: SupersetPair[] = [
+    { exerciseIds: [MCGILL_CURL_UP.id, MCGILL_SIDE_PLANK.id], restAfterPair: 20 },
+    { exerciseIds: [MCGILL_BIRD_DOG.id, abMove.id], restAfterPair: 20 },
+    { exerciseIds: [hinge.id, band.id], restAfterPair: 30 },
+    { exerciseIds: [bridge.id, arms[0].id], restAfterPair: 30 },
+  ];
+
+  const exercises = [...core, ...strength, ...arms, ...mobility].map((ex) =>
+    scaleForPhase(ex, phase)
+  );
+
+  return { exercises, supersets };
 }
 
 export function getWorkoutForDate(date: Date, startDate: Date): WorkoutDay {
   const dayOfWeek = date.getDay();
   const week = getCurrentWeekFor(date, startDate);
   const phase = getPhaseForWeek(week);
+  const { exercises, supersets } = getDailyWorkout(dayOfWeek, phase);
 
   return {
     type: 'workout',
     warmup: WARMUP,
-    exercises: getDailyWorkout(dayOfWeek, phase),
+    exercises,
+    supersets,
+    finisher: getFinisherForDate(dayOfWeek, phase),
   };
 }
 
@@ -748,43 +884,125 @@ export type SessionStep =
       reps: number | string;
       hold?: number;
       isLastSet: boolean;
+      supersetLabel?: string; // e.g. "Superset A · Round 2 of 3"
     }
-  | { kind: 'rest'; duration: number; nextName: string };
+  | { kind: 'rest'; duration: number; nextName: string }
+  | { kind: 'finisher-intro'; finisher: Finisher }
+  | { kind: 'finisher-work'; finisher: Finisher; round: number; rounds: number; duration: number }
+  | { kind: 'finisher-rest'; finisher: Finisher; round: number; rounds: number; duration: number }
+  | { kind: 'finisher-score'; finisher: Finisher };
 
-// Build the full ordered step list: warmups, then each exercise's sets with
-// rests between sets and a short transition rest before the next exercise.
+// Display name of a step, used for "Next: …" labels on rest screens.
+function stepName(step: SessionStep): string {
+  switch (step.kind) {
+    case 'warmup':
+    case 'work':
+      return step.name;
+    case 'finisher-intro':
+    case 'finisher-work':
+      return `Finisher: ${step.finisher.name}`;
+    case 'finisher-score':
+      return 'Log your score';
+    default:
+      return '';
+  }
+}
+
+// Build the full ordered step list:
+//   warm-up → supersets (A1 → A2 → rest, per round) → straight-set extras
+//   → finisher (intro → timed intervals/AMRAP → score) → cooldown stretch.
 export function buildSessionSteps(workout: WorkoutDay): SessionStep[] {
   const steps: SessionStep[] = [];
 
+  // 1) Warm-up
   for (const w of workout.warmup) {
     steps.push({ kind: 'warmup', id: w.id, name: w.name, cue: w.cue, duration: w.duration });
   }
 
-  workout.exercises.forEach((ex, exIdx) => {
-    const next = workout.exercises[exIdx + 1];
-    for (let s = 1; s <= ex.sets; s++) {
-      const isLastSet = s === ex.sets;
-      steps.push({
-        kind: 'work',
-        id: ex.id,
-        name: ex.name,
-        cue: ex.cue,
-        set: s,
-        sets: ex.sets,
-        reps: ex.reps,
-        hold: ex.hold,
-        isLastSet,
-      });
-      const rest = ex.restBetweenSets ?? 0;
-      if (!isLastSet && rest > 0) {
-        steps.push({ kind: 'rest', duration: rest, nextName: `${ex.name} · set ${s + 1}` });
-      } else if (isLastSet && next && rest > 0) {
-        steps.push({ kind: 'rest', duration: rest, nextName: next.name });
-      }
+  const byId = new Map(workout.exercises.map((e) => [e.id, e]));
+  const paired = new Set(workout.supersets.flatMap((p) => p.exerciseIds));
+
+  const pushWork = (ex: Exercise, set: number, supersetLabel?: string) => {
+    steps.push({
+      kind: 'work',
+      id: ex.id,
+      name: ex.name,
+      cue: ex.cue,
+      set,
+      sets: ex.sets,
+      reps: ex.reps,
+      hold: ex.hold,
+      isLastSet: set === ex.sets,
+      supersetLabel,
+    });
+  };
+
+  // 2) Supersets — A1 then A2 back-to-back, rest only after the pair.
+  const letters = ['A', 'B', 'C', 'D', 'E'];
+  workout.supersets.forEach((pair, pairIdx) => {
+    const a = byId.get(pair.exerciseIds[0]);
+    const b = byId.get(pair.exerciseIds[1]);
+    if (!a || !b) return;
+    const rounds = Math.max(a.sets, b.sets);
+    const letter = letters[pairIdx] ?? String(pairIdx + 1);
+    for (let r = 1; r <= rounds; r++) {
+      const label = `Superset ${letter} · Round ${r} of ${rounds}`;
+      if (r <= a.sets) pushWork(a, r, label);
+      if (r <= b.sets) pushWork(b, r, label);
+      steps.push({ kind: 'rest', duration: pair.restAfterPair, nextName: '' });
     }
   });
 
-  return steps;
+  // 3) Unpaired exercises (extra arm move) — straight sets. Mobility waits for the cooldown.
+  const extras = workout.exercises.filter((e) => !paired.has(e.id) && e.block !== 'mobility');
+  for (const ex of extras) {
+    for (let s = 1; s <= ex.sets; s++) {
+      pushWork(ex, s);
+      const rest = ex.restBetweenSets ?? 0;
+      if (rest > 0) steps.push({ kind: 'rest', duration: rest, nextName: '' });
+    }
+  }
+
+  // 4) Finisher — the scored sweat block.
+  if (workout.finisher) {
+    const f = workout.finisher;
+    steps.push({ kind: 'finisher-intro', finisher: f });
+    if (f.format === 'intervals') {
+      const rounds = f.rounds ?? 1;
+      for (let r = 1; r <= rounds; r++) {
+        steps.push({ kind: 'finisher-work', finisher: f, round: r, rounds, duration: f.workSeconds ?? 30 });
+        if (r < rounds) {
+          steps.push({ kind: 'finisher-rest', finisher: f, round: r, rounds, duration: f.restSeconds ?? 15 });
+        }
+      }
+    } else {
+      steps.push({ kind: 'finisher-work', finisher: f, round: 1, rounds: 1, duration: f.durationSeconds ?? 240 });
+    }
+    steps.push({ kind: 'finisher-score', finisher: f });
+  }
+
+  // 5) Cooldown — the day's mobility stretch(es).
+  const cooldown = workout.exercises.filter((e) => e.block === 'mobility');
+  for (const ex of cooldown) {
+    for (let s = 1; s <= ex.sets; s++) {
+      pushWork(ex, s);
+    }
+  }
+
+  // Fill in "Next: …" for rests, and drop a trailing rest if it ended up last.
+  const filled: SessionStep[] = [];
+  for (let i = 0; i < steps.length; i++) {
+    const s = steps[i];
+    if (s.kind === 'rest') {
+      const next = steps.slice(i + 1).find((n) => n.kind !== 'rest');
+      if (!next) continue; // nothing follows — drop the rest
+      filled.push({ ...s, nextName: stepName(next) });
+    } else {
+      filled.push(s);
+    }
+  }
+
+  return filled;
 }
 
 export function getCoachingTip(week: number): CoachingTip | null {

@@ -1,7 +1,8 @@
-import { useState } from 'preact/hooks';
-import { Check, Play, Pause, RotateCcw, Minus, Plus, Maximize2, ShieldCheck, Target } from 'lucide-preact';
-import type { Exercise, WarmupExercise } from '../data/workouts';
+import { useState, useEffect } from 'preact/hooks';
+import { Check, Play, Pause, RotateCcw, Minus, Plus, Maximize2, ShieldCheck, Target, Flame, Trophy } from 'lucide-preact';
+import type { Exercise, WarmupExercise, Finisher } from '../data/workouts';
 import { getMuscleFocus } from '../data/workouts';
+import { getBestFinisherScore } from '../db';
 import { useTimer } from '../hooks/useTimer';
 
 // Map exercise IDs to their image paths
@@ -185,7 +186,7 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
         {/* Reps/Rest display */}
         <p class="text-xs mt-2 ml-6" style={{ color: 'var(--text-dim)' }}>
           {exercise.sets} × {exercise.reps}
-          {exercise.restBetweenSets && exercise.restBetweenSets > 0 && (
+          {(exercise.restBetweenSets ?? 0) > 0 && (
             <span> · {exercise.restBetweenSets}s rest</span>
           )}
         </p>
@@ -333,6 +334,90 @@ export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
               alt={`${exercise.name} form demonstration`}
               class="exercise-image"
             />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Finisher item — the scored metabolic block at the end of the workout.
+interface FinisherItemProps {
+  finisher: Finisher;
+  completed: boolean;
+  onToggle: () => void;
+}
+
+export function FinisherItem({ finisher, completed, onToggle }: FinisherItemProps) {
+  const [expanded, setExpanded] = useState(false);
+  const [best, setBest] = useState<number | null>(null);
+  const imagePath = `/exercises/${finisher.exerciseId}.webp`;
+
+  useEffect(() => {
+    getBestFinisherScore(finisher.id).then(setBest);
+  }, [finisher.id]);
+
+  const spec =
+    finisher.format === 'intervals'
+      ? `${finisher.rounds} × ${finisher.workSeconds}s on / ${finisher.restSeconds}s off`
+      : `${Math.round((finisher.durationSeconds ?? 240) / 60)} min AMRAP · ${finisher.task}`;
+
+  return (
+    <div class="exercise-item animate-fade">
+      {/* Thumbnail image - always visible */}
+      <button
+        onClick={() => setExpanded(!expanded)}
+        class="exercise-thumbnail-btn"
+        aria-label={expanded ? 'Collapse image' : 'Expand image'}
+      >
+        <img src={imagePath} alt={`${finisher.name} form`} class="exercise-thumbnail" loading="lazy" />
+        <div class="thumbnail-expand-icon">
+          <Maximize2 size={10} />
+        </div>
+      </button>
+
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2">
+          <button
+            onClick={onToggle}
+            class={`checkbox-min ${completed ? 'checked' : ''}`}
+            aria-label={completed ? 'Mark incomplete' : 'Mark complete'}
+          >
+            {completed && <Check size={12} color="white" strokeWidth={3} />}
+          </button>
+          <h3 class={`font-medium ${completed ? 'completed' : ''}`}>{finisher.name}</h3>
+          <Flame size={14} style={{ color: 'var(--flame)' }} class="flex-shrink-0" />
+        </div>
+        <p class="text-sm mt-0.5 ml-6" style={{ color: 'var(--text-muted)' }}>
+          {finisher.tagline}
+        </p>
+
+        <p class="text-xs mt-2 ml-6" style={{ color: 'var(--text-dim)' }}>
+          {spec}
+        </p>
+
+        {/* Score to beat */}
+        <p class="text-xs mt-2 ml-6 flex items-start gap-1.5" style={{ color: 'var(--text-dim)' }}>
+          <Trophy size={13} class="flex-shrink-0 mt-0.5" style={{ color: 'var(--check)' }} />
+          <span>
+            {best !== null
+              ? `Score to beat: ${best} ${finisher.scoreUnit}`
+              : `First time — set the bar in ${finisher.scoreUnit}.`}
+          </span>
+        </p>
+
+        {/* Knee-friendly note */}
+        {finisher.kneeNote && (
+          <p class="text-xs mt-2 ml-6 flex items-start gap-1.5" style={{ color: 'var(--text-dim)' }}>
+            <ShieldCheck size={13} class="flex-shrink-0 mt-0.5" style={{ color: 'var(--check)' }} />
+            <span>{finisher.kneeNote}</span>
+          </p>
+        )}
+
+        {/* Expanded illustration */}
+        {expanded && (
+          <div class="exercise-image-container" onClick={() => setExpanded(false)}>
+            <img src={imagePath} alt={`${finisher.name} form demonstration`} class="exercise-image" />
           </div>
         )}
       </div>

@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { getWorkoutForDate, getAllExercises, getCurrentWeek, getPhaseInfo } from '../data/workouts';
 import type { WorkoutDay, Block, Exercise } from '../data/workouts';
-import { ExerciseItem, WarmupItem } from '../components/ExerciseCard';
+import { ExerciseItem, WarmupItem, FinisherItem } from '../components/ExerciseCard';
 import { GuidedSession } from '../components/GuidedSession';
 import { DateNav } from '../components/Navigation';
-import { Play } from 'lucide-preact';
+import { Play, Flame } from 'lucide-preact';
 import { initAudio } from '../lib/sound';
 import { useDate, formatDateString } from '../hooks/useDate';
 import {
   getWorkoutLogsForDate,
   toggleExercise,
   saveDailyLog,
+  getStreak,
   type WorkoutLog,
 } from '../db';
 
@@ -44,6 +45,7 @@ export function TodayView({ startDate }: TodayViewProps) {
   const [logs, setLogs] = useState<WorkoutLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [sessionOpen, setSessionOpen] = useState(false);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     const loadData = async () => {
@@ -53,6 +55,7 @@ export function TodayView({ startDate }: TodayViewProps) {
 
       const savedLogs = await getWorkoutLogsForDate(dateString);
       setLogs(savedLogs);
+      setStreak(await getStreak(formatDateString(new Date())));
       setLoading(false);
     };
 
@@ -61,7 +64,8 @@ export function TodayView({ startDate }: TodayViewProps) {
 
   const allExercises = workout ? getAllExercises(workout) : [];
   const completedCount = logs.filter((l) => l.completed).length;
-  const totalCount = allExercises.length;
+  // The finisher counts toward the day's completion alongside the exercises.
+  const totalCount = allExercises.length + (workout?.finisher ? 1 : 0);
   const isComplete = completedCount === totalCount && totalCount > 0;
 
   const week = getCurrentWeek(startDate);
@@ -98,6 +102,7 @@ export function TodayView({ startDate }: TodayViewProps) {
         workoutType: workout.type,
         completed: true,
       });
+      setStreak(await getStreak(formatDateString(new Date())));
     }
   };
 
@@ -152,8 +157,14 @@ export function TodayView({ startDate }: TodayViewProps) {
       {totalCount > 0 && (
         <div class="mb-4">
           <div class="flex items-center justify-between mb-2">
-            <span class="text-xs" style={{ color: 'var(--text-dim)' }}>
+            <span class="text-xs flex items-center gap-2" style={{ color: 'var(--text-dim)' }}>
               Week {week} · {phase.name}
+              {streak > 0 && (
+                <span class="streak-badge">
+                  <Flame size={12} strokeWidth={2.5} />
+                  {streak} day{streak === 1 ? '' : 's'}
+                </span>
+              )}
             </span>
             <span class="text-xs" style={{ color: isComplete ? 'var(--check)' : 'var(--text-dim)' }}>
               {completedCount}/{totalCount}
@@ -188,6 +199,7 @@ export function TodayView({ startDate }: TodayViewProps) {
       {sessionOpen && (
         <GuidedSession
           workout={workout}
+          dateString={dateString}
           onClose={() => setSessionOpen(false)}
           onExerciseComplete={markComplete}
         />
@@ -223,27 +235,45 @@ export function TodayView({ startDate }: TodayViewProps) {
             </section>
           )}
 
-          {/* Main exercises grouped by block */}
+          {/* Main exercises grouped by block, with the finisher before the cooldown */}
           {BLOCK_ORDER.map((block) => {
             const items = workout.exercises.filter((e: Exercise) => e.block === block);
-            if (items.length === 0) return null;
+            const finisherSection =
+              block === 'mobility' && workout.finisher ? (
+                <section key="finisher">
+                  <h2 class="section-header">Finisher</h2>
+                  <div>
+                    <FinisherItem
+                      finisher={workout.finisher}
+                      completed={getExerciseLog(workout.finisher.id)?.completed ?? false}
+                      onToggle={() => handleToggle(workout.finisher!.id)}
+                    />
+                  </div>
+                </section>
+              ) : null;
+            if (items.length === 0) return finisherSection;
             return (
-              <section key={block}>
-                <h2 class="section-header">{BLOCK_LABELS[block]}</h2>
-                <div>
-                  {items.map((exercise) => {
-                    const log = getExerciseLog(exercise.id);
-                    return (
-                      <ExerciseItem
-                        key={exercise.id}
-                        exercise={exercise}
-                        completed={log?.completed ?? false}
-                        onToggle={() => handleToggle(exercise.id)}
-                      />
-                    );
-                  })}
-                </div>
-              </section>
+              <>
+                {finisherSection}
+                <section key={block}>
+                  <h2 class="section-header">
+                    {block === 'mobility' ? 'Cooldown' : BLOCK_LABELS[block]}
+                  </h2>
+                  <div>
+                    {items.map((exercise) => {
+                      const log = getExerciseLog(exercise.id);
+                      return (
+                        <ExerciseItem
+                          key={exercise.id}
+                          exercise={exercise}
+                          completed={log?.completed ?? false}
+                          onToggle={() => handleToggle(exercise.id)}
+                        />
+                      );
+                    })}
+                  </div>
+                </section>
+              </>
             );
           })}
         </>
