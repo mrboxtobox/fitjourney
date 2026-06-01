@@ -21,6 +21,7 @@ const EXERCISE_IMAGES: Record<string, string> = {
   'single-leg-glute-bridge': '/exercises/single-leg-glute-bridge.webp',
   'kb-deadlift': '/exercises/kb-deadlift.webp',
   'db-rdl': '/exercises/db-rdl.webp',
+  'b-stance-rdl': '/exercises/b-stance-rdl.webp',
   'box-squat': '/exercises/box-squat.webp',
   'goblet-squat': '/exercises/goblet-squat.webp',
   'farmers-carry': '/exercises/farmers-carry.webp',
@@ -28,6 +29,7 @@ const EXERCISE_IMAGES: Record<string, string> = {
   'band-lateral-walk': '/exercises/band-lateral-walk.webp',
   'band-monster-walk': '/exercises/band-monster-walk.webp',
   'band-clamshell': '/exercises/band-clamshell.webp',
+  'band-kickback': '/exercises/band-kickback.webp',
   // Arms
   'db-bicep-curl': '/exercises/db-bicep-curl.webp',
   'db-overhead-press': '/exercises/db-overhead-press.webp',

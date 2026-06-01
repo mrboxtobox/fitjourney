@@ -69,6 +69,7 @@ const MAPS: MuscleMap[] = [
   { id: 'single-leg-glute-bridge', view: 'back', primary: 'the gluteus maximus (buttocks)', secondary: 'the hamstrings' },
   { id: 'kb-deadlift', view: 'back', primary: 'the gluteus maximus and the hamstrings (back of thighs)', secondary: 'the spinal erectors (lower back)' },
   { id: 'db-rdl', view: 'back', primary: 'the hamstrings (back of the thighs)', secondary: 'the gluteus maximus' },
+  { id: 'b-stance-rdl', view: 'back', primary: 'the gluteus maximus and the hamstrings (back of the thigh)', secondary: 'the spinal erectors (lower back)' },
   { id: 'box-squat', view: 'back', primary: 'the gluteus maximus (buttocks)', secondary: 'the quadriceps and hamstrings (thighs)' },
   { id: 'goblet-squat', view: 'back', primary: 'the gluteus maximus (buttocks)', secondary: 'the quadriceps (front of thighs)' },
   { id: 'farmers-carry', view: 'back', primary: 'the trapezius (upper back) and the forearm muscles', secondary: 'the spinal erectors and core' },
@@ -76,6 +77,7 @@ const MAPS: MuscleMap[] = [
   { id: 'band-lateral-walk', view: 'back', primary: 'the gluteus medius (the upper outer hip, side of the buttocks)' },
   { id: 'band-monster-walk', view: 'back', primary: 'the gluteus maximus and gluteus medius (buttocks and outer hip)' },
   { id: 'band-clamshell', view: 'back', primary: 'the gluteus medius (the upper outer hip on the side of the buttocks)' },
+  { id: 'band-kickback', view: 'back', primary: 'the gluteus maximus (the buttocks)', secondary: 'the hamstrings (back of the thigh)' },
   // Arms
   { id: 'db-bicep-curl', view: 'front', primary: 'the biceps (front of both upper arms)' },
   { id: 'db-overhead-press', view: 'front', primary: 'the deltoids (shoulder muscles)', secondary: 'the triceps' },

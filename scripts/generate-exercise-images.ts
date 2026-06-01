@@ -84,7 +84,8 @@ COMPOSITION:
 - Both positions (solid + ghosted) on plain cream background
 - No text, labels, or watermarks
 - Square format
-- Figures fill ~70% of frame`;
+- Figures fill ~70% of frame
+- The cream background runs edge-to-edge. Do NOT draw any border, frame, outline box, or rectangle around the illustration — no framing lines of any kind.`;
 
 // =============================================================================
 // Exercise definitions with HYPER-DETAILED form descriptions
@@ -119,9 +120,16 @@ HAND POSITION:
 - His elbows point outward and rest on the floor
 
 HEAD/SHOULDERS:
-- His head and shoulder blades are raised just 1-2 inches off the ground
-- Looking straight up at the ceiling
-- Small movement, not a full sit-up
+- His head and shoulder blades are raised just 1-2 inches off the ground — BARELY lifted
+- His torso stays almost flat: the angle between his back and the floor is LESS THAN 15 DEGREES
+- His mid back and lower back REMAIN ON THE FLOOR — only the head and the very top of the shoulder blades hover
+- Looking straight up at the ceiling (NOT forward at his knees)
+- Tiny movement, not a full sit-up
+
+=== WHAT THIS IS NOT (CRITICAL) ===
+- This is NOT a sit-up. NOT a crunch. The torso NEVER comes up to 45 degrees.
+- DO NOT draw the man sitting up. DO NOT lift the torso off the floor.
+- If the torso is more than a few inches off the floor, the drawing is WRONG.
 
 === GHOSTED POSITION (FADED - Start position) ===
 Show a lighter/faded version of the same figure with:
@@ -131,10 +139,9 @@ Show a lighter/faded version of the same figure with:
 - This shows the starting position before the curl-up
 
 MOVEMENT ARROWS:
-- Red curved arrow from the ghosted head position to the solid lifted position
-- Arrow shows the small upward lift of the shoulders
+- Small red curved arrow at the head showing the tiny upward lift (a few inches only)
 
-The KEY visual is the asymmetry: one bent knee with foot on floor, one straight leg flat.
+The KEY visuals are: (1) the asymmetry — one bent knee with foot on floor, one straight leg flat, (2) the TINY range of motion — head and shoulders barely hover off the floor.
 
 Vintage pen-and-ink style, crosshatching, navy shorts, cream background.`,
   },
@@ -142,49 +149,45 @@ Vintage pen-and-ink style, crosshatching, navy shorts, cream background.`,
     id: 'mcgill-side-plank',
     name: 'McGill Side Plank',
     modelGender: 'female',
-    formDescription: `CAMERA ANGLE: Front view, looking at the person from the front as they face the camera while in side plank.
+    formDescription: `A woman holding a SIDE PLANK on her forearm — a classic isometric core exercise.
 
-=== PRIMARY POSITION (SOLID - Held plank position) ===
-BODY POSITION - BE EXTREMELY PRECISE:
-- Person is lying on their RIGHT side, propped up on their right forearm
-- Body faces the CAMERA (viewer sees the front of their body)
-- The body forms a STRAIGHT LINE from head to feet - like a wooden plank
+CAMERA ANGLE: Front view. The woman lies on her RIGHT side facing the camera, so the viewer sees the front of her body.
 
-RIGHT ARM (bottom arm):
-- Right forearm is flat on the ground
-- Right elbow is DIRECTLY under the right shoulder (90-degree angle at elbow)
-- Right hand is flat on ground, fingers pointing forward
+THE SHAPE OF THE POSE (this is the most important part):
+Think of her body as a rigid wooden board propped up at an angle:
+- Her FEET are the low end of the board, resting on the floor at the image's left
+- Her HEAD is the high end of the board, up in the air at the image's right
+- The board (her body) is perfectly straight from feet to head, tilted at roughly 20-30 degrees from the floor
+- Underneath her, holding the board up, is her RIGHT FOREARM — like a kickstand
 
-LEFT ARM (top arm):
-- Left hand is placed on the left hip
-- Left elbow points toward ceiling
+THE SUPPORTING ARM — THE MOST IMPORTANT DETAIL:
+Her body weight rests on her right ELBOW and FOREARM, which lie flat on the floor:
+- Her right ELBOW touches the floor directly underneath her right shoulder
+- From the elbow, her right FOREARM lies flat on the floor pointing FORWARD — in the same direction her head points (toward the image's right side) — so the entire forearm is visible lying along the ground, ending in a flat hand
+- Her right UPPER ARM is vertical: it goes straight up from the floor-elbow to her shoulder
+- The arm forms a clear L-shape: vertical upper arm, horizontal forearm on the floor
+- Her shoulder sits LOW — only one forearm's length above the floor
+- HER WEIGHT IS ON THE ELBOW/FOREARM. There is NO straight locked arm. The hand alone does NOT support her.
 
-LEGS:
-- BOTH legs are straight and stacked on top of each other
-- Right leg is on the bottom, left leg is on top
-- Feet are stacked (left foot on top of right foot)
+ONLY TWO THINGS TOUCH THE FLOOR:
+1. The side of her right foot (with her left foot stacked on top of it)
+2. Her right ELBOW and FOREARM, lying flat pointing forward (described above)
 
-HIPS:
-- Hips are LIFTED off the ground
-- Hips are stacked vertically (not rotated forward or backward)
-- There is a straight line from shoulders through hips to feet
+THERE IS CLEAR OPEN SPACE between her hip and the floor — her hips are lifted high. Nothing else touches the ground: not her hip, not her thigh, not her hand.
 
-HEAD:
-- Head is in neutral alignment with spine
-- Looking forward (at camera)
+HER LEFT (top) ARM: hand resting on her left hip, elbow pointing up.
 
-=== GHOSTED POSITION (FADED - Setup on ground) ===
-Show a lighter/faded version of the same figure with:
-- Same forearm position on ground
-- But HIPS resting on the ground (not lifted)
-- Body in the starting position before lifting into the plank
-- Shows the setup position before engaging
+HER HEAD: in line with her spine, looking at the camera.
 
-MOVEMENT ARROWS:
-- Red arrow pointing UPWARD at the hip area, from ghosted to solid position
-- Shows the lift direction from ground to held plank
+VISUAL AIDS:
+- ONE dashed straight line running from her feet through her hips to her head, showing the body is a straight board
+- A small red arrow under her hip pointing UP, showing the hips stay lifted
 
-CRITICAL: Body is a straight diagonal line from head to feet in the solid figure. Propped on forearm. Hips lifted. Ghosted figure shows hips on ground.`,
+CRITICAL CHECKS:
+- ONE figure only. NO ghosted second figure.
+- Her supporting arm is bent at the elbow with the FOREARM flat on the floor (an L-shape) — NOT a straight locked arm
+- Her hips are HIGH off the floor with visible open space underneath
+- Her body is perfectly straight from feet to head`,
   },
   {
     id: 'mcgill-bird-dog',
@@ -477,13 +480,15 @@ BODY POSITION - QUARTER SQUAT, STEPPING SIDEWAYS:
 - Person is in an athletic quarter squat, stepping sideways to their right
 
 MINI LOOP BAND PLACEMENT - CRITICAL:
-- Small elastic LOOP BAND is placed ABOVE THE KNEES (on lower thighs)
+- Small elastic RED LOOP BAND wraps around BOTH lower thighs, just ABOVE THE KNEES
+- The band is at the SAME HEIGHT on both legs — it runs HORIZONTALLY from one thigh to the other, parallel to the floor
 - The band is a continuous loop (no ends/handles)
-- Band is RED or visible color, clearly stretched between thighs
-- Band creates constant tension pulling knees together
+- The band is clearly stretched/taut spanning the gap between the two thighs
+- DO NOT draw the band running diagonally. DO NOT place it on a shin, ankle, or only one leg. It sits just above BOTH kneecaps at equal height.
 
 STANCE:
-- In a QUARTER SQUAT position (knees bent ~30-45 degrees)
+- In a clear QUARTER SQUAT position: knees bent ~30-45 degrees, hips pushed back, torso leaning slightly forward
+- The figure is visibly crouched, NOT standing upright
 - Feet are wider than hip-width (stretching the band)
 - Weight is low, athletic stance
 - Chest up, slight forward lean
@@ -605,18 +610,17 @@ The body makes a RAMP shape:
 - High point: hips raised up
 - Knees bent, feet planted on floor
 
-=== THE BAND ===
-- Red mini loop band wrapped around BOTH thighs, just above the knees
-- Knees push outward against the band
-
-=== GHOSTED POSITION ===
-Faded version showing hips DOWN on the ground (starting position)
+=== THE BAND — CRITICAL ===
+- A red mini loop band is a SINGLE CONTINUOUS LOOP that wraps around BOTH thighs at once, just ABOVE both kneecaps (on the lower thighs, NOT on the shins)
+- The band passes around the outside of the near thigh, stretches across the gap between the legs, and around the outside of the far thigh — connecting the two legs like a rubber band around two posts
+- The band is visibly STRETCHED/TAUT between the two thighs because the knees push outward
+- DO NOT draw the band around only one leg. DO NOT draw it on the shins or over the hips. It sits on the lower thighs just above BOTH kneecaps.
 
 === ARROWS ===
 - Red arrow at hips pointing UP
-- Red arrows at knees pointing OUTWARD
+- Small red arrows at both knees pointing OUTWARD (away from each other)
 
-CRITICAL: This is a HIP THRUST. Feet are PLANTED on the ground. Hips lift UP. It's the same as a regular glute bridge but with a band above the knees.`,
+CRITICAL: This is a HIP THRUST shown as ONE single solid figure — NO ghosted second figure, NO extra figures anywhere in the image. Feet are PLANTED on the ground. Hips are lifted UP at the top of the bridge. The single loop band wraps around BOTH lower thighs above the knees and stretches between them. Exactly one person in the image.`,
   },
   {
     id: 'band-clamshell',
@@ -649,7 +653,45 @@ Two positions:
 
 Red arrow showing knee rotating up/back.
 
-Vintage illustration, cream background, navy clothing, black ink.`,
+THE BAND: the red mini loop band wraps around BOTH thighs just above the knees, stretching as the top knee opens.
+
+Vintage illustration, cream background, navy clothing, black ink.
+
+COMPOSITION: The illustration fills the whole frame edge-to-edge with the cream background. Do NOT draw any border, frame, outline box, or rectangle around the illustration. No framing lines of any kind.`,
+  },
+
+  {
+    id: 'band-kickback',
+    name: 'Banded Kickback',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile). A chair or wall for support is on the LEFT.
+
+=== PRIMARY POSITION (SOLID - leg kicked back) ===
+A woman performing a standing banded glute kickback:
+
+SETUP:
+- Standing TALL, facing a chair back / wall on the left side of the image
+- BOTH hands rest lightly on the chair back / wall for balance
+- A small RED LOOP BAND wraps around BOTH ankles — one continuous loop encircling the left ankle and the right ankle
+- The band is visibly STRETCHED between the two ankles
+
+THE KICKBACK:
+- Her STANDING leg (closer to the support) is planted flat, knee soft (slightly bent)
+- Her WORKING leg is kicked STRAIGHT BACK and slightly up, knee straight, toes pointed down toward the floor
+- The working leg lifts only to about 30-45 degrees behind her — a controlled squeeze, not a high kick
+- Her GLUTE on the working side is visibly squeezed/contracted
+- TORSO stays upright and still — she does NOT lean far forward, and her lower back does NOT arch
+- Hips stay square (both hip bones face the support)
+
+=== GHOSTED POSITION (faded - feet together) ===
+Lighter version with both feet together under the hips, band relaxed around both ankles (start position).
+
+MOVEMENT INDICATORS:
+- Bold red curved arrow showing the working leg sweeping straight back
+- Dashed arc showing the leg's path from standing to kicked-back
+- Dashed vertical line along the torso showing it stays upright (no arching)
+
+CRITICAL: The red loop band wraps around BOTH ankles and stretches as the leg kicks back. The kicking leg stays STRAIGHT. The torso stays tall — all the movement comes from the hip. Standing knee stays soft.`,
   },
 
   // =========================================================================
@@ -741,18 +783,21 @@ A woman performing a dumbbell Romanian deadlift, hinged forward:
 - HINGED at the hips: butt pushed far BACK, torso leaning forward to about 45 degrees
 - Back FLAT (neutral spine), not rounded
 - KNEES only slightly bent (soft) — SHINS NEARLY VERTICAL
-- A DUMBBELL in each hand, arms straight, dumbbells hanging just below the knees, close to the shins
+- TWO SEPARATE DUMBBELLS: one dumbbell gripped in the LEFT hand, one dumbbell gripped in the RIGHT hand
+- Both arms hang straight down, each hand holding its own dumbbell just below the knees, close to the shins
+- The two dumbbells hang side by side — since this is a profile view, one dumbbell is partially hidden behind the other, but BOTH hands are clearly each wrapped around their own separate handle
+- DO NOT draw one single dumbbell held horizontally by both hands. Each hand has its own dumbbell.
 - Head neutral, eyes down and slightly forward
 
 === GHOSTED POSITION (faded - standing tall) ===
-Lighter version standing fully upright, dumbbells at the front of the thighs, glutes squeezed.
+Lighter version standing fully upright, one dumbbell in each hand resting at the front of the thighs, glutes squeezed.
 
 MOVEMENT INDICATORS:
 - Bold red arrow at the hips showing the hinge (hips travel back and up)
 - Dashed line along the flat back showing neutral spine
 - Dashed horizontal line showing hips traveling backward
 
-CRITICAL: This is a HIP HINGE, not a squat. Knees barely bend, hips push back, back stays flat. A dumbbell in EACH hand (two dumbbells).`,
+CRITICAL: This is a HIP HINGE, not a squat. Knees barely bend, hips push back, back stays flat. TWO dumbbells — one in EACH hand, each hand gripping its own handle (in both the solid and the ghosted figure). NO border or frame around the image — the cream background runs edge-to-edge.`,
   },
   {
     id: 'box-squat',
@@ -760,10 +805,11 @@ CRITICAL: This is a HIP HINGE, not a squat. Knees barely bend, hips push back, b
     modelGender: 'male',
     formDescription: `CAMERA ANGLE: Side view (profile). A sturdy box/chair on the RIGHT.
 
-=== PRIMARY POSITION (SOLID - seated/touch on box) ===
-A man squatting back to lightly touch a box/chair:
+=== PRIMARY POSITION (SOLID - light touch on box) ===
+A man squatting back to LIGHTLY touch a box/chair (not sitting on it):
 - A sturdy BOX or CHAIR behind him
-- Hips sitting BACK and DOWN until the butt lightly touches the top of the box
+- Hips sitting BACK and DOWN until the butt JUST BARELY GRAZES the top of the box — he is still holding his own weight on his legs, NOT resting on the box
+- His muscles are still working: legs loaded, torso braced — this is a squat that touches the box, not a person sitting down
 - Thighs roughly PARALLEL to the floor (NOT a deep squat — depth is capped by the box)
 - KNEES bent, tracking over the toes, shins fairly upright
 - Feet flat, shoulder-width
@@ -778,6 +824,39 @@ MOVEMENT INDICATORS:
 - Dashed line showing the back angle
 
 CRITICAL: The box CAPS the depth at about parallel — this is a knee-friendly squat. Hips sit back to the box, chest stays up. Show the box/chair clearly.`,
+  },
+
+  {
+    id: 'b-stance-rdl',
+    name: 'B-Stance RDL',
+    modelGender: 'female',
+    formDescription: `CAMERA ANGLE: Side view (profile).
+
+=== PRIMARY POSITION (SOLID - hinged position) ===
+A woman performing a B-stance (kickstand) Romanian deadlift with a kettlebell:
+
+THE B-STANCE (STAGGERED FEET) — THE KEY DETAIL:
+- Her FRONT foot (working leg) is planted FLAT on the floor, carrying nearly all her weight
+- Her BACK foot is placed slightly behind: only the TOES/BALL of the back foot touch the floor, the back heel is UP
+- The toes of the back foot line up roughly with the HEEL of the front foot — a short, narrow stagger (NOT a long lunge stance)
+- The back leg is just a "kickstand" for balance — it stays relaxed and slightly bent
+
+THE HINGE:
+- HINGED at the hips: butt pushed far BACK, torso leaning forward to about 45 degrees
+- Back FLAT (neutral spine), not rounded
+- FRONT knee only slightly bent (soft) — front shin stays nearly vertical
+- A single KETTLEBELL held in both hands, hanging by straight arms, just below the knees, close to the front shin
+- Head neutral, eyes down and slightly forward
+
+=== GHOSTED POSITION (faded - standing tall) ===
+Lighter version standing fully upright in the same staggered stance, kettlebell hanging in front of the thighs, glutes squeezed.
+
+MOVEMENT INDICATORS:
+- Bold red arrow at the hips showing the hinge (hips travel back and up)
+- Dashed line along the flat back showing neutral spine
+- Small dashed circle highlighting the back foot showing only the toes touch (heel up)
+
+CRITICAL: This is a HIP HINGE on mostly ONE leg. The staggered "B-stance" is the key visual: front foot flat, back foot on toes only with heel up, back foot slightly behind the front heel. Kettlebell held in BOTH hands.`,
   },
 
   // =========================================================================
@@ -815,17 +894,18 @@ CRITICAL: Exactly two arms and two legs. Opposite arm and leg extend together. L
 === PRIMARY POSITION (SOLID) ===
 A man holding a forearm front plank:
 - FOREARMS flat on the floor, elbows directly under the shoulders
-- Body in ONE STRAIGHT LINE from the heels through the hips to the head
-- Hips neither sagging down nor piked up
+- Body in ONE PERFECTLY STRAIGHT LINE from the heels through the hips to the head — like a rigid wooden board
+- The shoulders, hips, knees and heels all lie ON the same straight line
+- Hips neither sagging down nor piked up — the buttocks do NOT rise above the line and do NOT dip below it
 - Toes on the floor, legs straight
 - Neck neutral, looking at the floor
 - Glutes and abs braced
 
 MOVEMENT INDICATORS:
-- Dashed straight line running from heels to head showing the rigid plank line
-- Small red arrows at the belly (pulling up/braced) and at the glutes (squeeze)
+- ONE dashed straight line running from the heels through the hips to the head, showing that the body lies exactly on this line
+- The dashed line must touch the back of the heels, the buttocks, and the shoulders — proving the body is straight
 
-CRITICAL: Perfectly straight body line, forearms down, elbows under shoulders. A held static position. No ghosted second position needed — show one clean strong plank.`,
+CRITICAL: The body must lie EXACTLY on the dashed line — shoulders, hips/buttocks, and heels all on one straight line. If the buttocks stick up above the line, the drawing is WRONG. A held static position. No ghosted second position needed — show one clean strong plank. No red arrows needed.`,
   },
   {
     id: 'hollow-hold',
@@ -855,25 +935,28 @@ CRITICAL: Low back stays flat on the floor (this is the whole point). Shallow di
     id: 'pallof-press',
     name: 'Pallof Press',
     modelGender: 'male',
-    formDescription: `CAMERA ANGLE: Front view (facing the viewer), band anchored to the side.
+    formDescription: `CAMERA ANGLE: Viewed from ABOVE and slightly behind at a 3/4 angle (high three-quarter view), so we can see BOTH the direction the man faces AND the band coming from his side.
 
 === PRIMARY POSITION (SOLID - pressed out) ===
 A man performing a banded Pallof press (anti-rotation):
 - Standing tall, feet shoulder-width, knees soft
-- A RED resistance band runs horizontally from an anchor point at one SIDE (at chest height) into both hands
-- BOTH hands grip the band together at the center of the chest, then PRESS the band STRAIGHT OUT in front of the chest, arms fully extended
-- The band pulls him toward the anchor, but his torso stays SQUARE and does NOT rotate
+- The man FACES FORWARD (toward the top of the image)
+- A RED resistance band comes from an anchor point (a vertical post/door) far off to his LEFT SIDE at chest height
+- The band runs HORIZONTALLY from the anchor straight to his hands
+- BOTH hands hold the end of the band, clasped together, and his arms are FULLY EXTENDED STRAIGHT OUT IN FRONT of his chest — pointing the same direction his chest faces
+- KEY GEOMETRY: his arms point FORWARD (the way he faces), but the band pulls SIDEWAYS toward the anchor — the band and his arms form roughly a 90-degree angle at his hands
+- His torso stays SQUARE facing forward and does NOT rotate toward the anchor
 - Core braced, ribs down
 
 === GHOSTED POSITION (faded - hands at chest) ===
-Lighter version with the hands drawn back IN to the chest (start position).
+Lighter version with the hands pulled back IN against the center of his chest, elbows bent (start position). The band still runs to the side anchor.
 
 MOVEMENT INDICATORS:
-- Bold red arrow showing the hands pressing straight OUT from the chest
-- Curved dashed arrow showing the band's sideways pull that the body resists
+- Bold red arrow showing the hands pressing straight OUT from the chest (forward)
+- Dashed line showing the band running sideways to the anchor
 - Dashed vertical line through the torso showing it stays square (no twist)
 
-CRITICAL: You MUST clearly DRAW the red resistance band as a visible line running horizontally from a fixed anchor point at one SIDE of the figure (at chest height) into both hands. The band must be visible and taut — it is the key piece of equipment. Hands press straight forward from the chest. The whole point is the torso resists twisting.`,
+CRITICAL GEOMETRY CHECK: The arms extend FORWARD from the chest. The band runs SIDEWAYS to an anchor. Arms and band are PERPENDICULAR to each other. Do NOT draw the arms pointing toward the anchor. Do NOT draw the arms out to his side. The drawing must clearly show: anchor at his side, band horizontal, hands pressed straight out in front of the chest.`,
   },
 
   // =========================================================================
@@ -934,7 +1017,8 @@ CRITICAL: A dumbbell in EACH hand (two dumbbells). Press straight overhead. Two 
 A woman doing a dumbbell triceps kickback:
 - Hinged forward at the hips to about 45 degrees, flat back, soft knees
 - UPPER ARM pinned HIGH and parallel to the torso (elbow up near the ribs)
-- A DUMBBELL in the hand
+- A DUMBBELL in the hand, gripped by its center handle
+- The dumbbell's handle is IN LINE with the forearm — the two round weight plates sit on either side of the fist (one plate above the fist, one below), exactly like the dumbbells in the ghosted figure
 - FOREARM extended STRAIGHT BACK so the whole arm is straight and parallel to the floor, dumbbell behind the body
 - Other hand can rest on the thigh for support
 
@@ -1024,9 +1108,16 @@ CRITICAL: Arms stay straight out at chest height; the hands pull apart sideways,
     id: '90-90',
     name: '90/90 Hip Stretch',
     modelGender: 'female',
-    formDescription: `CAMERA ANGLE: Elevated 3/4 view from above and in front, looking DOWN at a person SEATED ON THE FLOOR so both bent legs are clearly visible.
+    formDescription: `READ THIS FIRST — THE SINGLE MOST IMPORTANT RULE:
+The person is SITTING ON THE FLOOR. Their buttocks are ON THE GROUND. Their torso is VERTICAL. BOTH of their legs lie completely FLAT on the floor, folded into a flat pinwheel "Z" shape. NOTHING about this pose is upright, kneeling, or lunging.
 
-CRITICAL — WHAT THIS IS NOT: This is NOT a lunge. NOT a half-kneeling position. NOT standing. NOT one knee on the ground with the other foot forward. The person is SITTING on the floor with BOTH legs bent on the ground in front of them.
+FORBIDDEN (if any of these appear, the image is WRONG):
+- NO lunge. NO half-kneeling. NO kneeling. NO standing.
+- NO knee pointing up at the ceiling. NO vertical thigh. NO vertical shin.
+- NO foot planted flat on the floor with a raised bent knee.
+- The hips are NEVER above the knees — the person is seated, hips at floor level.
+
+CAMERA ANGLE: Elevated 3/4 view from above and in front, looking DOWN at the seated person so the flat "Z" shape of both legs on the floor is clearly visible.
 
 === PRIMARY POSITION (SOLID - Upright stretch position) ===
 BODY POSITION - SEATED ON FLOOR:
@@ -1078,7 +1169,7 @@ MOVEMENT INDICATORS:
 - Dashed arc showing the torso hinge forward and back
 - Dashed lines at 90-degree angles showing the knee bend angles
 
-CRITICAL: Seated on the floor. BOTH knees bent (one leg folded in front with the shin across the body, the other leg folded out to the side behind) — both lower legs resting flat on the floor, forming a Z shape. Spine tall and upright. ABSOLUTELY NO text, NO numbers, NO "90" labels, NO degree symbols anywhere in the image — illustration only.`,
+CRITICAL: Seated on the floor. BOTH legs must be clearly drawn and visible: one leg folded in front with the shin across the body, the other leg folded out to the side/behind — both lower legs resting flat on the floor, forming a Z shape. Spine tall and upright. ABSOLUTELY NO text, NO numbers, NO "90" labels, NO degree symbols anywhere in the image — illustration only. NO border or frame around the image — the cream background runs edge-to-edge.`,
   },
   {
     id: 'deep-squat-hold',

@@ -187,6 +187,18 @@ const DB_RDL: Exercise = {
   kneeNote: 'Hip hinge — minimal knee bend, great for glutes and hamstrings.',
 };
 
+const B_STANCE_RDL: Exercise = {
+  id: 'b-stance-rdl',
+  name: 'B-Stance RDL',
+  cue: 'One foot back, toes level with the front heel. Hinge — the front leg does the work. Both sides.',
+  block: 'strength',
+  sets: 3,
+  reps: '8 each',
+  restBetweenSets: 45,
+  equipment: ['kettlebell'],
+  kneeNote: 'A hip hinge — soft front knee, shin stays vertical. The back leg is just a kickstand.',
+};
+
 const BOX_SQUAT: Exercise = {
   id: 'box-squat',
   name: 'Box Squat',
@@ -253,6 +265,18 @@ const BAND_MONSTER_WALK: Exercise = {
   reps: '10 each leg',
   restBetweenSets: 15,
   equipment: ['mini band'],
+};
+
+const BAND_KICKBACK: Exercise = {
+  id: 'band-kickback',
+  name: 'Banded Kickback',
+  cue: 'Band around ankles, hold a chair or wall. Kick one leg straight back, squeeze the glute. Both sides.',
+  block: 'strength',
+  sets: 2,
+  reps: '12 each',
+  restBetweenSets: 15,
+  equipment: ['mini band'],
+  kneeNote: 'Knee-friendly: the standing knee stays soft, the moving leg stays straight.',
 };
 
 const BAND_CLAMSHELL: Exercise = {
@@ -491,6 +515,7 @@ export const EXERCISES: Exercise[] = [
   SINGLE_LEG_GLUTE_BRIDGE,
   KETTLEBELL_DEADLIFT,
   DB_RDL,
+  B_STANCE_RDL,
   BOX_SQUAT,
   GOBLET_SQUAT,
   FARMERS_CARRY,
@@ -498,6 +523,7 @@ export const EXERCISES: Exercise[] = [
   BAND_LATERAL_WALK,
   BAND_MONSTER_WALK,
   BAND_CLAMSHELL,
+  BAND_KICKBACK,
   DB_BICEP_CURL,
   DB_OVERHEAD_PRESS,
   DB_TRICEP_KICKBACK,
@@ -536,6 +562,7 @@ export const EXERCISE_MUSCLES: Record<string, MuscleFocus> = {
   'single-leg-glute-bridge': { targets: ['Glutes', 'Hamstrings'], squeeze: 'Feel the working-side glute do all the lifting.' },
   'kb-deadlift': { targets: ['Glutes', 'Hamstrings', 'Back'], squeeze: 'Feel the hamstrings load, squeeze glutes to stand tall.' },
   'db-rdl': { targets: ['Hamstrings', 'Glutes'], squeeze: 'Feel the hamstrings stretch, then squeeze glutes up.' },
+  'b-stance-rdl': { targets: ['Glutes', 'Hamstrings'], squeeze: 'Feel the front-leg glute and hamstring do all the work.' },
   'box-squat': { targets: ['Quads', 'Glutes'], squeeze: 'Drive up off the box and squeeze the glutes.' },
   'goblet-squat': { targets: ['Quads', 'Glutes'], squeeze: 'Push the floor away, squeeze glutes at the top.' },
   'farmers-carry': { targets: ['Grip', 'Traps', 'Core'], squeeze: 'Grip hard, brace the core, stay tall.' },
@@ -543,6 +570,7 @@ export const EXERCISE_MUSCLES: Record<string, MuscleFocus> = {
   'band-lateral-walk': { targets: ['Outer hip', 'Glutes'], squeeze: 'Feel the side glute on the leading leg with each step.' },
   'band-monster-walk': { targets: ['Glutes', 'Outer hip'], squeeze: 'Keep glutes switched on, knees out against the band.' },
   'band-clamshell': { targets: ['Outer hip'], squeeze: 'Feel the side glute open the knee — keep the hip still.' },
+  'band-kickback': { targets: ['Glutes'], squeeze: 'Squeeze the glute to drive the leg back — no arching the low back.' },
   // Arms
   'db-bicep-curl': { targets: ['Biceps'], squeeze: 'Squeeze the biceps at the top; lower slow.' },
   'db-overhead-press': { targets: ['Shoulders', 'Triceps'], squeeze: 'Feel the shoulders press; lock out without arching.' },
@@ -590,8 +618,8 @@ function getDailyWorkout(dayOfWeek: number, phase: Phase): Exercise[] {
     phase === 'foundation'
       ? [KETTLEBELL_DEADLIFT, DB_RDL, BOX_SQUAT]
       : phase === 'build'
-        ? [KETTLEBELL_DEADLIFT, DB_RDL, BOX_SQUAT, GOBLET_SQUAT]
-        : [KETTLEBELL_DEADLIFT, DB_RDL, GOBLET_SQUAT, KETTLEBELL_SWING, FARMERS_CARRY];
+        ? [KETTLEBELL_DEADLIFT, DB_RDL, BOX_SQUAT, GOBLET_SQUAT, B_STANCE_RDL]
+        : [KETTLEBELL_DEADLIFT, DB_RDL, B_STANCE_RDL, GOBLET_SQUAT, KETTLEBELL_SWING, FARMERS_CARRY];
 
   const bridgePool: Exercise[] =
     phase === 'foundation'
@@ -600,7 +628,7 @@ function getDailyWorkout(dayOfWeek: number, phase: Phase): Exercise[] {
         ? [GLUTE_BRIDGE, BAND_GLUTE_BRIDGE, HIP_THRUST]
         : [HIP_THRUST, SINGLE_LEG_GLUTE_BRIDGE, BAND_GLUTE_BRIDGE];
 
-  const bandPool: Exercise[] = [BAND_LATERAL_WALK, BAND_CLAMSHELL, BAND_MONSTER_WALK];
+  const bandPool: Exercise[] = [BAND_LATERAL_WALK, BAND_CLAMSHELL, BAND_MONSTER_WALK, BAND_KICKBACK];
 
   const strength: Exercise[] = [
     pick(hingePool, dayOfWeek),
