@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'preact/hooks';
-import { Check, Play, Pause, RotateCcw, Minus, Plus, Maximize2, ShieldCheck, Target, Flame, Trophy, TrendingUp } from 'lucide-preact';
+import { useState, useEffect, useRef } from 'preact/hooks';
+import type { ComponentChildren } from 'preact';
+import { Check, Play, Pause, RotateCcw, X, ShieldCheck, Target, Flame, Trophy } from 'lucide-preact';
 import type { WarmupExercise, Finisher, PrescribedExercise } from '../data/workouts';
 import { getMuscleFocus, formatTempo } from '../data/workouts';
 import { getBestFinisherScore } from '../db';
@@ -12,6 +13,144 @@ function imageFor(id: string): string {
   return `/exercises/${id}.webp`;
 }
 
+function formatSeconds(total: number): string {
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+// ── The row ────────────────────────────────────────────────────────────────
+// Today is the plan, not a second place to perform the workout — the guided session
+// is that. So a row states one thing: what to do, how much, and whether it's done.
+// The movement standard, the faults, the muscle map and the timer live in the sheet
+// behind it, where they are read once rather than scrolled past fifteen times.
+interface RowProps {
+  id: string;
+  name: string;
+  dose: string;
+  completed: boolean;
+  onToggle: () => void;
+  onOpen: () => void;
+  // The engine's own sentence, shown only when it actually decided something.
+  why?: { action: string; reason: string };
+  accent?: ComponentChildren;
+}
+
+function Row({ id, name, dose, completed, onToggle, onOpen, why, accent }: RowProps) {
+  return (
+    <div class="row" data-done={completed ? 'true' : undefined}>
+      <div class="row-line">
+        <button
+          class={`row-check ${completed ? 'checked' : ''}`}
+          onClick={onToggle}
+          aria-pressed={completed}
+          aria-label={completed ? `Mark ${name} incomplete` : `Mark ${name} complete`}
+        >
+          {completed && <Check size={12} color="var(--bg)" strokeWidth={3} />}
+        </button>
+
+        <button class="row-body" onClick={onOpen} aria-label={`${name} — how to do it`}>
+          <img src={imageFor(id)} alt="" class="row-plate" loading="lazy" />
+          <span class="row-name">
+            {name}
+            {accent}
+          </span>
+          <span class="row-dose">{dose}</span>
+        </button>
+      </div>
+
+      {/* Full width, below the line — the reason needs room to be a sentence. */}
+      {why && (
+        <p class="row-why" data-action={why.action}>
+          {why.reason}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ── The sheet ──────────────────────────────────────────────────────────────
+interface SheetProps {
+  title: string;
+  onClose: () => void;
+  children: ComponentChildren;
+}
+
+function Sheet({ title, onClose, children }: SheetProps) {
+  const panel = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    // The panel scrolls; the page behind it must not.
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    panel.current?.focus();
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [onClose]);
+
+  return (
+    <div class="sheet-backdrop" onClick={onClose}>
+      <div
+        class="sheet"
+        ref={panel}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div class="sheet-head">
+          <h2 class="sheet-title">{title}</h2>
+          <button class="sheet-close" onClick={onClose} aria-label="Close">
+            <X size={18} />
+          </button>
+        </div>
+        <div class="sheet-body">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+// A countdown a user can start, pause and reset. Lives in the sheet, not the row.
+function TimerControls({ seconds, onComplete }: { seconds: number; onComplete?: () => void }) {
+  const timer = useTimer({ initialSeconds: seconds, onComplete, countDown: true });
+  const nearlyDone = timer.seconds <= 3 && timer.isRunning;
+  return (
+    <div class="sheet-timer">
+      <button onClick={timer.toggle} class="timer-btn" aria-label={timer.isRunning ? 'Pause' : 'Start'}>
+        {timer.isRunning ? <Pause size={16} /> : <Play size={16} style={{ marginLeft: 2 }} />}
+      </button>
+      <span class="sheet-clock" style={{ color: nearlyDone ? 'var(--check)' : 'var(--text)' }}>
+        {timer.formattedTime}
+      </span>
+      <button onClick={() => timer.reset()} class="timer-btn" aria-label="Reset">
+        <RotateCcw size={16} />
+      </button>
+    </div>
+  );
+}
+
+function FormNotes({ standard, faults }: { standard: string; faults: string[] }) {
+  return (
+    <div class="form-notes">
+      <p class="form-standard">{standard}</p>
+      <p class="form-faults-title">Watch for</p>
+      <ul class="form-faults">
+        {faults.map((f) => (
+          <li key={f}>{f}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// ── Prescribed exercise ────────────────────────────────────────────────────
 interface ExerciseItemProps {
   prescribed: PrescribedExercise;
   weightUnit: 'kg' | 'lbs';
@@ -21,239 +160,95 @@ interface ExerciseItemProps {
 
 export function ExerciseItem({ prescribed, weightUnit, completed, onToggle }: ExerciseItemProps) {
   const exercise = prescribed.exercise;
-  const [setCount, setSetCount] = useState(0);
-  const [expanded, setExpanded] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+  const [open, setOpen] = useState(false);
   const hasHold = prescribed.holdFor !== undefined && prescribed.holdFor > 0;
-  const imagePath = imageFor(exercise.id);
   const muscle = getMuscleFocus(exercise.id);
   const musclePath = muscle ? `/exercises/muscles/${exercise.id}.webp` : undefined;
 
-  // Timer for timed holds
-  const timer = useTimer({
-    initialSeconds: prescribed.holdFor ?? 0,
-    onComplete: () => {
-      // Auto-increment set count when timer completes
-      if (setCount < prescribed.sets) {
-        setSetCount(setCount + 1);
-      }
-    },
-    countDown: true,
-  });
-
-  const handleSetComplete = () => {
-    if (setCount < prescribed.sets) {
-      setSetCount(setCount + 1);
-      // Auto-complete when all sets done
-      if (setCount + 1 >= prescribed.sets && !completed) {
-        onToggle();
-      }
-    }
-  };
-
-  const handleSetDecrement = () => {
-    if (setCount > 0) {
-      setSetCount(setCount - 1);
-      // Un-complete if we go below target
-      if (completed) {
-        onToggle();
-      }
-    }
-  };
+  // The dose, stated once. Tempo and rest are detail — they belong in the sheet.
+  // The row gets the compact target so it never overflows; the sheet gets the prose.
+  const dose =
+    `${prescribed.sets} × ${prescribed.targetLabelShort}` +
+    (prescribed.load > 0 ? ` · ${prescribed.load}${weightUnit}` : '');
+  const doseLong =
+    `${prescribed.sets} × ${prescribed.targetLabel}` +
+    (prescribed.load > 0 ? ` · ${prescribed.load}${weightUnit}` : '');
 
   return (
-    <div class="exercise-item animate-fade">
-      {/* Thumbnail image - always visible */}
-      {imagePath && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          class="exercise-thumbnail-btn"
-          aria-label={expanded ? 'Collapse image' : 'Expand image'}
-        >
-          <img
-            src={imagePath}
-            alt={`${exercise.name} form`}
-            class="exercise-thumbnail"
-            loading="lazy"
-          />
-          <div class="thumbnail-expand-icon">
-            <Maximize2 size={10} />
-          </div>
-        </button>
-      )}
+    <>
+      <Row
+        id={exercise.id}
+        name={exercise.name}
+        dose={dose}
+        completed={completed}
+        onToggle={onToggle}
+        onOpen={() => setOpen(true)}
+        why={prescribed.decision ? { action: prescribed.decision.action, reason: prescribed.decision.reason } : undefined}
+      />
 
-      <div class="flex-1 min-w-0">
-        <div class="flex items-start justify-between gap-3">
-          <div class="flex-1">
-            <div class="flex items-center gap-2">
-              <button
-                onClick={onToggle}
-                class={`checkbox-min ${completed ? 'checked' : ''}`}
-                aria-label={completed ? 'Mark incomplete' : 'Mark complete'}
-              >
-                {completed && <Check size={12} color="white" strokeWidth={3} />}
-              </button>
-              <h3 class={`font-medium ${completed ? 'completed' : ''}`}>
-                {exercise.name}
-              </h3>
-            </div>
-            <p class="text-sm mt-0.5 ml-6" style={{ color: 'var(--text-muted)' }}>
-              {exercise.cue}
+      {open && (
+        <Sheet title={exercise.name} onClose={() => setOpen(false)}>
+          <img src={imageFor(exercise.id)} alt={`${exercise.name} form`} class="sheet-image" />
+
+          <p class="sheet-dose">
+            {doseLong}
+            {prescribed.tempo && <span> · tempo {formatTempo(prescribed.tempo)}</span>}
+            {exercise.restBetweenSets > 0 && <span> · {exercise.restBetweenSets}s rest</span>}
+          </p>
+
+          {prescribed.decision && (
+            <p class="sheet-why" data-action={prescribed.decision.action}>
+              {prescribed.decision.reason}
             </p>
-          </div>
-
-          {/* Set counter */}
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <button
-              onClick={handleSetDecrement}
-              class="counter-btn"
-              disabled={setCount === 0}
-              style={{ opacity: setCount === 0 ? 0.3 : 1 }}
-            >
-              <Minus size={16} />
-            </button>
-            <span class="counter-display">
-              {setCount}/{prescribed.sets}
-            </span>
-            <button
-              onClick={handleSetComplete}
-              class="counter-btn"
-              disabled={setCount >= prescribed.sets}
-              style={{ opacity: setCount >= prescribed.sets ? 0.3 : 1 }}
-            >
-              <Plus size={16} />
-            </button>
-          </div>
-        </div>
-
-        {/* Timer for holds */}
-        {hasHold && (
-          <div class="flex items-center gap-3 mt-3 ml-6">
-            <button onClick={timer.toggle} class="timer-btn">
-              {timer.isRunning ? (
-                <Pause size={14} style={{ color: 'var(--text)' }} />
-              ) : (
-                <Play size={14} style={{ color: 'var(--text)', marginLeft: 2 }} />
-              )}
-            </button>
-            <span
-              class="timer-display"
-              style={{ color: timer.seconds <= 3 && timer.isRunning ? 'var(--check)' : 'var(--text)' }}
-            >
-              {timer.formattedTime}
-            </span>
-            <button onClick={() => timer.reset()} class="timer-btn">
-              <RotateCcw size={14} style={{ color: 'var(--text)' }} />
-            </button>
-          </div>
-        )}
-
-        {/* Today's dose — set by the progression engine, not the calendar */}
-        <p class="text-xs mt-2 ml-6" style={{ color: 'var(--text-dim)' }}>
-          {prescribed.sets} × {prescribed.targetLabel}
-          {prescribed.load > 0 && (
-            <span> · {prescribed.load} {weightUnit}</span>
           )}
-          {prescribed.tempo && (
-            <span title="Seconds: lower, pause, lift, squeeze">
-              {' '}· tempo {formatTempo(prescribed.tempo)}
-            </span>
+
+          {hasHold && <TimerControls seconds={prescribed.holdFor ?? 0} />}
+
+          <p class="sheet-cue">{exercise.cue}</p>
+          <FormNotes standard={exercise.standard} faults={exercise.faults} />
+
+          {exercise.kneeNote && (
+            <p class="sheet-note">
+              <ShieldCheck size={14} class="flex-shrink-0" style={{ color: 'var(--check)' }} />
+              <span>{exercise.kneeNote}</span>
+            </p>
           )}
-          {exercise.restBetweenSets > 0 && <span> · {exercise.restBetweenSets}s rest</span>}
-        </p>
 
-        {/* Why this dose — the engine's reasoning, in plain language */}
-        {prescribed.decision && (
-          <p class="dose-why ml-6" data-action={prescribed.decision.action}>
-            <TrendingUp size={13} class="flex-shrink-0 mt-0.5" />
-            <span>{prescribed.decision.reason}</span>
-          </p>
-        )}
-
-        {/* Form standard + the specific ways this movement goes wrong */}
-        <button
-          class="form-toggle ml-6"
-          aria-expanded={showForm}
-          onClick={() => setShowForm((v) => !v)}
-        >
-          {showForm ? 'Hide form notes' : 'What good looks like'}
-        </button>
-
-        {showForm && (
-          <div class="form-notes ml-6">
-            <p class="form-standard">{exercise.standard}</p>
-            <p class="form-faults-title">Watch for</p>
-            <ul class="form-faults">
-              {exercise.faults.map((f) => (
-                <li key={f}>{f}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Knee-friendly note */}
-        {exercise.kneeNote && (
-          <p
-            class="text-xs mt-2 ml-6 flex items-start gap-1.5"
-            style={{ color: 'var(--text-dim)' }}
-          >
-            <ShieldCheck size={13} class="flex-shrink-0 mt-0.5" style={{ color: 'var(--check)' }} />
-            <span>{exercise.kneeNote}</span>
-          </p>
-        )}
-
-        {/* Target muscles + squeeze cue */}
-        {muscle && (
-          <div class="ml-6 mt-2">
-            <div class="flex items-center gap-3">
+          {muscle && (
+            <div class="sheet-muscle">
               {musclePath && (
-                <button
-                  onClick={() => setExpanded(!expanded)}
-                  class="muscle-map-thumb-btn"
-                  aria-label="Show target muscles"
-                >
-                  <img src={musclePath} alt={`${exercise.name} target muscles`} class="muscle-map-thumb" loading="lazy" />
-                </button>
+                <img src={musclePath} alt={`${exercise.name} target muscles`} class="sheet-muscle-map" loading="lazy" />
               )}
-              <div class="flex flex-wrap gap-1.5">
-                {muscle.targets.map((t) => (
-                  <span key={t} class="muscle-chip">{t}</span>
-                ))}
+              <div class="sheet-muscle-text">
+                <div class="flex flex-wrap gap-1.5">
+                  {muscle.targets.map((t) => (
+                    <span key={t} class="muscle-chip">{t}</span>
+                  ))}
+                </div>
+                <p class="sheet-note">
+                  <Target size={14} class="flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <span>{muscle.squeeze}</span>
+                </p>
               </div>
             </div>
-            <p class="text-xs mt-1.5 flex items-start gap-1.5" style={{ color: 'var(--text-dim)' }}>
-              <Target size={13} class="flex-shrink-0 mt-0.5" style={{ color: 'var(--accent)' }} />
-              <span>{muscle.squeeze}</span>
-            </p>
-          </div>
-        )}
+          )}
 
-        {/* Expanded illustrations: form + target muscles */}
-        {imagePath && expanded && (
-          <div class="exercise-image-container" onClick={() => setExpanded(false)}>
-            <img
-              src={imagePath}
-              alt={`${exercise.name} form demonstration`}
-              class="exercise-image"
-            />
-            {musclePath && (
-              <>
-                <p class="exercise-image-caption">Muscles worked</p>
-                <img
-                  src={musclePath}
-                  alt={`${exercise.name} target muscles`}
-                  class="exercise-image"
-                />
-              </>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+          <button
+            class="sheet-action"
+            onClick={() => {
+              if (!completed) onToggle();
+              setOpen(false);
+            }}
+          >
+            {completed ? 'Done' : 'Mark done'}
+          </button>
+        </Sheet>
+      )}
+    </>
   );
 }
 
-// Warmup item - simpler version with just timer
+// ── Warmup ─────────────────────────────────────────────────────────────────
 interface WarmupItemProps {
   exercise: WarmupExercise;
   completed: boolean;
@@ -261,87 +256,45 @@ interface WarmupItemProps {
 }
 
 export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
-  const [expanded, setExpanded] = useState(false);
-  const imagePath = imageFor(exercise.id);
-
-  const timer = useTimer({
-    initialSeconds: exercise.duration,
-    onComplete: onToggle,
-    countDown: true,
-  });
+  const [open, setOpen] = useState(false);
 
   return (
-    <div class="exercise-item animate-fade">
-      {/* Thumbnail image - always visible */}
-      {imagePath && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          class="exercise-thumbnail-btn"
-          aria-label={expanded ? 'Collapse image' : 'Expand image'}
-        >
-          <img
-            src={imagePath}
-            alt={`${exercise.name} form`}
-            class="exercise-thumbnail"
-            loading="lazy"
+    <>
+      <Row
+        id={exercise.id}
+        name={exercise.name}
+        dose={formatSeconds(exercise.duration)}
+        completed={completed}
+        onToggle={onToggle}
+        onOpen={() => setOpen(true)}
+      />
+
+      {open && (
+        <Sheet title={exercise.name} onClose={() => setOpen(false)}>
+          <img src={imageFor(exercise.id)} alt={`${exercise.name} form`} class="sheet-image" />
+          <TimerControls
+            seconds={exercise.duration}
+            onComplete={() => {
+              if (!completed) onToggle();
+            }}
           />
-          <div class="thumbnail-expand-icon">
-            <Maximize2 size={10} />
-          </div>
-        </button>
+          <p class="sheet-cue">{exercise.cue}</p>
+          <button
+            class="sheet-action"
+            onClick={() => {
+              if (!completed) onToggle();
+              setOpen(false);
+            }}
+          >
+            {completed ? 'Done' : 'Mark done'}
+          </button>
+        </Sheet>
       )}
-
-      <div class="flex-1 min-w-0">
-        <div class="flex items-center justify-between">
-          <div>
-            <div class="flex items-center gap-2">
-              <button
-                onClick={onToggle}
-                class={`checkbox-min ${completed ? 'checked' : ''}`}
-              >
-                {completed && <Check size={12} color="white" strokeWidth={3} />}
-              </button>
-              <h4 class={`font-medium ${completed ? 'completed' : ''}`}>{exercise.name}</h4>
-            </div>
-            <p class="text-sm ml-6" style={{ color: 'var(--text-dim)' }}>{exercise.cue}</p>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <span
-              class="timer-display"
-              style={{ color: timer.seconds <= 3 && timer.isRunning ? 'var(--check)' : 'var(--text)' }}
-            >
-              {timer.formattedTime}
-            </span>
-            <button onClick={timer.toggle} class="timer-btn">
-              {timer.isRunning ? (
-                <Pause size={14} style={{ color: 'var(--text)' }} />
-              ) : (
-                <Play size={14} style={{ color: 'var(--text)', marginLeft: 2 }} />
-              )}
-            </button>
-            <button onClick={() => timer.reset()} class="timer-btn">
-              <RotateCcw size={14} style={{ color: 'var(--text)' }} />
-            </button>
-          </div>
-        </div>
-
-        {/* Expanded exercise illustration */}
-        {imagePath && expanded && (
-          <div class="exercise-image-container" onClick={() => setExpanded(false)}>
-            <img
-              src={imagePath}
-              alt={`${exercise.name} form demonstration`}
-              class="exercise-image"
-            />
-          </div>
-        )}
-      </div>
-    </div>
+    </>
   );
 }
 
-// Finisher item — the scored metabolic block at the end of the workout.
+// ── Finisher — the scored metabolic block at the end of the workout ────────
 interface FinisherItemProps {
   finisher: Finisher;
   completed: boolean;
@@ -349,7 +302,7 @@ interface FinisherItemProps {
 }
 
 export function FinisherItem({ finisher, completed, onToggle }: FinisherItemProps) {
-  const [expanded, setExpanded] = useState(false);
+  const [open, setOpen] = useState(false);
   const [best, setBest] = useState<number | null>(null);
   // Each finisher has its own circuit diagram, named after the finisher id.
   const imagePath = `/exercises/${finisher.id}.webp`;
@@ -358,71 +311,62 @@ export function FinisherItem({ finisher, completed, onToggle }: FinisherItemProp
     getBestFinisherScore(finisher.id).then(setBest);
   }, [finisher.id]);
 
+  const dose =
+    finisher.format === 'intervals'
+      ? `${finisher.rounds} × ${finisher.workSeconds}s/${finisher.restSeconds}s`
+      : `${Math.round((finisher.durationSeconds ?? 240) / 60)} min`;
+
   const spec =
     finisher.format === 'intervals'
       ? `${finisher.rounds} × ${finisher.workSeconds}s on / ${finisher.restSeconds}s off`
       : `${Math.round((finisher.durationSeconds ?? 240) / 60)} min AMRAP · ${finisher.task}`;
 
   return (
-    <div class="exercise-item animate-fade">
-      {/* Thumbnail image - always visible */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        class="exercise-thumbnail-btn"
-        aria-label={expanded ? 'Collapse image' : 'Expand image'}
-      >
-        <img src={imagePath} alt={`${finisher.name} form`} class="exercise-thumbnail" loading="lazy" />
-        <div class="thumbnail-expand-icon">
-          <Maximize2 size={10} />
-        </div>
-      </button>
+    <>
+      <Row
+        id={finisher.id}
+        name={finisher.name}
+        dose={dose}
+        completed={completed}
+        onToggle={onToggle}
+        onOpen={() => setOpen(true)}
+        accent={<Flame size={13} style={{ color: 'var(--flame)' }} class="row-flame" />}
+      />
 
-      <div class="flex-1 min-w-0">
-        <div class="flex items-center gap-2">
-          <button
-            onClick={onToggle}
-            class={`checkbox-min ${completed ? 'checked' : ''}`}
-            aria-label={completed ? 'Mark incomplete' : 'Mark complete'}
-          >
-            {completed && <Check size={12} color="white" strokeWidth={3} />}
-          </button>
-          <h3 class={`font-medium ${completed ? 'completed' : ''}`}>{finisher.name}</h3>
-          <Flame size={14} style={{ color: 'var(--flame)' }} class="flex-shrink-0" />
-        </div>
-        <p class="text-sm mt-0.5 ml-6" style={{ color: 'var(--text-muted)' }}>
-          {finisher.tagline}
-        </p>
+      {open && (
+        <Sheet title={finisher.name} onClose={() => setOpen(false)}>
+          <img src={imagePath} alt={`${finisher.name} circuit`} class="sheet-image" />
+          <p class="sheet-dose">{spec}</p>
+          <p class="sheet-cue">{finisher.tagline}</p>
 
-        <p class="text-xs mt-2 ml-6" style={{ color: 'var(--text-dim)' }}>
-          {spec}
-        </p>
-
-        {/* Score to beat */}
-        <p class="text-xs mt-2 ml-6 flex items-start gap-1.5" style={{ color: 'var(--text-dim)' }}>
-          <Trophy size={13} class="flex-shrink-0 mt-0.5" style={{ color: 'var(--check)' }} />
-          <span>
-            {best !== null
-              ? `Score to beat: ${best} ${finisher.scoreUnit}`
-              : `First time — set the bar in ${finisher.scoreUnit}.`}
-          </span>
-        </p>
-
-        {/* Knee-friendly note */}
-        {finisher.kneeNote && (
-          <p class="text-xs mt-2 ml-6 flex items-start gap-1.5" style={{ color: 'var(--text-dim)' }}>
-            <ShieldCheck size={13} class="flex-shrink-0 mt-0.5" style={{ color: 'var(--check)' }} />
-            <span>{finisher.kneeNote}</span>
+          <p class="sheet-note">
+            <Trophy size={14} class="flex-shrink-0" style={{ color: 'var(--check)' }} />
+            <span>
+              {best !== null
+                ? `Score to beat: ${best} ${finisher.scoreUnit}`
+                : `First time — set the bar in ${finisher.scoreUnit}.`}
+            </span>
           </p>
-        )}
 
-        {/* Expanded illustration */}
-        {expanded && (
-          <div class="exercise-image-container" onClick={() => setExpanded(false)}>
-            <img src={imagePath} alt={`${finisher.name} form demonstration`} class="exercise-image" />
-          </div>
-        )}
-      </div>
-    </div>
+          {finisher.kneeNote && (
+            <p class="sheet-note">
+              <ShieldCheck size={14} class="flex-shrink-0" style={{ color: 'var(--check)' }} />
+              <span>{finisher.kneeNote}</span>
+            </p>
+          )}
+
+          <button
+            class="sheet-action"
+            onClick={() => {
+              if (!completed) onToggle();
+              setOpen(false);
+            }}
+          >
+            {completed ? 'Done' : 'Mark done'}
+          </button>
+        </Sheet>
+      )}
+    </>
   );
 }
 

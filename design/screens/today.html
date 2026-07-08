@@ -1,0 +1,270 @@
+<!-- @dsCard group="Screens" -->
+<meta charset="utf-8">
+<title>Today</title>
+<style>
+/* Idaraya design tokens.
+   Palette is lifted from the illustrations the app already ships — the pen line,
+   the plate the figure sits on, the red motion arrow. Nothing here was invented
+   to look nice; every value is either in the artwork or in CLINICAL.md. */
+
+:root {
+  /* Surfaces */
+  --paper: #fbfaf7;      /* page */
+  --plate: #f5f0e6;      /* the cream the illustrations are drawn on */
+  --ink: #14110e;        /* the pen line */
+  --hair: #e6e1d8;       /* rules, dividers */
+  --muted: #6b6560;      /* secondary text */
+  --faint: #9a938c;      /* tertiary text, disabled */
+
+  /* The red motion arrow in every illustration. Used for regression, never for error. */
+  --arrow: #c41e3a;
+
+  /* Pain bands — these mirror PAIN_BANDS in src/clinical/parameters.ts.
+     Change them there, not here. */
+  --band-ok: #2f8f5b;      /* 0-3  proceed */
+  --band-caution: #b45309; /* 4-5  hold */
+  --band-stop: #c41e3a;    /* 6-10 regress */
+
+  /* Type. Inter carries the interface.
+     The mono face carries every number the engine decided — the dose, the timer,
+     the RIR keys, the pain scale, the week. The app writes prescriptions; the
+     prescribed values are set in a typewriter face. That is the whole signature. */
+  --ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --rx: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --step-1: 0.6875rem;  /* 11px  section labels, reason line */
+  --step0: 0.8125rem;   /* 13px  dose, meta */
+  --step1: 0.9375rem;   /* 15px  exercise name, body */
+  --step2: 1.1875rem;   /* 19px  screen title */
+  --step3: 1.75rem;     /* 28px  session exercise name */
+
+  --gap: 0.75rem;
+  --pad: 1.25rem;
+  --radius: 0.375rem;
+  --tap: 2.75rem;       /* minimum touch target */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0e0d0c;
+    --ink: #f2efe9;
+    --hair: #2a2724;
+    --muted: #8f8880;
+    --faint: #5f5952;
+    --band-ok: #3fb277;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A phone-width frame so every card is judged at the size it will be used. */
+.frame {
+  width: 390px;
+  margin: 0 auto;
+  padding: var(--pad);
+  background: var(--paper);
+}
+
+/* Section labels own their own rhythm — 1.75rem above, 0.375rem below — so no
+   caller has to patch the gap with an inline margin. The first label after the
+   primary action needs the space as much as the ones between sections do. */
+.label {
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin: 1.75rem 0 0.375rem;
+}
+
+.label:first-child { margin-top: 0; }
+
+/* Every number the engine decided. Tabular so columns of doses align. */
+.rx {
+  font-family: var(--rx);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--step0);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.plate{display:block;width:var(--s);height:var(--s);flex:0 0 var(--s);border-radius:var(--radius);
+  background-color:var(--plate);background-size:cover;background-position:center}
+.stack{display:flex;flex-direction:column}
+.row-note{font-size:var(--step-1);color:var(--faint);margin:1.5rem 0 0;line-height:1.5}
+
+.head{display:flex;align-items:baseline;justify-content:space-between}
+h1{font-size:var(--step2);font-weight:600;letter-spacing:-0.015em;margin:0}
+.link{background:none;border:0;font:inherit;font-size:var(--step0);color:var(--muted);cursor:pointer;padding:0}
+.meta{display:flex;justify-content:space-between;align-items:center;
+  font-size:var(--step0);color:var(--muted);margin-top:1.375rem;margin-bottom:0.5rem}
+.track{height:2px;background:var(--hair);border-radius:1px;overflow:hidden}
+.fill{display:block;height:100%;background:var(--ink)}
+.datebar{display:flex;align-items:center;justify-content:space-between;margin-top:1.125rem}
+.date{font-size:var(--step1);font-weight:500;letter-spacing:-0.01em}
+.pager{display:flex;gap:0.25rem}
+.pager button{width:var(--tap);height:2rem;background:none;border:0;color:var(--muted);
+  font-size:1.125rem;line-height:1;cursor:pointer;border-radius:var(--radius)}
+.pager button:hover{background:color-mix(in srgb, var(--ink) 6%, transparent)}
+.cta{display:block;width:100%;margin-top:1.125rem;padding:0.875rem;border:0;border-radius:999px;
+  background:var(--ink);color:var(--paper);font:inherit;font-size:var(--step1);font-weight:500;cursor:pointer}
+
+.row{display:flex;align-items:center;gap:var(--gap);width:100%;padding:0.6875rem 0;
+  min-height:var(--tap);background:none;border:0;border-bottom:1px solid var(--hair);
+  font:inherit;color:inherit;text-align:left;cursor:pointer}
+.row:last-of-type{border-bottom:0}
+.row-main{flex:1 1 auto;min-width:0}
+.row-name{font-size:var(--step1);font-weight:500;letter-spacing:-0.005em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* The engine's own sentence, under the exercise it explains. Colour carries the
+   verdict; the words carry the reason. It appears only when a decision was made. */
+.why{font-size:var(--step-1);line-height:1.35;margin-top:0.125rem}
+.why[data-action=advance]{color:var(--band-ok)}
+.why[data-action=hold]{color:var(--band-caution)}
+.why[data-action=regress]{color:var(--arrow)}
+.row[data-done=true]{opacity:0.45}
+.row[data-done=true] .row-name{text-decoration:line-through;text-decoration-thickness:1px}
+.row:focus-visible{outline:0;box-shadow:inset 0 0 0 2px var(--ink);border-radius:var(--radius)}
+.check{font-family:var(--rx);font-size:var(--step0);color:var(--band-ok)}
+
+</style>
+
+<div class="frame">
+  <header class="head">
+    <h1>Idaraya</h1>
+    <button class="link" type="button">Settings</button>
+  </header>
+
+  <!-- Week is named once. It used to appear here and again in the header. -->
+  <div class="meta">
+    <span>Week 79 · Sustain</span>
+    <span class="rx">0 / 15</span>
+  </div>
+  <div class="track"><span class="fill" style="width:0%"></span></div>
+
+  <!-- Left-aligned to the reading column. The pager is a control, not a title. -->
+  <div class="datebar">
+    <span class="date">Wednesday, Jul 8</span>
+    <span class="pager">
+      <button type="button" aria-label="Previous day">‹</button>
+      <button type="button" aria-label="Next day">›</button>
+    </span>
+  </div>
+
+  <button class="cta" type="button">Start guided session</button>
+
+  <h2 class="label">WARM-UP</h2>
+  
+  <button class="row"  type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/cat-cow.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Cat-Cow</span>
+      
+    </span>
+    <span class="rx">0:45</span>
+  </button>
+  
+  <button class="row"  type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/leg-swings.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Leg Swings</span>
+      
+    </span>
+    <span class="rx">0:30</span>
+  </button>
+  
+  <button class="row"  type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/hip-circles.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Hip Circles</span>
+      
+    </span>
+    <span class="rx">0:30</span>
+  </button>
+  
+  <button class="row"  type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/glute-bridge-warmup.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Glute Bridge</span>
+      
+    </span>
+    <span class="rx">0:30</span>
+  </button>
+
+  <h2 class="label">CORE &amp; ABS</h2>
+  
+  <button class="row"  type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/mcgill-curl-up.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Curl-Up</span>
+      <span class="why" data-action="advance">Two clean sessions at the top. Harder today.</span>
+    </span>
+    <span class="rx">3 × 8s</span>
+  </button>
+  
+  <button class="row"  type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/mcgill-side-plank.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Side Plank</span>
+      
+    </span>
+    <span class="rx">2 × 10s</span>
+  </button>
+  
+  <button class="row"  type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/mcgill-bird-dog.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Bird Dog</span>
+      
+    </span>
+    <span class="rx">2 × 6</span>
+  </button>
+  
+  <button class="row"  type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/dead-bug.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Dead Bug</span>
+      <span class="why" data-action="hold">Knee pain was 4/10. Holding here.</span>
+    </span>
+    <span class="rx">2 × 8</span>
+  </button>
+
+  <h2 class="label">GLUTES &amp; STRENGTH</h2>
+  
+  <button class="row" data-done="true" type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/hip-thrust.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Hip Thrust</span>
+      
+    </span>
+    <span class="check">done</span>
+  </button>
+  
+  <button class="row"  type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/goblet-squat.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Goblet Squat</span>
+      <span class="why" data-action="regress">Back six weeks off. Starting lighter.</span>
+    </span>
+    <span class="rx">3 × 8 · 8kg</span>
+  </button>
+  
+  <button class="row"  type="button">
+    <span class="plate" style="--s:44px;background-image:url('https://idaraya.pages.dev/exercises/band-lateral-walk.webp')"></span>
+    <span class="row-main stack">
+      <span class="row-name">Band Lateral Walk</span>
+      
+    </span>
+    <span class="rx">2 × 12</span>
+  </button>
+
+  <p class="row-note">One exercise, one line, one dose. Tap a row for the movement
+  standard, the faults to watch for, and the muscles it trains.</p>
+</div>

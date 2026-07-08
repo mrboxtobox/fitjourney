@@ -62,19 +62,7 @@
     padding: 0 1.25rem;
   }
 
-  /* Exercise item - elegant list style */
-  .exercise-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.875rem;
-    padding: 1.25rem 0;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s ease;
-  }
 
-  .exercise-item:last-child {
-    border-bottom: none;
-  }
 
   /* Checkbox - refined circle */
   .checkbox-min {
@@ -133,15 +121,6 @@
     transform: scale(0.95);
   }
 
-  /* Timer display - monospace numerals */
-  .timer-display {
-    font-variant-numeric: tabular-nums;
-    font-weight: 500;
-    font-size: 0.875rem;
-    min-width: 2.5rem;
-    text-align: right;
-    letter-spacing: -0.01em;
-  }
 
   /* Bottom nav - floating style */
   .nav-bottom {
@@ -206,39 +185,10 @@
   }
 
   /* Counter button - tactile feel */
-  .counter-btn {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 0.5rem;
-    background: var(--bg-alt);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.125rem;
-    font-weight: 500;
-    color: var(--text);
-    transition: all 0.15s ease;
-    user-select: none;
-  }
 
-  .counter-btn:hover {
-    background: var(--border);
-  }
 
-  .counter-btn:active {
-    transform: scale(0.92);
-  }
 
   /* Counter display - bold numerals */
-  .counter-display {
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-    font-size: 1.25rem;
-    min-width: 3.5rem;
-    text-align: center;
-    letter-spacing: -0.02em;
-  }
 
   /* Safe area padding */
   .pb-safe-nav {
@@ -292,144 +242,31 @@
   }
 
   /* Strikethrough for completed */
-  .completed {
-    text-decoration: line-through;
-    color: var(--text-dim);
-  }
 
-  /* Form toggle button - subtle and minimal */
-  .form-toggle-btn {
-    padding: 0.125rem;
-    border-radius: 0.25rem;
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 
-  .form-toggle-btn:hover {
-    color: var(--text-muted);
-    background: var(--bg-alt);
-  }
 
-  /* Thumbnail button - always visible */
-  .exercise-thumbnail-btn {
-    position: relative;
-    flex-shrink: 0;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    background: #f5f0e6;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
 
   @media (prefers-color-scheme: dark) {
-    .exercise-thumbnail-btn {
-      background: #2a2520;
-    }
   }
 
-  .exercise-thumbnail-btn:hover {
-    transform: scale(1.05);
-  }
 
-  .exercise-thumbnail-btn:active {
-    transform: scale(0.98);
-  }
 
-  .exercise-thumbnail {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
 
-  .thumbnail-expand-icon {
-    position: absolute;
-    bottom: 0.25rem;
-    right: 0.25rem;
-    width: 1.125rem;
-    height: 1.125rem;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-  }
 
-  .exercise-thumbnail-btn:hover .thumbnail-expand-icon {
-    opacity: 1;
-  }
 
   /* Exercise image container - expanded view */
-  .exercise-image-container {
-    margin-top: 1rem;
-    margin-left: 1.5rem;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    background: #f5f0e6;
-    animation: fadeIn 0.25s ease-out;
-    cursor: pointer;
-  }
 
   @media (prefers-color-scheme: dark) {
-    .exercise-image-container {
-      background: #2a2520;
-    }
   }
 
-  .exercise-image {
-    width: 100%;
-    max-width: 320px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-  }
 
-  .exercise-image-caption {
-    font-size: 0.6875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-dim);
-    text-align: center;
-    margin-top: 0.75rem;
-  }
 
   /* Muscle map thumbnail + target chips */
-  .muscle-map-thumb-btn {
-    flex-shrink: 0;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 0.375rem;
-    overflow: hidden;
-    background: #f5f0e6;
-    cursor: pointer;
-    transition: transform 0.15s ease;
-  }
 
   @media (prefers-color-scheme: dark) {
-    .muscle-map-thumb-btn {
-      background: #2a2520;
-    }
   }
 
-  .muscle-map-thumb-btn:active {
-    transform: scale(0.96);
-  }
 
-  .muscle-map-thumb {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
 
   .muscle-chip {
     font-size: 0.6875rem;
@@ -717,7 +554,6 @@ html {
    Clinical surfaces — pain scale, set logging, readiness, form notes
    ═══════════════════════════════════════════════════════════════════ */
 
-/* Today's dose, and why the engine chose it */
 .session-dose {
   margin-top: 0.5rem;
   font-size: 0.8125rem;
@@ -725,32 +561,7 @@ html {
   letter-spacing: 0.01em;
 }
 
-.dose-why {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.375rem;
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
-  line-height: 1.45;
-  color: var(--text-dim);
-}
-.dose-why[data-action='advance'] { color: var(--check); }
-.dose-why[data-action='regress'] { color: var(--flame); }
 
-/* Form standard + fault list */
-.form-toggle {
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-}
-.form-toggle:hover { color: var(--text); }
 
 .form-notes {
   margin-top: 0.5rem;
@@ -1049,3 +860,288 @@ html {
   font-size: 0.75rem;
   color: var(--text-dim);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Today: one exercise, one line, one dose.
+
+   The guided session is where the workout is performed. Today is the plan.
+   The movement standard, the fault list, the muscle map and the timer live in
+   the sheet behind each row — read once, not scrolled past fifteen times.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Every number the engine decided — the dose, the clock — is set in a
+   typewriter face, tabular so a column of doses aligns down the screen.
+   A system stack: the app is offline-first and will not fetch a webfont. */
+:root {
+  --font-rx: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.row {
+  padding: 0.375rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.row:last-child { border-bottom: none; }
+
+.row-line {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.row-check {
+  /* The circle reads at 1.375rem; the finger gets 2.75rem. An ::after overlay
+     grows the hit area without disturbing the row's vertical rhythm. */
+  position: relative;
+  width: 1.375rem;
+  height: 1.375rem;
+  flex-shrink: 0;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.row-check::after {
+  content: '';
+  position: absolute;
+  inset: -0.6875rem;
+}
+.row-check:hover { border-color: var(--text-muted); }
+.row-check:focus-visible {
+  outline: 2px solid var(--text-muted);
+  outline-offset: 2px;
+}
+.row-check.checked { background: var(--check); border-color: var(--check); }
+
+.row-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  min-height: 2.75rem;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 0.375rem;
+}
+.row-body:hover { background: var(--bg-alt); }
+.row-body:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--text-muted);
+}
+
+.row-plate {
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  border-radius: 0.375rem;
+  object-fit: cover;
+  background: var(--bg-alt);
+}
+
+.row-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.row-flame { flex-shrink: 0; }
+
+.row-dose {
+  flex-shrink: 0;
+  font-family: var(--font-rx);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* The engine's sentence gets the full width of the row, not the scraps left
+   beside a thumbnail. Colour carries the verdict; the words carry the reason. */
+.row-why {
+  margin: 0 0 0.5rem 4.25rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+.row-why[data-action='advance'] { color: var(--check); }
+.row-why[data-action='hold'] { color: var(--warn, var(--flame)); }
+.row-why[data-action='regress'] { color: var(--flame); }
+
+.row[data-done='true'] .row-plate { opacity: 0.4; }
+.row[data-done='true'] .row-name {
+  color: var(--text-dim);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* ── The sheet ───────────────────────────────────────────────────────── */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+@media (min-width: 30rem) {
+  .sheet-backdrop { align-items: center; }
+}
+
+.sheet {
+  width: 100%;
+  max-width: 28rem;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border-radius: 1rem 1rem 0 0;
+  box-shadow: 0 -0.5rem 2rem rgb(0 0 0 / 0.25);
+  animation: sheet-in 0.22s ease-out;
+}
+@media (min-width: 30rem) {
+  .sheet { border-radius: 1rem; }
+}
+@keyframes sheet-in {
+  from { transform: translateY(1.5rem); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet { animation: none; }
+}
+.sheet:focus { outline: none; }
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 0.75rem;
+  flex-shrink: 0;
+}
+.sheet-title {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.sheet-close {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-right: -0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+.sheet-close:hover { background: var(--bg-alt); color: var(--text); }
+
+.sheet-body {
+  overflow-y: auto;
+  padding: 0 1.25rem 1.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sheet-image {
+  width: 100%;
+  border-radius: 0.625rem;
+  display: block;
+}
+
+.sheet-dose {
+  margin-top: 0.875rem;
+  font-family: var(--font-rx);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.sheet-why {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+.sheet-why[data-action='advance'] { color: var(--check); }
+.sheet-why[data-action='hold'] { color: var(--warn, var(--flame)); }
+.sheet-why[data-action='regress'] { color: var(--flame); }
+
+.sheet-timer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.sheet-clock {
+  font-family: var(--font-rx);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.375rem;
+  font-weight: 500;
+  min-width: 3.5rem;
+}
+
+.sheet-cue {
+  margin-top: 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.sheet-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+.sheet-muscle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  margin-top: 1rem;
+}
+.sheet-muscle-map {
+  width: 4.5rem;
+  height: 4.5rem;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+.sheet-muscle-text { flex: 1 1 auto; min-width: 0; }
+
+.sheet-action {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.875rem;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--text);
+  color: var(--bg);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.sheet-action:hover { opacity: 0.9; }
