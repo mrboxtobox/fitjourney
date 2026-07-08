@@ -1,15 +1,23 @@
 import Dexie, { type Table } from 'dexie';
+import {
+  applyDetraining,
+  computeSnapshot,
+  type PainRegion,
+  type SessionPerformance,
+  type Snapshot,
+  type SymptomReport,
+  type WeightUnit,
+} from '../lib/progression';
+import { isDeloadWeek, weekForDate } from '../data/workouts';
 
+export type { PainRegion } from '../lib/progression';
+
+// Completion tracking only. Per-set performance (load, reps, RIR) lives in SetLog.
 export interface WorkoutLog {
   id?: number;
   date: string; // YYYY-MM-DD
   exerciseId: string;
   completed: boolean;
-  sets?: number;
-  reps?: number;
-  duration?: number; // seconds
-  weight?: number; // kg or lbs
-  notes?: string;
 }
 
 export interface WeightLog {
@@ -33,8 +41,6 @@ export interface DailyLog {
   date: string; // YYYY-MM-DD
   workoutType: 'workout' | 'rest';
   completed: boolean;
-  totalTime?: number; // seconds
-  notes?: string;
 }
 
 // One row per finisher attempt — drives the "beat your best" challenge.
@@ -45,12 +51,47 @@ export interface FinisherScore {
   score: number;
 }
 
+// One row per set actually performed. This is the only input the progression
+// engine has: without it, the prescription can never respond to the user.
+export interface SetLog {
+  id?: number;
+  date: string; // YYYY-MM-DD
+  exerciseId: string;
+  setIndex: number; // 1-based
+  reps: number; // reps completed, or seconds held, or steps taken
+  load: number; // external load; 0 for bodyweight and bands
+  rir: number; // reps in reserve; 0 means taken to failure
+  prescribedSets: number; // how many sets were asked for that day (phase/deload scaled)
+}
+
+// One row per body region the user flagged after a session, on the 0–10 numeric
+// pain rating scale. `nprsNextMorning` is filled in the following day.
+export interface SymptomLog {
+  id?: number;
+  date: string; // YYYY-MM-DD — the session this refers to
+  region: PainRegion;
+  nprsDuring: number;
+  nprsNextMorning?: number;
+}
+
+// Answers to the pre-start readiness screen. Stored so it is asked once, and so a
+// later "yes" can re-surface the advice to see a clinician.
+export interface ReadinessRecord {
+  id?: number;
+  date: string;
+  flaggedQuestionIds: string[];
+  acknowledgedDisclaimer: boolean;
+}
+
 export class IdarayaDB extends Dexie {
   workoutLogs!: Table<WorkoutLog>;
   dailyLogs!: Table<DailyLog>;
   weightLogs!: Table<WeightLog>;
   settings!: Table<UserSettings>;
   finisherScores!: Table<FinisherScore>;
+  setLogs!: Table<SetLog>;
+  symptomLogs!: Table<SymptomLog>;
+  readiness!: Table<ReadinessRecord>;
 
   constructor() {
     super('idaraya');
@@ -67,6 +108,18 @@ export class IdarayaDB extends Dexie {
       weightLogs: '++id, date',
       settings: '++id',
       finisherScores: '++id, date, finisherId, [date+finisherId]',
+    });
+    // v3: per-set performance, symptom reports, readiness screen.
+    // Additive — no data migration needed.
+    this.version(3).stores({
+      workoutLogs: '++id, date, exerciseId, [date+exerciseId]',
+      dailyLogs: '++id, &date',
+      weightLogs: '++id, date',
+      settings: '++id',
+      finisherScores: '++id, date, finisherId, [date+finisherId]',
+      setLogs: '++id, date, exerciseId, [date+exerciseId]',
+      symptomLogs: '++id, date, region, [date+region]',
+      readiness: '++id',
     });
   }
 }
@@ -149,6 +202,147 @@ export async function saveSettings(settings: Omit<UserSettings, 'id'>): Promise<
   }
 }
 
+// ─── Set logs — the engine's raw input ──────────────────────────────
+
+// Replaces any previously logged sets for this exercise on this date, so a user
+// who re-enters their numbers corrects the record rather than duplicating it.
+export async function saveSetLogs(
+  date: string,
+  exerciseId: string,
+  prescribedSets: number,
+  sets: Array<{ reps: number; load: number; rir: number }>
+): Promise<void> {
+  await db.transaction('rw', db.setLogs, async () => {
+    const existing = await db.setLogs.where('[date+exerciseId]').equals([date, exerciseId]).toArray();
+    await db.setLogs.bulkDelete(existing.map((s) => s.id!));
+    await db.setLogs.bulkAdd(
+      sets.map((s, i) => ({
+        date,
+        exerciseId,
+        setIndex: i + 1,
+        reps: s.reps,
+        load: s.load,
+        rir: s.rir,
+        prescribedSets,
+      }))
+    );
+  });
+}
+
+export async function getSetLogsForDate(date: string): Promise<SetLog[]> {
+  return db.setLogs.where('date').equals(date).toArray();
+}
+
+// ─── Symptom logs — the engine's safety input ───────────────────────
+
+export async function saveSymptom(
+  date: string,
+  region: PainRegion,
+  nprsDuring: number
+): Promise<void> {
+  const existing = await db.symptomLogs.where('[date+region]').equals([date, region]).first();
+  if (existing) {
+    await db.symptomLogs.update(existing.id!, { nprsDuring });
+  } else {
+    await db.symptomLogs.add({ date, region, nprsDuring });
+  }
+}
+
+// The morning-after score. Pain that has not settled within 24 hours means the
+// previous dose was too much, whatever it felt like at the time.
+export async function saveNextMorningSymptom(
+  sessionDate: string,
+  region: PainRegion,
+  nprsNextMorning: number
+): Promise<void> {
+  const existing = await db.symptomLogs.where('[date+region]').equals([sessionDate, region]).first();
+  if (existing) {
+    await db.symptomLogs.update(existing.id!, { nprsNextMorning });
+  } else {
+    await db.symptomLogs.add({ date: sessionDate, region, nprsDuring: 0, nprsNextMorning });
+  }
+}
+
+export async function getSymptomsForDate(date: string): Promise<SymptomLog[]> {
+  return db.symptomLogs.where('date').equals(date).toArray();
+}
+
+// Sessions that have been logged but not yet followed by a morning check.
+export async function getPendingMorningCheck(beforeDate: string): Promise<SymptomLog[]> {
+  const all = await db.symptomLogs.toArray();
+  return all.filter((s) => s.date < beforeDate && s.nprsNextMorning === undefined && s.nprsDuring > 0);
+}
+
+// ─── The snapshot: progression derived from history ─────────────────
+
+// Folds every logged set and symptom into the user's current position. Derived,
+// never stored — replaying the same history always lands in the same place, and a
+// morning-after pain score retroactively gates the session it describes.
+// `asOf` (YYYY-MM-DD) exists so tests and the guard suite can ask "what would this user's
+// prescription be on such-and-such a day" without mocking the clock. Production omits it.
+export async function loadProgressionSnapshot(startDate: Date, asOf?: string): Promise<Snapshot> {
+  const [setRows, symptomRows, settings] = await Promise.all([
+    db.setLogs.toArray(),
+    db.symptomLogs.toArray(),
+    getSettings(),
+  ]);
+
+  const unit: WeightUnit = settings?.weightUnit ?? 'lbs';
+
+  // Group set rows into one SessionPerformance per (date, exercise).
+  const byKey = new Map<string, SessionPerformance>();
+  for (const row of setRows.sort((a, b) => a.setIndex - b.setIndex)) {
+    const key = `${row.date}|${row.exerciseId}`;
+    const session = byKey.get(key) ?? {
+      date: row.date,
+      exerciseId: row.exerciseId,
+      sets: [],
+      prescribedSets: row.prescribedSets,
+    };
+    session.sets.push({ reps: row.reps, load: row.load, rir: row.rir });
+    byKey.set(key, session);
+  }
+
+  const symptoms: SymptomReport[] = symptomRows.map((s) => ({
+    date: s.date,
+    region: s.region,
+    nprsDuring: s.nprsDuring,
+    nprsNextMorning: s.nprsNextMorning,
+  }));
+
+  const folded = computeSnapshot({
+    sessions: [...byKey.values()],
+    symptoms,
+    unit,
+    isDeloadDate: (date) => isDeloadWeek(weekOf(date, startDate)),
+  });
+
+  // Time away decays the dose. Applied on read, against today's date, because the answer
+  // genuinely depends on when you ask: nothing has decayed on the day they stopped.
+  return applyDetraining(folded, asOf ?? dateToString(new Date()), unit);
+}
+
+// Shares the program's own week arithmetic — a second, subtly different copy here is
+// how the deload calendar and the progression fold would silently drift apart.
+function weekOf(date: string, startDate: Date): number {
+  return weekForDate(new Date(`${date}T00:00:00`), startDate);
+}
+
+// ─── Readiness screen ───────────────────────────────────────────────
+
+export async function getReadiness(): Promise<ReadinessRecord | undefined> {
+  return db.readiness.toCollection().first();
+}
+
+export async function saveReadiness(record: Omit<ReadinessRecord, 'id'>): Promise<void> {
+  const existing = await db.readiness.toCollection().first();
+  if (existing) {
+    await db.readiness.update(existing.id!, record);
+  } else {
+    await db.readiness.add(record);
+  }
+}
+
 // ─── Finisher scores & PRs ──────────────────────────────────────────
 
 export async function getBestFinisherScore(finisherId: string): Promise<number | null> {
@@ -210,27 +404,4 @@ export async function getStreak(today: string): Promise<number> {
     cursor.setDate(cursor.getDate() - 1);
   }
   return streak;
-}
-
-// Update exercise with weight
-export async function updateExerciseLog(
-  date: string,
-  exerciseId: string,
-  updates: Partial<WorkoutLog>
-): Promise<void> {
-  const existing = await db.workoutLogs
-    .where('[date+exerciseId]')
-    .equals([date, exerciseId])
-    .first();
-
-  if (existing) {
-    await db.workoutLogs.update(existing.id!, updates);
-  } else {
-    await db.workoutLogs.add({
-      date,
-      exerciseId,
-      completed: false,
-      ...updates,
-    });
-  }
 }
