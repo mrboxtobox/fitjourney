@@ -1,75 +1,40 @@
 import { useState, useEffect } from 'preact/hooks';
-import { Check, Play, Pause, RotateCcw, Minus, Plus, Maximize2, ShieldCheck, Target, Flame, Trophy } from 'lucide-preact';
-import type { Exercise, WarmupExercise, Finisher } from '../data/workouts';
-import { getMuscleFocus } from '../data/workouts';
+import { Check, Play, Pause, RotateCcw, Minus, Plus, Maximize2, ShieldCheck, Target, Flame, Trophy, TrendingUp } from 'lucide-preact';
+import type { WarmupExercise, Finisher, PrescribedExercise } from '../data/workouts';
+import { getMuscleFocus, formatTempo } from '../data/workouts';
 import { getBestFinisherScore } from '../db';
 import { useTimer } from '../hooks/useTimer';
 
-// Map exercise IDs to their image paths
-const EXERCISE_IMAGES: Record<string, string> = {
-  // Core & abs
-  'mcgill-curl-up': '/exercises/mcgill-curl-up.webp',
-  'mcgill-side-plank': '/exercises/mcgill-side-plank.webp',
-  'mcgill-bird-dog': '/exercises/mcgill-bird-dog.webp',
-  'dead-bug': '/exercises/dead-bug.webp',
-  'front-plank': '/exercises/front-plank.webp',
-  'hollow-hold': '/exercises/hollow-hold.webp',
-  'pallof-press': '/exercises/pallof-press.webp',
-  // Strength (glutes / lower)
-  'glute-bridge': '/exercises/glute-bridge.webp',
-  'band-glute-bridge': '/exercises/band-glute-bridge.webp',
-  'hip-thrust': '/exercises/hip-thrust.webp',
-  'single-leg-glute-bridge': '/exercises/single-leg-glute-bridge.webp',
-  'kb-deadlift': '/exercises/kb-deadlift.webp',
-  'db-rdl': '/exercises/db-rdl.webp',
-  'b-stance-rdl': '/exercises/b-stance-rdl.webp',
-  'box-squat': '/exercises/box-squat.webp',
-  'goblet-squat': '/exercises/goblet-squat.webp',
-  'farmers-carry': '/exercises/farmers-carry.webp',
-  'kb-swing': '/exercises/kb-swing.webp',
-  'band-lateral-walk': '/exercises/band-lateral-walk.webp',
-  'band-monster-walk': '/exercises/band-monster-walk.webp',
-  'band-clamshell': '/exercises/band-clamshell.webp',
-  'band-kickback': '/exercises/band-kickback.webp',
-  // Arms
-  'db-bicep-curl': '/exercises/db-bicep-curl.webp',
-  'db-overhead-press': '/exercises/db-overhead-press.webp',
-  'db-tricep-kickback': '/exercises/db-tricep-kickback.webp',
-  'db-lateral-raise': '/exercises/db-lateral-raise.webp',
-  'push-up': '/exercises/push-up.webp',
-  'band-pull-apart': '/exercises/band-pull-apart.webp',
-  // Mobility
-  '90-90': '/exercises/90-90.webp',
-  'deep-squat-hold': '/exercises/deep-squat-hold.webp',
-  'couch-stretch': '/exercises/couch-stretch.webp',
-  'pigeon-stretch': '/exercises/pigeon-stretch.webp',
-  // Warmup
-  'cat-cow': '/exercises/cat-cow.webp',
-  'leg-swings': '/exercises/leg-swings.webp',
-  'hip-circles': '/exercises/hip-circles.webp',
-  'glute-bridge-warmup': '/exercises/glute-bridge-warmup.webp',
-};
+// Every illustration is `/exercises/<id>.webp`, and every muscle map is
+// `/exercises/muscles/<id>.webp`. A missing file is caught by the asset guard test,
+// not by a broken image in the user's face.
+function imageFor(id: string): string {
+  return `/exercises/${id}.webp`;
+}
 
 interface ExerciseItemProps {
-  exercise: Exercise;
+  prescribed: PrescribedExercise;
+  weightUnit: 'kg' | 'lbs';
   completed: boolean;
   onToggle: () => void;
 }
 
-export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProps) {
+export function ExerciseItem({ prescribed, weightUnit, completed, onToggle }: ExerciseItemProps) {
+  const exercise = prescribed.exercise;
   const [setCount, setSetCount] = useState(0);
   const [expanded, setExpanded] = useState(false);
-  const hasHold = exercise.hold && exercise.hold > 0;
-  const imagePath = EXERCISE_IMAGES[exercise.id];
+  const [showForm, setShowForm] = useState(false);
+  const hasHold = prescribed.holdFor !== undefined && prescribed.holdFor > 0;
+  const imagePath = imageFor(exercise.id);
   const muscle = getMuscleFocus(exercise.id);
   const musclePath = muscle ? `/exercises/muscles/${exercise.id}.webp` : undefined;
 
   // Timer for timed holds
   const timer = useTimer({
-    initialSeconds: exercise.hold || 0,
+    initialSeconds: prescribed.holdFor ?? 0,
     onComplete: () => {
       // Auto-increment set count when timer completes
-      if (setCount < exercise.sets) {
+      if (setCount < prescribed.sets) {
         setSetCount(setCount + 1);
       }
     },
@@ -77,10 +42,10 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
   });
 
   const handleSetComplete = () => {
-    if (setCount < exercise.sets) {
+    if (setCount < prescribed.sets) {
       setSetCount(setCount + 1);
       // Auto-complete when all sets done
-      if (setCount + 1 >= exercise.sets && !completed) {
+      if (setCount + 1 >= prescribed.sets && !completed) {
         onToggle();
       }
     }
@@ -148,13 +113,13 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
               <Minus size={16} />
             </button>
             <span class="counter-display">
-              {setCount}/{exercise.sets}
+              {setCount}/{prescribed.sets}
             </span>
             <button
               onClick={handleSetComplete}
               class="counter-btn"
-              disabled={setCount >= exercise.sets}
-              style={{ opacity: setCount >= exercise.sets ? 0.3 : 1 }}
+              disabled={setCount >= prescribed.sets}
+              style={{ opacity: setCount >= prescribed.sets ? 0.3 : 1 }}
             >
               <Plus size={16} />
             </button>
@@ -183,13 +148,48 @@ export function ExerciseItem({ exercise, completed, onToggle }: ExerciseItemProp
           </div>
         )}
 
-        {/* Reps/Rest display */}
+        {/* Today's dose — set by the progression engine, not the calendar */}
         <p class="text-xs mt-2 ml-6" style={{ color: 'var(--text-dim)' }}>
-          {exercise.sets} × {exercise.reps}
-          {(exercise.restBetweenSets ?? 0) > 0 && (
-            <span> · {exercise.restBetweenSets}s rest</span>
+          {prescribed.sets} × {prescribed.targetLabel}
+          {prescribed.load > 0 && (
+            <span> · {prescribed.load} {weightUnit}</span>
           )}
+          {prescribed.tempo && (
+            <span title="Seconds: lower, pause, lift, squeeze">
+              {' '}· tempo {formatTempo(prescribed.tempo)}
+            </span>
+          )}
+          {exercise.restBetweenSets > 0 && <span> · {exercise.restBetweenSets}s rest</span>}
         </p>
+
+        {/* Why this dose — the engine's reasoning, in plain language */}
+        {prescribed.decision && (
+          <p class="dose-why ml-6" data-action={prescribed.decision.action}>
+            <TrendingUp size={13} class="flex-shrink-0 mt-0.5" />
+            <span>{prescribed.decision.reason}</span>
+          </p>
+        )}
+
+        {/* Form standard + the specific ways this movement goes wrong */}
+        <button
+          class="form-toggle ml-6"
+          aria-expanded={showForm}
+          onClick={() => setShowForm((v) => !v)}
+        >
+          {showForm ? 'Hide form notes' : 'What good looks like'}
+        </button>
+
+        {showForm && (
+          <div class="form-notes ml-6">
+            <p class="form-standard">{exercise.standard}</p>
+            <p class="form-faults-title">Watch for</p>
+            <ul class="form-faults">
+              {exercise.faults.map((f) => (
+                <li key={f}>{f}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Knee-friendly note */}
         {exercise.kneeNote && (
@@ -262,7 +262,7 @@ interface WarmupItemProps {
 
 export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
   const [expanded, setExpanded] = useState(false);
-  const imagePath = EXERCISE_IMAGES[exercise.id];
+  const imagePath = imageFor(exercise.id);
 
   const timer = useTimer({
     initialSeconds: exercise.duration,
