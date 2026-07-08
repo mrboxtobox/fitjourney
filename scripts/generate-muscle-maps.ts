@@ -15,7 +15,20 @@ if (!GOOGLE_AI_API_KEY) {
   process.exit(1);
 }
 
-const IMAGE_MODEL = 'gemini-3-pro-image-preview';
+// Nano Banana 2. Chosen empirically, not by version number.
+//
+// The previous default, gemini-3-pro-image-preview (Nano Banana Pro), could not draw an
+// occluded far-side limb: across five rounds of prompting it produced a dead bug with one
+// arm, an RDL whose far arm was a hairline with no shoulder or elbow, and a B-stance RDL
+// missing an arm. It also could not fold the knees for a side-lying clamshell. Given the
+// identical prompt, gemini-3.1-flash-image drew both correctly on the first attempt.
+//
+// Override with IMAGE_MODEL=... to A/B:
+//   gemini-3.1-flash-image      = Nano Banana 2      (current default)
+//   gemini-3-pro-image          = Nano Banana Pro, GA alias
+//   gemini-3-pro-image-preview  = Nano Banana Pro, preview alias
+//   gemini-2.5-flash-image      = Nano Banana (v1)
+const IMAGE_MODEL = process.env.IMAGE_MODEL ?? 'gemini-3.1-flash-image';
 const OUTPUT_DIR = path.join(process.cwd(), 'public', 'exercises', 'muscles');
 if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
@@ -44,7 +57,10 @@ HIGHLIGHTING:
 COMPOSITION:
 - Plain cream background, no scenery
 - NO text, NO labels, NO arrows, NO watermark
-- Square format, figure fills ~80% of the frame`;
+- Square format, figure fills ~80% of the frame
+- The cream background runs edge-to-edge. Do NOT draw any border, frame, outline box, or
+  rectangle around the illustration — no framing lines of any kind, no inset rule, no
+  vignette, no paper edge.`;
 
 interface MuscleMap {
   id: string;
@@ -95,6 +111,9 @@ const MAPS: MuscleMap[] = [
   { id: 'db-tricep-kickback', view: 'back', primary: 'the triceps (back of both upper arms)' },
   { id: 'db-lateral-raise', view: 'front', primary: 'the lateral deltoids (the outer/side of both shoulders)' },
   { id: 'push-up', view: 'front', primary: 'the pectorals (chest)', secondary: 'the triceps and front deltoids' },
+  { id: 'incline-push-up', view: 'front', primary: 'the pectorals (chest)', secondary: 'the triceps and front deltoids' },
+  { id: 'band-row', view: 'back', primary: 'the latissimus dorsi (the broad muscles of the mid and outer back) and the rhomboids between the shoulder blades', secondary: 'the biceps' },
+  { id: 'db-row', view: 'back', primary: 'the latissimus dorsi (the broad muscle down the side of the back) and the rhomboids between the shoulder blades', secondary: 'the biceps and rear deltoid' },
   { id: 'band-pull-apart', view: 'back', primary: 'the rhomboids and mid-trapezius (upper back between the shoulder blades) and the rear deltoids' },
   // Mobility — highlight the muscle being stretched / felt
   { id: '90-90', view: 'back', primary: 'the deep hip rotators and the gluteus maximus (where the stretch is felt deep in the hips)' },
