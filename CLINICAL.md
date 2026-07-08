@@ -2,6 +2,14 @@
 
 **Status: not reviewed. Not approved. Prepared for review.**
 
+> **Review log**
+>
+> **2026-07-08** — A physiotherapist was consulted informally, in conversation. **No written
+> review was performed**, no section was signed off, and no changes were requested or recorded.
+> This note exists so the conversation is not later mistaken for a review. The sign-off table
+> in §14 remains blank, the app continues to state that it has not been clinician-reviewed, and
+> `src/clinical/claims.guard.test.ts` continues to fail CI on any approval claim.
+
 Idaraya is a general strength and mobility program delivered as an offline web app. It is
 **not medical advice**, has **not** been reviewed or approved by a physiotherapist, and
 makes no claim to have been. This document exists so that a physiotherapist *can* review
