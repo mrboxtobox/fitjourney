@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { getWorkoutForDate, getAllExercises, getCurrentWeek, getPhaseInfo } from '../data/workouts';
-import type { WorkoutDay, Block, Exercise } from '../data/workouts';
+import type { WorkoutDay, Block, PrescribedExercise, ProgressionSnapshot } from '../data/workouts';
+import { EMPTY_SNAPSHOT } from '../data/workouts';
 import { ExerciseItem, WarmupItem, FinisherItem } from '../components/ExerciseCard';
 import { GuidedSession } from '../components/GuidedSession';
+import { MorningCheck } from '../components/SymptomCheck';
 import { DateNav } from '../components/Navigation';
-import { Play, Flame } from 'lucide-preact';
+import { Play, Flame, Moon } from 'lucide-preact';
 import { initAudio } from '../lib/sound';
 import { useDate, formatDateString } from '../hooks/useDate';
 import {
@@ -12,14 +14,19 @@ import {
   toggleExercise,
   saveDailyLog,
   getStreak,
+  loadProgressionSnapshot,
+  getPendingMorningCheck,
+  saveNextMorningSymptom,
   type WorkoutLog,
+  type SymptomLog,
 } from '../db';
 
 interface TodayViewProps {
   startDate: Date;
+  weightUnit: 'kg' | 'lbs';
 }
 
-export function TodayView({ startDate }: TodayViewProps) {
+export function TodayView({ startDate, weightUnit }: TodayViewProps) {
   const { currentDate, displayDate, isToday, goToToday, goToNext, goPrev } = useDate();
   const dateString = formatDateString(currentDate);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
@@ -46,21 +53,36 @@ export function TodayView({ startDate }: TodayViewProps) {
   const [loading, setLoading] = useState(true);
   const [sessionOpen, setSessionOpen] = useState(false);
   const [streak, setStreak] = useState(0);
+  const [pendingMorning, setPendingMorning] = useState<SymptomLog[]>([]);
+  const [dismissedMorning, setDismissedMorning] = useState(false);
+  // Bumped when the snapshot must be recomputed from IndexedDB.
+  const [historyVersion, setHistoryVersion] = useState(0);
+  const loggedDuringSession = useRef(false);
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      const dayWorkout = getWorkoutForDate(currentDate, startDate);
-      setWorkout(dayWorkout);
+
+      // The prescription is a function of what the user has actually done.
+      const snapshot: ProgressionSnapshot = await loadProgressionSnapshot(startDate).catch(
+        () => EMPTY_SNAPSHOT
+      );
+      setWorkout(getWorkoutForDate(currentDate, startDate, snapshot));
 
       const savedLogs = await getWorkoutLogsForDate(dateString);
       setLogs(savedLogs);
       setStreak(await getStreak(formatDateString(new Date())));
+      setPendingMorning(await getPendingMorningCheck(formatDateString(new Date())));
       setLoading(false);
     };
 
     loadData();
-  }, [currentDate, dateString, startDate]);
+  }, [currentDate, dateString, startDate, historyVersion]);
+
+  const answerMorningCheck = async (log: SymptomLog, nprs: number) => {
+    await saveNextMorningSymptom(log.date, log.region, nprs);
+    setHistoryVersion((v) => v + 1);
+  };
 
   const allExercises = workout ? getAllExercises(workout) : [];
   const completedCount = logs.filter((l) => l.completed).length;
@@ -153,12 +175,23 @@ export function TodayView({ startDate }: TodayViewProps) {
         showToday={!isToday}
       />
 
+      {/* Yesterday's pain, revisited. Pain that hasn't settled in 24h means the
+          last dose was too much — this is the only path that fact reaches the engine. */}
+      {!dismissedMorning && pendingMorning.length > 0 && (
+        <MorningCheck
+          region={pendingMorning[0].region}
+          onAnswer={(nprs) => answerMorningCheck(pendingMorning[0], nprs)}
+          onDismiss={() => setDismissedMorning(true)}
+        />
+      )}
+
       {/* Progress */}
       {totalCount > 0 && (
         <div class="mb-4">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs flex items-center gap-2" style={{ color: 'var(--text-dim)' }}>
               Week {week} · {phase.name}
+              {workout.isDeload && <span class="deload-badge">Deload</span>}
               {streak > 0 && (
                 <span class="streak-badge">
                   <Flame size={12} strokeWidth={2.5} />
@@ -200,17 +233,30 @@ export function TodayView({ startDate }: TodayViewProps) {
         <GuidedSession
           workout={workout}
           dateString={dateString}
-          onClose={() => setSessionOpen(false)}
+          weightUnit={weightUnit}
+          onClose={() => {
+            setSessionOpen(false);
+            // Recompute only once the session is over. Doing it per set would rebuild
+            // the workout — and therefore the session's step list — mid-session.
+            if (loggedDuringSession.current) {
+              loggedDuringSession.current = false;
+              setHistoryVersion((v) => v + 1);
+            }
+          }}
           onExerciseComplete={markComplete}
+          onSessionLogged={() => {
+            loggedDuringSession.current = true;
+          }}
         />
       )}
 
       {/* Rest day */}
       {workout.type === 'rest' ? (
         <div class="rest-card">
-          <h2 class="text-2xl font-semibold mb-2">Rest</h2>
+          <Moon size={28} strokeWidth={1.75} style={{ color: 'var(--text-dim)' }} />
+          <h2 class="text-2xl font-semibold mb-2 mt-3">Rest</h2>
           <p style={{ color: 'var(--text-dim)' }}>
-            Recovery is part of the practice.
+            Recovery is when the work you already did turns into strength. Nothing to do today.
           </p>
         </div>
       ) : (
@@ -237,7 +283,9 @@ export function TodayView({ startDate }: TodayViewProps) {
 
           {/* Main exercises grouped by block, with the finisher before the cooldown */}
           {BLOCK_ORDER.map((block) => {
-            const items = workout.exercises.filter((e: Exercise) => e.block === block);
+            const items = workout.exercises.filter(
+              (e: PrescribedExercise) => e.exercise.block === block
+            );
             const finisherSection =
               block === 'mobility' && workout.finisher ? (
                 <section key="finisher">
@@ -260,14 +308,15 @@ export function TodayView({ startDate }: TodayViewProps) {
                     {block === 'mobility' ? 'Cooldown' : BLOCK_LABELS[block]}
                   </h2>
                   <div>
-                    {items.map((exercise) => {
-                      const log = getExerciseLog(exercise.id);
+                    {items.map((px) => {
+                      const log = getExerciseLog(px.exercise.id);
                       return (
                         <ExerciseItem
-                          key={exercise.id}
-                          exercise={exercise}
+                          key={px.exercise.id}
+                          prescribed={px}
+                          weightUnit={weightUnit}
                           completed={log?.completed ?? false}
-                          onToggle={() => handleToggle(exercise.id)}
+                          onToggle={() => handleToggle(px.exercise.id)}
                         />
                       );
                     })}

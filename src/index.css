@@ -15,6 +15,7 @@
     --border: #e0e0e0;
     --accent: #1a1a1a;
     --check: #10b981;
+    --caution: #b45309; /* pain 4–5/10 — hold the dose */
     --flame: #c41e3a; /* finisher red — matches the illustration arrows */
   }
 
@@ -29,6 +30,7 @@
       --border: #262626;
       --accent: #fafafa;
       --check: #10b981;
+      --caution: #fbbf24; /* lighter amber for contrast on dark */
       --flame: #f87171; /* lighter red for contrast on dark */
     }
   }
@@ -709,4 +711,341 @@ html {
   color: var(--text);
   border: none;
   outline: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Clinical surfaces — pain scale, set logging, readiness, form notes
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Today's dose, and why the engine chose it */
+.session-dose {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--text-dim);
+  letter-spacing: 0.01em;
+}
+
+.dose-why {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+.dose-why[data-action='advance'] { color: var(--check); }
+.dose-why[data-action='regress'] { color: var(--flame); }
+
+/* Form standard + fault list */
+.form-toggle {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.form-toggle:hover { color: var(--text); }
+
+.form-notes {
+  margin-top: 0.5rem;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.5rem;
+  background: var(--bg-alt);
+}
+.form-standard {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+.form-faults-title {
+  margin-top: 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.form-faults {
+  margin-top: 0.25rem;
+  padding-left: 1rem;
+  list-style: disc;
+}
+.form-faults li {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-top: 0.1875rem;
+}
+
+.deload-badge {
+  padding: 0.0625rem 0.375rem;
+  border-radius: 9999px;
+  background: var(--bg-alt);
+  color: var(--text-muted);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Pain scale (0–10 NPRS) ───────────────────────────────────────── */
+.pain-scale {
+  display: grid;
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.pain-key {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: var(--bg-alt);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.pain-key:hover { background: var(--border); }
+.pain-key.selected { color: #fff; }
+.pain-key:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ── Symptom check ────────────────────────────────────────────────── */
+.symptom-check {
+  width: 100%;
+  max-width: 30rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.region-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.region-chip {
+  min-height: 2.75rem;
+  padding: 0 0.875rem;
+  border-radius: 9999px;
+  background: var(--bg-alt);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.region-chip:hover { background: var(--border); }
+.region-chip.selected { background: var(--text); color: var(--bg); }
+.region-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.symptom-region { margin-top: 1.25rem; text-align: left; }
+.symptom-region-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.symptom-advice {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+.symptom-actions { margin-top: 1.75rem; }
+
+/* ── Morning-after check ──────────────────────────────────────────── */
+.morning-check {
+  margin-bottom: 1rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--bg-alt);
+}
+.morning-check-title { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+.morning-check-sub {
+  margin-top: 0.125rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.morning-check-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+}
+
+/* ── Set logger ───────────────────────────────────────────────────── */
+.set-logger {
+  width: 100%;
+  max-width: 30rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.set-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 1.25rem;
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  background: var(--bg-alt);
+}
+.set-row-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.set-row-stepper { display: flex; align-items: center; gap: 1rem; }
+.set-row-value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  min-width: 5.5rem;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.set-row-unit { font-size: 0.75rem; font-weight: 500; color: var(--text-dim); }
+.set-row-load { font-size: 0.75rem; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+.rir-row { display: flex; gap: 0.375rem; }
+.rir-key {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border-radius: 0.5rem;
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.rir-key:hover { background: var(--border); }
+.rir-key.selected { background: var(--text); color: var(--bg); }
+.rir-key.selected.failure { background: var(--flame); color: #fff; }
+.rir-key:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.set-logger-legend {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+.set-logger .session-btn-primary { margin-top: 1.25rem; }
+
+.session-controls-spacer { flex: 1; }
+
+/* ── Readiness screen ─────────────────────────────────────────────── */
+.readiness {
+  min-height: 100vh;
+  background: var(--bg);
+  overflow-y: auto;
+}
+.readiness-inner {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 3rem;
+}
+.readiness-title { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; }
+.readiness-lede {
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.readiness-questions { margin-top: 2rem; }
+.readiness-question { padding: 1rem 0; }
+.readiness-question + .readiness-question { border-top: 1px solid var(--border); }
+.readiness-question-text { font-size: 0.9375rem; line-height: 1.5; color: var(--text); }
+.readiness-answers { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+.readiness-answer {
+  min-height: 2.75rem;
+  min-width: 5rem;
+  border-radius: 0.5rem;
+  background: var(--bg-alt);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.readiness-answer:hover { background: var(--border); }
+.readiness-answer.selected { background: var(--text); color: var(--bg); }
+.readiness-answer.selected.flagged { background: var(--caution); color: #fff; }
+.readiness-answer:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.readiness-flag {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  margin-top: 1.5rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--bg-alt);
+}
+.readiness-flag p { font-size: 0.8125rem; line-height: 1.55; color: var(--text-muted); }
+
+.readiness-disclaimer {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  background: var(--bg-alt);
+}
+.readiness-disclaimer-title { font-size: 0.9375rem; font-weight: 600; }
+.readiness-disclaimer p {
+  margin-top: 0.625rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.readiness-disclaimer strong { color: var(--text); font-weight: 600; }
+
+.readiness-ack {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  text-align: left;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  cursor: pointer;
+  background: transparent;
+  transition: background 0.12s ease;
+}
+.readiness-ack:hover { background: var(--bg-alt); }
+.readiness-ack.selected { color: var(--text); }
+.readiness-ack:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.readiness-ack .checkbox-min { flex-shrink: 0; margin-top: 0.0625rem; }
+
+.readiness-continue { width: 100%; margin-top: 1.25rem; }
+.readiness-continue:disabled { opacity: 0.4; cursor: not-allowed; }
+.readiness-hint {
+  margin-top: 0.625rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-dim);
 }

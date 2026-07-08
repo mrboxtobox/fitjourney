@@ -13,10 +13,13 @@ import {
   Flame,
   Trophy,
 } from 'lucide-preact';
-import { buildSessionSteps, type WorkoutDay, type SessionStep } from '../data/workouts';
+import { buildSessionSteps, getExercise, type WorkoutDay, type SessionStep } from '../data/workouts';
 import { initAudio, cueGo, cueRest, cueDone, cueTick } from '../lib/sound';
 import { celebrate } from '../lib/confetti';
-import { getBestFinisherScore, saveFinisherScore } from '../db';
+import { getBestFinisherScore, saveFinisherScore, saveSetLogs, saveSymptom } from '../db';
+import { SetLogger } from './SetLogger';
+import { SymptomCheck } from './SymptomCheck';
+import type { PainRegion } from '../lib/progression';
 
 const REST_ENCOURAGEMENT = [
   'Breathe. Shake it out.',
@@ -42,8 +45,10 @@ const FINISHER_REST_LINES = [
 interface GuidedSessionProps {
   workout: WorkoutDay;
   dateString: string; // YYYY-MM-DD — for logging finisher scores
+  weightUnit: 'kg' | 'lbs';
   onClose: () => void;
   onExerciseComplete: (exerciseId: string) => void;
+  onSessionLogged: () => void; // performance recorded — the snapshot needs recomputing
 }
 
 const MUTE_KEY = 'idaraya-session-muted';
@@ -57,13 +62,33 @@ function fmt(s: number): string {
 function stepDuration(step: SessionStep): number {
   if (step.kind === 'warmup') return step.duration;
   if (step.kind === 'rest') return step.duration;
-  if (step.kind === 'work' && step.hold) return step.hold;
+  if (step.kind === 'work' && step.holdFor) return step.holdFor;
   if (step.kind === 'finisher-work' || step.kind === 'finisher-rest') return step.duration;
-  return 0; // rep-based work, finisher intro, score entry: untimed
+  return 0; // rep-based work, logging, finisher intro, score entry: untimed
 }
 
-export function GuidedSession({ workout, dateString, onClose, onExerciseComplete }: GuidedSessionProps) {
-  const steps = useMemo(() => buildSessionSteps(workout), [workout]);
+// What the logger's number means for this exercise: reps, seconds, or steps.
+function measureOf(exerciseId: string): 'reps' | 'seconds' | 'steps' {
+  const kind = getExercise(exerciseId).prescription.kind;
+  if (kind === 'hold') return 'seconds';
+  if (kind === 'steps') return 'steps';
+  return 'reps';
+}
+
+export function GuidedSession({
+  workout,
+  dateString,
+  weightUnit,
+  onClose,
+  onExerciseComplete,
+  onSessionLogged,
+}: GuidedSessionProps) {
+  // The session is frozen at the moment it starts. Logging a set recomputes the
+  // progression snapshot, which produces a new `workout` object with new targets — and
+  // rebuilding the step list mid-session would renumber the steps under the user's feet,
+  // sending them back through work they had already finished.
+  const frozenWorkout = useRef(workout);
+  const steps = useMemo(() => buildSessionSteps(frozenWorkout.current), []);
   const [idx, setIdx] = useState(0);
   const [remaining, setRemaining] = useState(() => stepDuration(steps[0]));
   const [paused, setPaused] = useState(false);
@@ -82,11 +107,13 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
   const step = steps[idx];
   const timed = stepDuration(step) > 0;
 
+  const finisher = frozenWorkout.current.finisher;
+
   // Load the score to beat once per session.
   useEffect(() => {
-    if (!workout.finisher) return;
-    getBestFinisherScore(workout.finisher.id).then(setBestScore);
-  }, [workout.finisher]);
+    if (!finisher) return;
+    getBestFinisherScore(finisher.id).then(setBestScore);
+  }, [finisher]);
 
   const goPrev = () => setIdx((i) => Math.max(0, i - 1));
 
@@ -138,6 +165,24 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
     }
   };
 
+  // Record what actually happened. This is the engine's only input — skipping it
+  // leaves the prescription frozen where it is.
+  const saveSets = async (
+    exerciseId: string,
+    prescribedSets: number,
+    rows: Array<{ reps: number; load: number; rir: number }>
+  ) => {
+    await saveSetLogs(dateString, exerciseId, prescribedSets, rows);
+    onSessionLogged();
+    advance(false);
+  };
+
+  const saveSymptoms = async (reports: Array<{ region: PainRegion; nprs: number }>) => {
+    for (const r of reports) await saveSymptom(dateString, r.region, r.nprs);
+    onSessionLogged();
+    advance(false);
+  };
+
   // Save the finisher score, check for a PR, then advance.
   const submitScore = async () => {
     if (step.kind !== 'finisher-score') return;
@@ -180,6 +225,10 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
         }
         return;
       }
+      // Data-entry steps own their own keyboard: space and enter must reach the
+      // stepper and scale buttons, not skip the step.
+      const isDataStep = step.kind === 'log' || step.kind === 'symptom-check';
+
       switch (e.key) {
         case 'ArrowLeft':
           e.preventDefault();
@@ -191,6 +240,7 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
           break;
         case ' ':
         case 'Enter':
+          if (isDataStep) break;
           e.preventDefault();
           if (step.kind === 'finisher-score') submitScore();
           else if (step.kind === 'rest' || step.kind === 'finisher-rest' || step.kind === 'finisher-intro')
@@ -252,9 +302,9 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
           <h2 class="text-2xl font-semibold mt-4">
             {prResult?.isPR ? 'New record!' : 'Session complete'}
           </h2>
-          {prResult?.isPR && workout.finisher && (
+          {prResult?.isPR && finisher && (
             <p class="mt-2 font-medium" style={{ color: 'var(--check)' }}>
-              {score} {workout.finisher.scoreUnit} — previous best was {prResult.previousBest}.
+              {score} {finisher.scoreUnit} — previous best was {prResult.previousBest}.
             </p>
           )}
           <p class="mt-2" style={{ color: 'var(--text-dim)' }}>
@@ -272,6 +322,7 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
   }
 
   const total = steps.length;
+  const isDataStep = step.kind === 'log' || step.kind === 'symptom-check';
   const isRest = step.kind === 'rest' || step.kind === 'finisher-rest';
   const isFinisherStep =
     step.kind === 'finisher-intro' ||
@@ -284,7 +335,11 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
       ? 'Warm-up'
       : step.kind === 'rest'
         ? 'Rest'
-        : step.kind === 'work'
+        : step.kind === 'log'
+          ? 'Log your sets'
+          : step.kind === 'symptom-check'
+            ? 'Check in'
+            : step.kind === 'work'
           ? (step.supersetLabel ?? `Set ${step.set} of ${step.sets}`)
           : step.kind === 'finisher-intro'
             ? 'Finisher'
@@ -434,6 +489,18 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
               </p>
             )}
           </>
+        ) : step.kind === 'log' ? (
+          <SetLogger
+            name={step.name}
+            sets={step.sets}
+            target={step.target}
+            load={step.load}
+            unitLabel={weightUnit}
+            measure={measureOf(step.exerciseId)}
+            onSave={(rows) => saveSets(step.exerciseId, step.sets, rows)}
+          />
+        ) : step.kind === 'symptom-check' ? (
+          <SymptomCheck onSave={saveSymptoms} />
         ) : (
           <>
             <h2 class="session-name">{step.name}</h2>
@@ -441,7 +508,23 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
             {timed ? (
               <div class="session-timer">{fmt(remaining)}</div>
             ) : (
-              step.kind === 'work' && <div class="session-reps">{step.reps}</div>
+              step.kind === 'work' && <div class="session-reps">{step.targetLabel}</div>
+            )}
+            {step.kind === 'work' && (step.load > 0 || step.tempo) && (
+              <p class="session-dose">
+                {step.load > 0 && (
+                  <span>
+                    {step.load} {weightUnit}
+                  </span>
+                )}
+                {step.load > 0 && step.tempo && <span aria-hidden="true"> · </span>}
+                {step.tempo && (
+                  <span title="Seconds: lower, pause, lift, squeeze">
+                    Tempo {step.tempo.eccentric}-{step.tempo.pauseBottom}-{step.tempo.concentric}-
+                    {step.tempo.pauseTop}
+                  </span>
+                )}
+              </p>
             )}
             <p class="session-cue">{step.cue}</p>
           </>
@@ -454,7 +537,10 @@ export function GuidedSession({ workout, dateString, onClose, onExerciseComplete
           <ChevronLeft size={22} />
         </button>
 
-        {step.kind === 'finisher-intro' ? (
+        {isDataStep ? (
+          // SetLogger and SymptomCheck each own their save button.
+          <span class="session-controls-spacer" />
+        ) : step.kind === 'finisher-intro' ? (
           <button onClick={() => advance(false)} class="session-btn-primary session-btn-wide">
             <Flame size={18} /> Go
           </button>

@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: 'Idaraya',
         short_name: 'Idaraya',
-        description: '20-minute daily movement practice',
+        description: 'A 30-minute daily movement practice',
         theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
         display: 'standalone',
