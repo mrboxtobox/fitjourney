@@ -12,6 +12,7 @@
 import {
   getExercise,
   formatTarget,
+  formatTargetCompact,
   holdSeconds,
   WARMUP,
   type Exercise,
@@ -36,6 +37,7 @@ export interface PrescribedExercise {
   sets: number; // after phase and deload scaling
   target: number; // reps, seconds, or steps — whatever the prescription measures
   targetLabel: string; // the same, as prose
+  targetLabelShort: string; // the same, compressed for a one-line row
   load: number; // 0 for bodyweight and bands
   holdFor?: number; // seconds, when this is a timed hold
   tempo?: Tempo;
@@ -319,6 +321,7 @@ function prescribe(
     sets: scaledSets(exercise.sets, phase, isDeload),
     target,
     targetLabel: formatTarget(exercise.prescription, target),
+    targetLabelShort: formatTargetCompact(exercise.prescription, target),
     load: state.load,
     holdFor: holdSeconds(exercise.prescription, target),
     tempo: exercise.tempo,
@@ -495,6 +498,7 @@ export type SessionStep =
       set: number;
       sets: number;
       targetLabel: string;
+      targetLabelShort: string;
       target: number;
       load: number;
       holdFor?: number;
@@ -555,6 +559,7 @@ export function buildSessionSteps(workout: WorkoutDay): SessionStep[] {
       set,
       sets: px.sets,
       targetLabel: px.targetLabel,
+      targetLabelShort: px.targetLabelShort,
       target: px.target,
       load: px.load,
       holdFor: px.holdFor,

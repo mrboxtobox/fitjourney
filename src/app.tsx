@@ -6,7 +6,6 @@ import { MonthView } from './views/MonthView';
 import { SettingsView } from './views/SettingsView';
 import { ReadinessScreen } from './components/ReadinessScreen';
 import { getSettings, saveSettings, getReadiness, saveReadiness } from './db';
-import { getCurrentWeek } from './data/workouts';
 import { formatDateString } from './hooks/useDate';
 
 type View = 'today' | 'week' | 'month' | 'weight' | 'settings';
@@ -58,7 +57,6 @@ export function App() {
     setStartDate(date);
   };
 
-  const week = getCurrentWeek(startDate);
 
   if (loading) {
     return (
@@ -70,8 +68,11 @@ export function App() {
 
   const getHeaderInfo = () => {
     switch (currentView) {
+      // No subtitle: Today's own meta line already names the week and the phase.
+      // Saying "Week 79" in the header and "Week 79 · Sustain" directly beneath it
+      // is the same label twice.
       case 'today':
-        return { title: 'Idaraya', subtitle: `Week ${week}` };
+        return { title: 'Idaraya', subtitle: '' };
       case 'week':
         return { title: 'Week', subtitle: '' };
       case 'month':

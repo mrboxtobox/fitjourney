@@ -15,7 +15,7 @@ import {
   type ProgressionSnapshot,
   type WorkoutDay,
 } from './workouts';
-import { EXERCISES, getExercise, hasExercise } from './exercises';
+import { EXERCISES, getExercise, hasExercise, formatTarget, formatTargetCompact } from './exercises';
 import { LADDERS, type MovementPattern } from './ladders';
 import { computeSnapshot, type SessionPerformance, type SymptomReport } from '../lib/progression';
 
@@ -469,6 +469,44 @@ describe('clinical content is present on every exercise', () => {
     for (const ex of EXERCISES) {
       if (ex.block === 'mobility') continue;
       expect(ex.targetRIR, ex.id).toBeGreaterThan(0);
+    }
+  });
+
+  // The row states the dose on one line beside the exercise name. A prose target
+  // ("10s each side") overflowed that line and was clipped at the screen edge.
+  it('compresses every target so a one-line dose cannot overflow the row', () => {
+    for (const e of EXERCISES) {
+      const target = e.prescription.min;
+      const prose = formatTarget(e.prescription, target);
+      const compact = formatTargetCompact(e.prescription, target);
+
+      expect(compact.length, `${e.id}: compact must not be longer than prose`).toBeLessThanOrEqual(
+        prose.length
+      );
+      // "each side" is what blew the row. Steps keep their unit; nothing else needs one.
+      expect(compact, e.id).not.toContain('each side');
+      if (e.prescription.kind !== 'steps') {
+        expect(compact, e.id).not.toMatch(/reps|hold/);
+      }
+    }
+  });
+
+  it('keeps the prose target for the sheet and the guided session', () => {
+    // The compact form is for the row only. Losing the prose would make the session
+    // read "3 × 10" aloud where it must say "10 each side".
+    // `steps` has no perSide, so narrow on kind before reading it.
+    const perSideReps = EXERCISES.find((e) => e.prescription.kind === 'reps' && e.prescription.perSide);
+    const perSideHold = EXERCISES.find((e) => e.prescription.kind === 'hold' && e.prescription.perSide);
+    expect(perSideReps ?? perSideHold, 'a per-side exercise must exist').toBeDefined();
+
+    if (perSideReps) {
+      expect(formatTarget(perSideReps.prescription, 10)).toBe('10 each side');
+      expect(formatTargetCompact(perSideReps.prescription, 10)).toBe('10/side');
+    }
+    if (perSideHold) {
+      // A hold keeps its unit — "10/side" would read as ten repetitions, not ten seconds.
+      expect(formatTarget(perSideHold.prescription, 10)).toBe('10s each side');
+      expect(formatTargetCompact(perSideHold.prescription, 10)).toBe('10s/side');
     }
   });
 });

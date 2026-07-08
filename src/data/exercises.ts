@@ -712,6 +712,21 @@ export function formatTarget(p: Prescription, target: number): string {
   }
 }
 
+// The same target, compressed for a single-line row where the dose sits beside the
+// exercise name. `10s each side` becomes `10s/side`; `8s hold` becomes `8s`, because
+// nothing else in a dose column is measured in seconds. The prose form above is what
+// the detail sheet and the guided session say out loud.
+export function formatTargetCompact(p: Prescription, target: number): string {
+  switch (p.kind) {
+    case 'reps':
+      return p.perSide ? `${target}/side` : `${target}`;
+    case 'hold':
+      return p.perSide ? `${target}s/side` : `${target}s`;
+    case 'steps':
+      return `${target} steps`;
+  }
+}
+
 export function formatRange(p: Prescription): string {
   const span = p.min === p.max ? `${p.min}` : `${p.min}–${p.max}`;
   switch (p.kind) {

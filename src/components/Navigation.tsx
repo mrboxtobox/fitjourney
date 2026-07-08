@@ -67,26 +67,20 @@ interface DateNavProps {
   showToday?: boolean;
 }
 
+// The date is a title and reads at the left edge of the reading column. The chevrons
+// are controls, so they sit together at the right. A `‹ Wednesday, Jul 8 ›` cluster
+// centred in the viewport reads as decoration and hides where the column begins.
 export function DateNav({ displayText, onPrev, onNext, onToday, showToday = false }: DateNavProps) {
   return (
     <div class="flex items-center justify-between py-3">
-      <button
-        onClick={onPrev}
-        class="touch-target flex items-center justify-center cursor-pointer"
-        aria-label="Previous"
-        style={{ color: 'var(--text-dim)' }}
-      >
-        <ChevronLeft size={20} />
-      </button>
-
-      <div class="text-center">
+      <div class="flex items-baseline gap-2 min-w-0">
         <button onClick={onToday} class="cursor-pointer date-display">
           {displayText}
         </button>
         {showToday && onToday && (
           <button
             onClick={onToday}
-            class="ml-2 text-xs cursor-pointer font-medium"
+            class="text-xs cursor-pointer font-medium flex-shrink-0"
             style={{ color: 'var(--text)' }}
           >
             Today
@@ -94,14 +88,24 @@ export function DateNav({ displayText, onPrev, onNext, onToday, showToday = fals
         )}
       </div>
 
-      <button
-        onClick={onNext}
-        class="touch-target flex items-center justify-center cursor-pointer"
-        aria-label="Next"
-        style={{ color: 'var(--text-dim)' }}
-      >
-        <ChevronRight size={20} />
-      </button>
+      <div class="flex items-center flex-shrink-0">
+        <button
+          onClick={onPrev}
+          class="touch-target flex items-center justify-center cursor-pointer"
+          aria-label="Previous day"
+          style={{ color: 'var(--text-dim)' }}
+        >
+          <ChevronLeft size={20} />
+        </button>
+        <button
+          onClick={onNext}
+          class="touch-target flex items-center justify-center cursor-pointer"
+          aria-label="Next day"
+          style={{ color: 'var(--text-dim)' }}
+        >
+          <ChevronRight size={20} />
+        </button>
+      </div>
     </div>
   );
 }
