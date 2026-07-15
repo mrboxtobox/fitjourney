@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { EXERCISES, EXERCISE_MUSCLES, WARMUP } from './exercises';
+import { EXERCISES, EXERCISE_MUSCLES, WARMUP, MOTION_FRAMES } from './exercises';
 import { FINISHERS } from './workouts';
 
 const ROOT = process.cwd();
@@ -36,6 +36,20 @@ describe('every illustration referenced by the app exists on disk', () => {
     const missing = Object.keys(EXERCISE_MUSCLES).filter((id) => !existsSync(muscleImage(id)));
     expect(missing).toEqual([]);
   });
+
+  it('has both animation frames for every exercise that declares motion', () => {
+    // The UI renders <id>-a.webp and <id>-b.webp for these; a missing frame is a
+    // permanently broken image inside the sheet and the guided session.
+    const missing = [...MOTION_FRAMES].flatMap((id) =>
+      ['a', 'b'].filter((f) => !existsSync(formImage(`${id}-${f}`))).map((f) => `${id}-${f}`)
+    );
+    expect(missing).toEqual([]);
+  });
+
+  it('declares motion only for exercises that exist', () => {
+    const ids = new Set(EXERCISES.map((e) => e.id));
+    expect([...MOTION_FRAMES].filter((id) => !ids.has(id))).toEqual([]);
+  });
 });
 
 describe('muscle focus data covers the library', () => {
@@ -58,6 +72,7 @@ describe('muscle focus data covers the library', () => {
 describe('the generators can actually reproduce every image they ship', () => {
   const formScript = readFileSync(join(ROOT, 'scripts', 'generate-exercise-images.ts'), 'utf8');
   const muscleScript = readFileSync(join(ROOT, 'scripts', 'generate-muscle-maps.ts'), 'utf8');
+  const motionScript = readFileSync(join(ROOT, 'scripts', 'generate-motion-frames.ts'), 'utf8');
 
   const specIds = (source: string) =>
     new Set([...source.matchAll(/^\s*(?:\{\s*)?id: '([\w-]+)'/gm)].map((m) => m[1]));
@@ -79,6 +94,12 @@ describe('the generators can actually reproduce every image they ship', () => {
   it('has a muscle-map recipe for every exercise that declares a muscle focus', () => {
     const specced = specIds(muscleScript);
     const missing = Object.keys(EXERCISE_MUSCLES).filter((id) => !specced.has(id));
+    expect(missing).toEqual([]);
+  });
+
+  it('has a motion-frame recipe for every exercise that declares motion', () => {
+    const specced = specIds(motionScript);
+    const missing = [...MOTION_FRAMES].filter((id) => !specced.has(id));
     expect(missing).toEqual([]);
   });
 

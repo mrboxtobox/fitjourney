@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useMemo } from 'preact/hooks';
 import { format, isSameDay } from 'date-fns';
 import { Check } from 'lucide-preact';
-import { getWorkoutForDate, getCurrentWeek } from '../data/workouts';
+import { getWorkoutForDate, getCurrentWeek, getMuscleFocus } from '../data/workouts';
 import { DateNav } from '../components/Navigation';
 import { useWeek, formatDateString } from '../hooks/useDate';
 import { getWeekLogs, type DailyLog } from '../db';
@@ -32,6 +32,22 @@ export function WeekView({ startDate, onDayClick }: WeekViewProps) {
 
   const completedDays = logs.filter((l) => l.completed).length;
 
+  // What the week trains, counted across every planned exercise's muscle targets.
+  // The plan is a function of the dates, so this needs no store.
+  const muscleCoverage = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const day of weekDays) {
+      const workout = getWorkoutForDate(day, startDate);
+      for (const px of workout.exercises) {
+        for (const target of getMuscleFocus(px.exercise.id)?.targets ?? []) {
+          counts.set(target, (counts.get(target) ?? 0) + 1);
+        }
+      }
+    }
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weekStartString, startDate]);
+
   return (
     <div class="container-app pb-safe-nav">
       <DateNav
@@ -43,10 +59,21 @@ export function WeekView({ startDate, onDayClick }: WeekViewProps) {
       />
 
       {/* Week info */}
-      <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center justify-between mb-2">
         <span class="text-xs" style={{ color: 'var(--text-dim)' }}>Week {week}</span>
         <span class="text-xs" style={{ color: 'var(--text-dim)' }}>{completedDays} completed</span>
       </div>
+
+      {/* What this week trains, by muscle */}
+      {muscleCoverage.length > 0 && (
+        <p class="week-muscles">
+          {muscleCoverage.map(([muscle, count]) => (
+            <span key={muscle} class="week-muscle">
+              {muscle} <span class="week-muscle-count">×{count}</span>
+            </span>
+          ))}
+        </p>
+      )}
 
       {/* Days list */}
       <div>

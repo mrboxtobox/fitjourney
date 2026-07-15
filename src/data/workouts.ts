@@ -19,7 +19,7 @@ import {
   type WarmupExercise,
   type Tempo,
 } from './exercises';
-import { levelExerciseId, type MovementPattern } from './ladders';
+import { getLadder, levelExerciseId, type MovementPattern } from './ladders';
 import { initialState, type ExerciseState, type ProgressionDecision } from '../lib/progression';
 import { SCHEDULE, PHASE_LAST_WEEK, PAIN_BANDS, AUTOREGULATION } from '../clinical/parameters';
 
@@ -30,6 +30,18 @@ export type { MovementPattern } from './ladders';
 // ═══════════════════════════════════════════════════════════════════
 // THE DAY'S PRESCRIPTION
 // ═══════════════════════════════════════════════════════════════════
+
+// Where this exercise sits on its movement-pattern ladder, and what unlocks the next
+// rung. This is the engine's game board, surfaced: rungs earned, the rung you're on,
+// and the plain-English gate for the one above.
+export interface LadderProgress {
+  pattern: MovementPattern;
+  level: number; // index of the current rung
+  rungs: { name: string; criteria: string }[];
+  next?: { name: string; criteria: string }; // absent at the top of the ladder
+  qualifyingStreak: number; // consecutive qualifying sessions at the top of the range
+  streakNeeded: number;
+}
 
 // An exercise plus the exact dose the engine has arrived at for today.
 export interface PrescribedExercise {
@@ -42,6 +54,7 @@ export interface PrescribedExercise {
   holdFor?: number; // seconds, when this is a timed hold
   tempo?: Tempo;
   decision?: ProgressionDecision; // why today's dose is what it is
+  progress?: LadderProgress; // absent for mobility, which has no ladder
 }
 
 // The engine's persisted view of the user. Levels are per movement pattern; loads
@@ -264,30 +277,39 @@ export function isRestDay(dayOfWeek: number): boolean {
 // THE WEEKLY TEMPLATE — which patterns are trained on which day
 // ═══════════════════════════════════════════════════════════════════
 
-// Core is trained daily: the McGill anti-movement trio plus one anti-extension move.
-const CORE_PATTERNS: MovementPattern[] = [
-  'trunkFlexion',
-  'antiLateralFlexion',
-  'antiRotation',
-  'antiExtension',
-];
-
-// Indexed by day of week, Monday (1) through Saturday (6). Sunday rests.
-const STRENGTH_BY_DAY: Record<number, MovementPattern[]> = {
-  1: ['hinge', 'bridge', 'abduction'],
-  2: ['squat', 'hipExtension', 'bridge'],
-  3: ['hinge', 'abduction', 'bridge'],
-  4: ['carry', 'bridge', 'hipExtension'],
-  5: ['hinge', 'bridge', 'abduction'],
-  6: ['squat', 'hipExtension', 'bridge'],
+// The day is deliberately lean: five working exercises, gone deep, rather than ten
+// gone shallow. Depth lives in the per-exercise set counts in clinical/parameters.ts.
+//
+// Core alternates two anti-movement patterns per day (A/B), so each of the four is
+// still trained three times a week — coverage comes from the week, not the day.
+const CORE_BY_DAY: Record<number, MovementPattern[]> = {
+  1: ['antiExtension', 'antiRotation'],
+  2: ['trunkFlexion', 'antiLateralFlexion'],
+  3: ['antiExtension', 'antiRotation'],
+  4: ['trunkFlexion', 'antiLateralFlexion'],
+  5: ['antiExtension', 'antiRotation'],
+  6: ['trunkFlexion', 'antiLateralFlexion'],
 };
 
+// Strength: the day's MAIN lift first — straight sets, full rest, the deep work —
+// then one glute accessory. Indexed by day of week, Monday (1) through Saturday (6).
+const STRENGTH_BY_DAY: Record<number, MovementPattern[]> = {
+  1: ['hinge', 'bridge'],
+  2: ['squat', 'hipExtension'],
+  3: ['bridge', 'abduction'],
+  4: ['carry', 'bridge'],
+  5: ['hinge', 'abduction'],
+  6: ['squat', 'bridge'],
+};
+
+// Arms: one pattern a day. Saturday alternates between the two shoulder accessories
+// by week — with a single daily slot, a fixed map would leave one pattern dead.
 const ARMS_BY_DAY: Record<number, MovementPattern[]> = {
-  1: ['horizontalPush', 'horizontalPull'],
-  2: ['verticalPush', 'scapularRetraction'],
-  3: ['horizontalPull', 'elbowFlexion'],
-  4: ['horizontalPush', 'elbowExtension'],
-  5: ['verticalPush', 'horizontalPull'],
+  1: ['horizontalPush'],
+  2: ['horizontalPull'],
+  3: ['verticalPush'],
+  4: ['elbowFlexion'],
+  5: ['elbowExtension'],
   6: ['lateralRaise', 'scapularRetraction'],
 };
 
@@ -308,6 +330,32 @@ function scaledSets(base: number, phase: Phase, isDeload: boolean): number {
   return Math.max(1, sets);
 }
 
+// The exercise's position on its pattern ladder, for display. Level comes from the
+// snapshot; the rung names resolve through the same tables the engine climbs.
+function ladderProgress(exercise: Exercise, snapshot: ProgressionSnapshot): LadderProgress | undefined {
+  const ladder = getLadder(exercise.pattern);
+  if (!ladder) return undefined;
+  const level = Math.min(snapshot.patternLevels[exercise.pattern] ?? 0, ladder.levels.length - 1);
+  const rungs = ladder.levels.map((rung) => ({
+    name: getExercise(rung.exerciseId).name,
+    // The criteria on a rung is the gate for LEAVING it.
+    criteria: rung.criteria,
+  }));
+  const next =
+    level + 1 < rungs.length
+      ? { name: rungs[level + 1].name, criteria: rungs[level].criteria }
+      : undefined;
+  const state = snapshot.exerciseStates[exercise.id];
+  return {
+    pattern: exercise.pattern,
+    level,
+    rungs,
+    next,
+    qualifyingStreak: state?.qualifyingStreak ?? 0,
+    streakNeeded: AUTOREGULATION.sessionsAtTopOfRangeToAdvance,
+  };
+}
+
 function prescribe(
   exercise: Exercise,
   snapshot: ProgressionSnapshot,
@@ -326,6 +374,7 @@ function prescribe(
     holdFor: holdSeconds(exercise.prescription, target),
     tempo: exercise.tempo,
     decision: snapshot.decisions?.[exercise.id],
+    progress: ladderProgress(exercise, snapshot),
   };
 }
 
@@ -369,20 +418,19 @@ export function getWorkoutForDate(
     };
   }
 
-  // Core: the anti-movement trio plus anti-extension, every training day in every
-  // phase. Dropping one in Foundation would leave a whole anti-movement class
-  // untrained for four weeks; volume is reduced by set count instead.
-  const core = CORE_PATTERNS.map((p) => exerciseForPattern(p, snapshot));
+  // Core: two anti-movement patterns, alternating by day. Each of the four is
+  // trained three times a week; the week covers what the day no longer crams in.
+  const core = (CORE_BY_DAY[dayOfWeek] ?? CORE_BY_DAY[1]).map((p) =>
+    exerciseForPattern(p, snapshot)
+  );
 
-  // Strength: three glute-dominant patterns, rotating by day.
+  // Strength: the main lift plus one glute accessory.
   const strengthPatterns = STRENGTH_BY_DAY[dayOfWeek] ?? STRENGTH_BY_DAY[1];
   const strength = strengthPatterns.map((p) => exerciseForPattern(p, snapshot));
 
-  // Arms: two patterns, one in foundation.
-  const armPatterns = ARMS_BY_DAY[dayOfWeek] ?? ARMS_BY_DAY[1];
-  const arms = (phase === 'foundation' ? armPatterns.slice(0, 1) : armPatterns).map((p) =>
-    exerciseForPattern(p, snapshot)
-  );
+  // Arms: one pattern. A day with several arm choices rotates through them by week.
+  const armChoices = ARMS_BY_DAY[dayOfWeek] ?? ARMS_BY_DAY[1];
+  const arms = [exerciseForPattern(armChoices[(week - 1) % armChoices.length], snapshot)];
 
   // Mobility: one cooldown stretch, rotating.
   const mobility = [getExercise(pick(MOBILITY_POOL, dayOfWeek))];
@@ -391,14 +439,13 @@ export function getWorkoutForDate(
   const exercises = all.map((ex) => prescribe(ex, snapshot, phase, isDeload));
 
   // Supersets: non-competing muscle groups back-to-back, rest only after the pair.
-  // Core pairs rest 20s, strength/arm pairs 30s. Anything unpaired runs straight.
+  // The core pair opens the session; the accessory + arm pair closes the strength
+  // work. The main lift stays unpaired — it runs straight sets with full rest.
   const supersets: SupersetPair[] = [];
   const addPair = (a: Exercise | undefined, b: Exercise | undefined, rest: number) => {
     if (a && b && a.id !== b.id) supersets.push({ exerciseIds: [a.id, b.id], restAfterPair: rest });
   };
   addPair(core[0], core[1], 20);
-  addPair(core[2], core[3], 20);
-  addPair(strength[0], strength[2], 30);
   addPair(strength[1], arms[0], 30);
 
   return {
@@ -582,8 +629,15 @@ export function buildSessionSteps(workout: WorkoutDay): SessionStep[] {
     });
   };
 
+  // Work runs in the plan's order. A paired exercise pulls its whole superset in at
+  // the position of its first member, so the day reads: core pair → main lift,
+  // straight sets — the deep work sits in the middle, not after the accessories →
+  // accessory pair. Mobility waits for the cooldown.
   const letters = ['A', 'B', 'C', 'D', 'E'];
-  workout.supersets.forEach((pair, pairIdx) => {
+  const emittedPairs = new Set<number>();
+
+  const pushPair = (pairIdx: number) => {
+    const pair = workout.supersets[pairIdx];
     const a = byId.get(pair.exerciseIds[0]);
     const b = byId.get(pair.exerciseIds[1]);
     if (!a || !b) return;
@@ -597,13 +651,19 @@ export function buildSessionSteps(workout: WorkoutDay): SessionStep[] {
     }
     pushLog(a);
     pushLog(b);
-  });
+  };
 
-  // Unpaired exercises — straight sets. Mobility waits for the cooldown.
-  const extras = workout.exercises.filter(
-    (e) => !paired.has(e.exercise.id) && e.exercise.block !== 'mobility'
-  );
-  for (const px of extras) {
+  for (const px of workout.exercises) {
+    if (px.exercise.block === 'mobility') continue;
+    if (paired.has(px.exercise.id)) {
+      const pairIdx = workout.supersets.findIndex((p) => p.exerciseIds.includes(px.exercise.id));
+      if (pairIdx >= 0 && !emittedPairs.has(pairIdx)) {
+        emittedPairs.add(pairIdx);
+        pushPair(pairIdx);
+      }
+      continue;
+    }
+    // Unpaired — straight sets.
     for (let s = 1; s <= px.sets; s++) {
       pushWork(px, s);
       const rest = px.exercise.restBetweenSets;
