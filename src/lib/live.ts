@@ -6,6 +6,7 @@
 // viewer is read-only by construction — the relay only carries host → viewer.
 
 import type { SessionStep } from '../data/workouts';
+import type { MusicStatus } from './music';
 
 const LIVE_HOST = import.meta.env.VITE_LIVE_HOST ?? 'idaraya-live.straitstreetco.workers.dev';
 
@@ -20,6 +21,9 @@ export interface LiveState {
   cue?: string;
   imageId?: string; // renders as /exercises/<id>.webp
   timer?: { remaining: number; paused: boolean };
+  // What the host's speaker is doing, so a partner's phone can play the same
+  // track from its own bundled copy, roughly in sync.
+  music?: MusicStatus | null;
   idx?: number;
   total?: number;
 }

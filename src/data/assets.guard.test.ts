@@ -5,10 +5,11 @@
 // suite is that check, and it runs on a clean checkout with no browser.
 
 import { describe, it, expect } from 'vitest';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { EXERCISES, EXERCISE_MUSCLES, WARMUP, MOTION_FRAMES } from './exercises';
 import { FINISHERS } from './workouts';
+import { MUSIC_TRACKS } from '../lib/music';
 
 const ROOT = process.cwd();
 const PUBLIC = join(ROOT, 'public', 'exercises');
@@ -49,6 +50,33 @@ describe('every illustration referenced by the app exists on disk', () => {
   it('declares motion only for exercises that exist', () => {
     const ids = new Set(EXERCISES.map((e) => e.id));
     expect([...MOTION_FRAMES].filter((id) => !ids.has(id))).toEqual([]);
+  });
+});
+
+describe('session music ships what the player lists — and nothing else', () => {
+  const MUSIC_DIR = join(ROOT, 'public', 'music');
+
+  it('has a file for every track in the playlist', () => {
+    const missing = MUSIC_TRACKS.filter((t) => !existsSync(join(MUSIC_DIR, t.file)));
+    expect(missing.map((t) => t.file)).toEqual([]);
+  });
+
+  it('bundles no orphan tracks the player can never reach', () => {
+    const declared = new Set(MUSIC_TRACKS.map((t) => t.file));
+    const orphans = readdirSync(MUSIC_DIR).filter(
+      (f) => f.endsWith('.mp3') && !declared.has(f)
+    );
+    expect(orphans).toEqual([]);
+  });
+
+  it('carries the CC BY attribution the license requires', () => {
+    // The music is CC BY 4.0, not CC0: shipping it without attribution is a
+    // license violation, not a style choice.
+    const credits = readFileSync(join(MUSIC_DIR, 'CREDITS.txt'), 'utf8');
+    expect(credits).toContain('Kevin MacLeod');
+    expect(credits).toContain('creativecommons.org/licenses/by/4.0');
+    const settings = readFileSync(join(ROOT, 'src', 'views', 'SettingsView.tsx'), 'utf8');
+    expect(settings).toContain('Kevin MacLeod');
   });
 });
 

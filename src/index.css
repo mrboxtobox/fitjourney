@@ -316,6 +316,7 @@ html {
 /* Live share: the radio button glows while broadcasting; the strip below the
    progress bar names the code and re-copies the link on tap. */
 .session-icon-btn[data-sharing='true'] { color: var(--check); }
+.session-icon-btn[data-music='true'] { color: var(--check); }
 
 .session-share {
   display: flex;

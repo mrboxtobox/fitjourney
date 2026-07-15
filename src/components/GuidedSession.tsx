@@ -13,6 +13,7 @@ import {
   Flame,
   Trophy,
   Radio,
+  Music,
 } from 'lucide-preact';
 import { buildSessionSteps, getExercise, type WorkoutDay, type SessionStep } from '../data/workouts';
 import { ExerciseImage } from './ExerciseCard';
@@ -24,6 +25,7 @@ import {
   type LiveBroadcaster,
 } from '../lib/live';
 import { initAudio, cueGo, cueRest, cueDone, cueTick } from '../lib/sound';
+import { musicEnabled, setMusicEnabled, startMusic, stopMusic, musicStatus } from '../lib/music';
 import { celebrate } from '../lib/confetti';
 import { getBestFinisherScore, saveFinisherScore, saveSetLogs, saveSymptom } from '../db';
 import { SetLogger } from './SetLogger';
@@ -126,6 +128,24 @@ export function GuidedSession({
   const [paused, setPaused] = useState(false);
   const [finished, setFinished] = useState(false);
   const [muted, setMuted] = useState(() => localStorage.getItem(MUTE_KEY) === '1');
+  const [music, setMusic] = useState(() => musicEnabled());
+
+  // Ambience runs for the session's lifetime and no longer: it starts with the
+  // overlay (we are past the Start tap, so autoplay is allowed) and fades out
+  // when the session closes, however it closes.
+  useEffect(() => {
+    if (music) startMusic();
+    else stopMusic();
+  }, [music]);
+  useEffect(() => () => stopMusic(), []);
+
+  const toggleMusic = () => {
+    setMusic((on) => {
+      const next = !on;
+      setMusicEnabled(next);
+      return next;
+    });
+  };
 
   // Finisher scoring state
   const [bestScore, setBestScore] = useState<number | null>(null);
@@ -285,6 +305,7 @@ export function GuidedSession({
           prResult && finisher
             ? `${score} ${finisher.scoreUnit}${prResult.isPR ? ' — a new record' : ''}`
             : undefined,
+        music: musicStatus(),
         idx: steps.length,
         total: steps.length,
       });
@@ -294,6 +315,7 @@ export function GuidedSession({
       kind: 'step',
       ...liveStateForStep(step, phaseLabelFor(step), weightUnit),
       timer: timed ? { remaining, paused } : undefined,
+      music: musicStatus(),
       idx: idx + 1,
       total: steps.length,
     });
@@ -456,6 +478,15 @@ export function GuidedSession({
           {idx + 1} / {total}
         </span>
         <div class="session-top-actions">
+          <button
+            onClick={toggleMusic}
+            class="session-icon-btn"
+            data-music={music ? 'true' : undefined}
+            aria-label={music ? 'Turn music off' : 'Turn music on'}
+            aria-pressed={music}
+          >
+            <Music size={20} />
+          </button>
           <button
             onClick={toggleShare}
             class="session-icon-btn"
