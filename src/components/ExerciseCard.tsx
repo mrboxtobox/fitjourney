@@ -3,7 +3,7 @@ import type { ComponentChildren } from 'preact';
 import { Check, Play, Pause, RotateCcw, X, ShieldCheck, Target, Flame, Trophy } from 'lucide-preact';
 import type { WarmupExercise, Finisher, PrescribedExercise } from '../data/workouts';
 import { getMuscleFocus, formatTempo } from '../data/workouts';
-import { hasMotionFrames, hasMotionVideo } from '../data/exercises';
+import { hasMotionFrames, poseCaptions } from '../data/exercises';
 import { getBestFinisherScore } from '../db';
 import { useTimer } from '../hooks/useTimer';
 
@@ -14,55 +14,37 @@ function imageFor(id: string): string {
   return `/exercises/${id}.webp`;
 }
 
-const reducedMotion = () =>
-  typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// The exercise picture, animated where animation exists. Preference order:
-// a true Veo clip (one drawn repetition, looping) → the two-frame flip →
-// the static diagram. Reduced-motion users always get the still, and a device
-// that refuses video playback (iOS Low Power Mode does) falls back rather than
-// freezing on the poster.
+// The movement as a SET of stills, classic instructional-manual style: the start
+// pose and the top of the rep where a pair exists (single diagram otherwise), plus
+// the muscle map — form AND what it trains, one captioned row. Nothing moves; the
+// reader compares positions at their own pace.
 export function ExerciseImage({ id, alt, imgClass }: { id: string; alt: string; imgClass: string }) {
-  const [videoRefused, setVideoRefused] = useState(false);
-  if (!reducedMotion() && !videoRefused && hasMotionVideo(id)) {
-    return (
-      <video
-        // Frameworks set `muted` as a property after the autoplay policy check,
-        // which silently blocks playback — mute via ref and start it by hand.
-        // A rejected play() (e.g. Low Power Mode) flips to the flip/static fallback.
-        ref={(el: HTMLVideoElement | null) => {
-          if (el && el.paused) {
-            el.muted = true;
-            void el.play().catch(() => {});
-          }
-        }}
-        onCanPlay={(e: Event) => {
-          const v = e.currentTarget as HTMLVideoElement;
-          if (v.paused) {
-            v.muted = true;
-            void v.play().catch(() => setVideoRefused(true));
-          }
-        }}
-        onError={() => setVideoRefused(true)}
-        class={`${imgClass} motion-video`}
-        src={`/motion/${id}.mp4`}
-        poster={imageFor(id)}
-        autoplay
-        muted
-        loop
-        playsinline
-        disableRemotePlayback
-        aria-label={alt}
-      />
-    );
+  const [first, second] = poseCaptions(id);
+  const panels: Array<{ src: string; caption: string; alt: string }> = hasMotionFrames(id)
+    ? [
+        { src: `/exercises/${id}-a.webp`, caption: first, alt: `${alt} — ${first} position` },
+        { src: `/exercises/${id}-b.webp`, caption: second, alt: `${alt} — ${second} position` },
+      ]
+    : [{ src: imageFor(id), caption: 'Form', alt }];
+  if (getMuscleFocus(id)) {
+    panels.push({ src: `/exercises/muscles/${id}.webp`, caption: 'Muscles', alt: `${alt} — target muscles` });
   }
-  if (reducedMotion() || !hasMotionFrames(id)) {
-    return <img src={imageFor(id)} alt={alt} class={imgClass} loading="eager" />;
+  if (panels.length === 1) {
+    return <img src={panels[0].src} alt={panels[0].alt} class={imgClass} loading="eager" />;
   }
   return (
-    <div class={`${imgClass} motion-image`} role="img" aria-label={alt}>
-      <img src={`/exercises/${id}-a.webp`} alt="" loading="eager" />
-      <img src={`/exercises/${id}-b.webp`} alt="" class="motion-frame-b" loading="eager" />
+    <div
+      class={`${imgClass} pose-set`}
+      style={{ gridTemplateColumns: `repeat(${panels.length}, 1fr)` }}
+      role="group"
+      aria-label={alt}
+    >
+      {panels.map((p) => (
+        <figure key={p.caption} class="pose">
+          <img src={p.src} alt={p.alt} loading="eager" />
+          <figcaption>{p.caption}</figcaption>
+        </figure>
+      ))}
     </div>
   );
 }
@@ -106,7 +88,7 @@ function Row({ id, name, dose, completed, onToggle, onOpen, why, accent, muscles
         </button>
 
         <button class="row-body" onClick={onOpen} aria-label={`${name} — how to do it`}>
-          <ExerciseImage id={id} alt="" imgClass="row-plate" />
+          <img src={imageFor(id)} alt="" class="row-plate" loading="lazy" />
           <span class="row-text">
             <span class="row-name">
               {name}
@@ -260,7 +242,6 @@ export function ExerciseItem({ prescribed, weightUnit, completed, onToggle }: Ex
   const [open, setOpen] = useState(false);
   const hasHold = prescribed.holdFor !== undefined && prescribed.holdFor > 0;
   const muscle = getMuscleFocus(exercise.id);
-  const musclePath = muscle ? `/exercises/muscles/${exercise.id}.webp` : undefined;
 
   // The dose, stated once. Tempo and rest are detail — they belong in the sheet.
   // The row gets the compact target so it never overflows; the sheet gets the prose.
@@ -314,11 +295,9 @@ export function ExerciseItem({ prescribed, weightUnit, completed, onToggle }: Ex
             </p>
           )}
 
+          {/* The map itself lives in the image set up top; here, what to feel. */}
           {muscle && (
             <div class="sheet-muscle">
-              {musclePath && (
-                <img src={musclePath} alt={`${exercise.name} target muscles`} class="sheet-muscle-map" loading="lazy" />
-              )}
               <div class="sheet-muscle-text">
                 <div class="flex flex-wrap gap-1.5">
                   {muscle.targets.map((t) => (

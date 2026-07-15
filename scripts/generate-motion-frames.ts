@@ -103,21 +103,17 @@ its handle, arms straight down, the bell hanging IN FRONT of her thighs.`,
     start: `Now draw the START of the repetition: she is HINGED at the hips — hips pushed
 far BACK, torso tipped forward about 45 degrees with a FLAT back, knees only slightly
 bent, shins vertical. The same kettlebell, still in both hands with straight arms, now
-hangs at MID-SHIN height, close to her legs. Same feet in the same floor positions.`,
+hangs at MID-SHIN height, close to her legs. Same feet in the same floor positions.
+
+PHYSIO REVIEW FIXES (MUST HOLD):
+- The kettlebell RESTS ON THE FLOOR between her feet — grounded, not hovering. Her
+  hands grip the handle ready to lift.`,
   },
   {
     id: 'box-squat',
     name: 'Box Squat',
     gender: 'male',
-    top: `CAMERA: side view (profile).
-THE SCENE: a plain wooden chair stands on the floor at the LEFT of the image, all four
-legs on the ground, its seat pointing to the RIGHT. The athlete stands on the FLOOR a
-small step to the RIGHT of the chair, fully clear of it, facing RIGHT (away from the
-chair). The chair seat is directly behind his hips.
-HIS POSE: standing FULLY UPRIGHT — legs straight, chest tall, both arms extended
-straight forward at shoulder height. No part of him touches the chair. BOTH feet are
-FLAT ON THE FLOOR — never on the chair.`,
-    start: `Now draw the BOTTOM of the repetition: keeping his feet EXACTLY where they are
+    top: `Now draw the BOTTOM of the repetition: keeping his feet EXACTLY where they are
 FLAT ON THE FLOOR, he bends his knees and pushes his hips BACK and DOWN until his bottom
 sits back and DOWN until his bottom actually RESTS on the front edge of the chair seat —
 real contact, carrying almost no weight, with NO GAP between his hips and the seat.
@@ -126,7 +122,19 @@ forward with a flat back; shins stay near vertical; arms stay extended straight 
 The chair is IDENTICAL and in the IDENTICAL position as in the reference.
 
 FORBIDDEN: feet on the chair; standing on the chair; climbing the chair; sitting fully
-onto the seat; copying the reference pose. His feet NEVER leave the floor.`,
+onto the seat; copying the reference pose. His feet NEVER leave the floor.
+
+PHYSIO REVIEW FIXES (MUST HOLD):
+- He HOVERS: his bottom only lightly GRAZES the seat's front edge with daylight under
+  his thighs, torso leaning forward, hips back. NEVER settled or sitting upright.`,
+    start: `CAMERA: side view (profile).
+THE SCENE: a plain wooden chair stands on the floor at the LEFT of the image, all four
+legs on the ground, its seat pointing to the RIGHT. The athlete stands on the FLOOR a
+small step to the RIGHT of the chair, fully clear of it, facing RIGHT (away from the
+chair). The chair seat is directly behind his hips.
+HIS POSE: standing FULLY UPRIGHT — legs straight, chest tall, both arms extended
+straight forward at shoulder height. No part of him touches the chair. BOTH feet are
+FLAT ON THE FLOOR — never on the chair.`,
   },
   // ── Full rollout (2026-07-15). Floor/lying poses are standaloneStart (the identity
   // reference overrides pose instructions for these); standing poses use the reference.
@@ -155,7 +163,13 @@ Her head is at the LEFT of frame and her feet point RIGHT; a low sturdy bench/co
 edge; her feet are flat on the floor, knees bent about 90 degrees, shins vertical. Her
 HIPS are driven UP so her torso is one horizontal line from shoulders to knees. A single
 dumbbell (solid black ink) rests across the crease of her hips, steadied with both
-hands. Chin tucked, gaze along the torso. She is BAREFOOT.`,
+hands. Chin tucked, gaze along the torso. She is BAREFOOT.
+
+PHYSIO REVIEW FIXES (MUST HOLD):
+- FULL LOCKOUT: her torso is EXACTLY HORIZONTAL — one flat line from shoulders on the
+  bench through hips to knees, hips ON that line, never sagging below it.
+- The dumbbell rests in the CREASE OF HER HIPS, on the pelvis — never on the ribs,
+  never on the belly.`,
     start: `CAMERA: side view (profile).
 The SAME scene and SAME orientation — head at the LEFT of frame, feet pointing RIGHT, the low bench at the LEFT behind her shoulders, upper back resting on its edge,
 feet flat, both hands steadying the same dumbbell (solid black ink) over her hips — but
@@ -223,12 +237,20 @@ He has TWO arms and TWO legs; draw all four.`,
 She lies on her LEFT side at the TOP of a clamshell: knees bent about 90 degrees, hips
 stacked, head resting on her lower arm. Her FEET stay TOUCHING while her TOP knee lifts
 OPEN like a clamshell. A red mini loop band around BOTH thighs just above the knees is
-stretched taut by the open knee. Pelvis still, not rolled back.`,
+stretched taut by the open knee. Pelvis still, not rolled back.
+
+PHYSIO REVIEW FIXES (MUST HOLD):
+- Hips bent about 45 degrees and KNEES BENT 90 degrees — a true clam setup.
+- BOTH strands of the red band sit ABOVE both knees on the lower thighs.`,
     start: `CAMERA: viewed from her front, slightly elevated.
 She lies on her LEFT side at the START of a clamshell: knees bent about 90 degrees and
 STACKED together, feet together, hips stacked, head resting on her lower arm. The red
 mini loop band around BOTH thighs just above the knees sits close and lightly tensioned
-because the knees are closed.`,
+because the knees are closed.
+
+PHYSIO REVIEW FIXES (MUST HOLD):
+- Hips bent about 45 degrees and KNEES BENT 90 degrees — a true clam setup.
+- BOTH strands of the red band sit ABOVE both knees on the lower thighs.`,
     standaloneStart: true,
   },
   {
@@ -238,7 +260,14 @@ because the knees are closed.`,
     top: `CAMERA: side view (profile), at floor level, her head to the RIGHT of frame.
 She is at the BOTTOM of a push-up, dark hair in a low bun: hands flat under the shoulders, body one rigid
 straight line from heels through hips to head, elbows bent and tracking about 45 degrees
-back (not flared straight out), her chest a fist's height above the floor. Toes tucked.`,
+back (not flared straight out), her chest a fist's height above the floor. Toes tucked.
+
+PHYSIO REVIEW FIXES (MUST HOLD):
+- FULL DEPTH: her chest hovers within ONE FIST of the floor.
+- Her body is ONE RIGID LINE from heels through hips to head — the hips NEVER pike up;
+  they stay exactly on the heel-to-head line.
+
+FINAL CORRECTION: her ELBOWS are BENT DEEP, upper arms angled back along her ribs, chest hovering a fist above the floor. If her arms are straight the drawing is WRONG.`,
     start: `CAMERA: side view (profile), at floor level, her head to the RIGHT of frame.
 She is at the TOP of a push-up, a high plank, dark hair in a low bun: arms fully extended, hands flat under the
 shoulders, body one rigid straight line from heels through hips to head. Toes tucked.`,
@@ -274,50 +303,54 @@ chest height, the kettlebell floating weightless at the end of his arms at chest
 He FACES RIGHT (nose pointing to the right of frame). He is at the BACKSWING of a kettlebell swing: HINGED deep at the hips — hips pushed far
 BACK, flat back tipped forward about 45 degrees, knees only slightly bent, shins
 vertical — with both ARMS STRAIGHT and the kettlebell swung BACK BETWEEN and slightly
-behind his knees, forearms brushing the inner thighs. Feet flat, planted wide.`,
+behind his knees, forearms brushing the inner thighs. Feet flat, planted wide.
+
+PHYSIO REVIEW FIXES (MUST HOLD):
+- The bell is HIKED HIGH into the groin: forearms pressed against the inner thighs,
+  the bell up behind them — never dangling at knee height at arm's length.`,
     standaloneStart: true,
   },
   {
     id: 'db-rdl',
     name: 'Dumbbell RDL',
     gender: 'female',
-    top: `CAMERA: side view (profile).
-She stands FULLY TALL at the top of a dumbbell RDL: legs straight, hips extended, chest
-up, one dumbbell in each hand resting against the FRONT of her thighs, arms straight.`,
-    start: `Now draw the BOTTOM of the repetition: she is HINGED at the hips — hips pushed
+    top: `Now draw the BOTTOM of the repetition: she is HINGED at the hips — hips pushed
 far BACK, flat back tipped forward, knees soft, shins vertical — and the dumbbells have
 slid DOWN the front of her legs to MID-SHIN, staying close to the legs. Same feet in the
 same floor positions.`,
+    start: `CAMERA: side view (profile).
+She stands FULLY TALL at the top of a dumbbell RDL: legs straight, hips extended, chest
+up, one dumbbell in each hand resting against the FRONT of her thighs, arms straight.`,
   },
   {
     id: 'b-stance-rdl',
     name: 'B-Stance RDL',
     gender: 'female',
-    top: `CAMERA: side view (profile).
+    top: `Now draw the BOTTOM of the repetition: she HINGES over the FRONT leg — hips
+back, flat back tipped forward, front knee soft with a vertical shin — the back foot
+still just a toe-down kickstand in the same spot. The kettlebell lowers to the front
+SHIN, close to the leg, both arms straight.`,
+    start: `CAMERA: side view (profile).
 She stands tall in a B-STANCE (kickstand) position: her LEFT foot planted flat in front
 carrying the weight, her RIGHT foot a half step back with ONLY THE TOES on the floor,
 its heel up, level with the front foot's heel. She holds one kettlebell in both hands,
 arms straight, the bell in front of her thighs.`,
-    start: `Now draw the BOTTOM of the repetition: she HINGES over the FRONT leg — hips
-back, flat back tipped forward, front knee soft with a vertical shin — the back foot
-still just a toe-down kickstand in the same spot. The kettlebell lowers to the front
-SHIN, close to the leg, both arms straight.`,
   },
   {
     id: 'goblet-squat',
     name: 'Goblet Squat',
     gender: 'female',
     top: `CAMERA: side view (profile).
-She stands FULLY TALL holding a kettlebell like a goblet at her chest — both hands on
-the horns of the handle, elbows tucked down in front of her ribs. Legs straight, chest
-up, feet flat about shoulder width.`,
-    start: `CAMERA: side view (profile).
 She is at the BOTTOM of a goblet squat: sitting back and down with her KNEES BENT DEEP —
 thighs just above parallel to the floor — hips back, chest tall, HEELS flat. She holds a
 kettlebell like a goblet at her chest, both hands on the horns, elbows tucked between
 her knees. Her legs are clearly FOLDED, never straight. BOTH feet are side by side,
 parallel, FULL SOLES planted flat on the floor — the near foot AND the far foot. No
 heel lifts, no tiptoe, no floating foot; both heels press into the ground.`,
+    start: `CAMERA: side view (profile).
+She stands FULLY TALL holding a kettlebell like a goblet at her chest — both hands on
+the horns of the handle, elbows tucked down in front of her ribs. Legs straight, chest
+up, feet flat about shoulder width.`,
     standaloneStart: true,
   },
   {
@@ -355,7 +388,11 @@ column as in the other frame.`,
 She stands tall holding the chair's backrest with both hands, torso upright. A red mini
 loop band wraps around BOTH ankles. Her RIGHT leg is kicked STRAIGHT BACK and low (about
 30 degrees), the band stretched taut between her ankles. Standing knee soft, low back
-still, no arch.`,
+still, no arch.
+
+PHYSIO REVIEW FIXES (MUST HOLD):
+- The kicked leg lifts only SLIGHTLY — the foot barely above knee height of the
+  standing leg, roughly 20 degrees of hip extension. Low and controlled, never high.`,
     start: `Now draw the START of the repetition: both feet together FLAT on the floor
 under her hips, both legs vertical, the red band around BOTH ankles sitting close with
 light tension. She still stands tall holding the same chair with both hands.`,
@@ -384,7 +421,12 @@ Both feet flat. She is BAREFOOT.`,
     top: `CAMERA: three-quarter front view.
 He is in a quarter squat mid monster-walk step: hips low, chest up, knees pushed OUT
 against a red mini loop band around BOTH thighs just above the knees. His RIGHT foot has
-stepped diagonally FORWARD and OUT, feet wide, the band stretched taut. Both feet flat.`,
+stepped diagonally FORWARD and OUT, feet wide, the band stretched taut. Both feet flat.
+
+PHYSIO REVIEW FIXES (MUST HOLD):
+- The step is SHORT — the stepping foot lands only about one foot-length forward-and-out.
+- He stays LOW: hips down in the quarter squat, trailing knee clearly bent. Never a
+  stride, never a lunge, never straightened legs.`,
     start: `CAMERA: three-quarter front view.
 He is in a quarter squat at the GATHERED phase of a monster walk: hips low, chest up,
 knees pushed out — and his FEET CLOSE TOGETHER directly under his hips, only HIP WIDTH
@@ -450,7 +492,12 @@ with a straight back stands at the RIGHT of frame in front of her.
 She is hinged forward with a flat back, one hand braced on the chair back, her RIGHT
 upper arm pinned HIGH beside her ribs, PARALLEL to the floor — with the ELBOW BENT to
 90 degrees so the forearm and dumbbell hang straight DOWN from the elbow. The dumbbell
-is below the elbow, never behind her.`,
+is below the elbow, never behind her.
+
+PHYSIO REVIEW FIXES (MUST HOLD):
+- The UPPER ARM is PINNED HORIZONTAL, parallel to the floor, elbow HIGH beside her ribs.
+- ONLY the forearm hangs straight down from that high bent elbow. The whole arm NEVER
+  hangs from the shoulder.`,
     standaloneStart: true,
   },
   {
