@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { EXERCISES, EXERCISE_MUSCLES, WARMUP, MOTION_FRAMES, MOTION_VIDEOS } from './exercises';
+import { EXERCISES, EXERCISE_MUSCLES, WARMUP, MOTION_FRAMES } from './exercises';
 import { FINISHERS } from './workouts';
 import { MUSIC_TRACKS } from '../lib/music';
 import { VOICE_LINES } from '../lib/voice';
@@ -53,20 +53,6 @@ describe('every illustration referenced by the app exists on disk', () => {
     expect([...MOTION_FRAMES].filter((id) => !ids.has(id))).toEqual([]);
   });
 
-  it('has an animation clip for every exercise that declares one', () => {
-    // ExerciseImage renders /motion/<id>.mp4 for these; a missing clip is a
-    // grey rectangle exactly where the movement demo should be.
-    const missing = [...MOTION_VIDEOS].filter(
-      (id) => !existsSync(join(ROOT, 'public', 'motion', `${id}.mp4`))
-    );
-    expect(missing).toEqual([]);
-  });
-
-  it('has a video recipe for every declared animation clip', () => {
-    const videoScript = readFileSync(join(ROOT, 'scripts', 'generate-motion-videos.ts'), 'utf8');
-    const specced = new Set([...videoScript.matchAll(/\{ id: '([\w-]+)'/g)].map((m) => m[1]));
-    expect([...MOTION_VIDEOS].filter((id) => !specced.has(id))).toEqual([]);
-  });
 });
 
 describe('session music ships what the player lists — and nothing else', () => {

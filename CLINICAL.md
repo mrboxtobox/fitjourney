@@ -442,7 +442,13 @@ a kneeling lunge; a mini loop band drawn around one thigh instead of both; and g
 overlay figures rendered as disembodied limbs or a different camera angle.
 
 Regenerate with `scripts/generate-exercise-images.ts` and `scripts/generate-muscle-maps.ts`,
-then `scripts/convert-to-webp.mjs`. **Look at every regenerated image.** `assets.guard.test.ts`
+then `scripts/convert-to-webp.mjs`. **Look at every regenerated image.** As of 2026-07-15 every
+form illustration (statics and start/top pose pairs) has additionally passed an
+**adversarial physiotherapy review**: reviewers were instructed to refute each image
+against the movement's own standard/faults, and images that taught a listed fault were
+regenerated or replaced; pairs the generator repeatedly failed (clamshell, triceps
+kickback) fall back to their single reviewed diagram. Known accepted minors are the
+90/90 back-knee angle, the kettlebell backswing depth, and the box-squat foot contact. `assets.guard.test.ts`
 asserts that a file exists for every movement — it cannot assert that the file is correct.
 
 **Reviewer question.** Please check the form illustrations against the movement standards in

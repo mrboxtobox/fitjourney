@@ -1172,45 +1172,38 @@ html {
 }
 .sheet-path-next strong { color: var(--text); }
 
-/* ── Motion frames ───────────────────────────────────────────────────── */
-/* Two generated frames of the same figure crossfade: start position ↔ top of the
-   rep. The container carries the usual image class (sheet-image / session-image)
-   for sizing; the frames fill it. */
-.motion-image {
-  position: relative;
-  overflow: hidden;
+/* ── Pose sets ───────────────────────────────────────────────────────── */
+/* The movement as two captioned stills, start and top, side by side. The
+   container carries the usual image class (sheet-image / session-image) for
+   width; the panels split it. */
+.session-image.pose-set { max-width: 24rem; }
+
+div.pose-set {
+  /* element+class outweighs the later .sheet-image/.session-image display:block */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  height: auto;
+  background: none;
 }
-.motion-image img {
+.pose {
+  margin: 0;
+  min-width: 0;
+}
+.pose img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: inherit;
+  border-radius: 0.5rem;
+  background: var(--bg-alt);
 }
-.motion-image .motion-frame-b {
-  position: absolute;
-  top: 0;
-  left: 0;
-  /* steps(): a hard flipbook cut. A crossfade blends the two drawings for a
-     moment, which reads as a double-exposure — the flip never overlays them. */
-  animation: motion-swap 2.4s steps(1, end) infinite;
-}
-
-/* Row thumbnails animate too — a fixed square, so the frames must cover it. */
-.row-plate.motion-image img {
-  height: 100%;
-  object-fit: cover;
-}
-video.motion-video { background: var(--bg-alt); }
-video.row-plate { object-fit: cover; }
-@keyframes motion-swap {
-  0%, 49% { opacity: 0; }
-  50%, 100% { opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .motion-image .motion-frame-b {
-    animation: none;
-    opacity: 1; /* hold the top of the rep, the position the static diagrams show */
-  }
+.pose figcaption {
+  margin-top: 0.25rem;
+  text-align: center;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
 }
 
 /* ── The sheet ───────────────────────────────────────────────────────── */
@@ -1344,13 +1337,6 @@ video.row-plate { object-fit: cover; }
   align-items: flex-start;
   gap: 0.875rem;
   margin-top: 1rem;
-}
-.sheet-muscle-map {
-  width: 4.5rem;
-  height: 4.5rem;
-  flex-shrink: 0;
-  border-radius: 0.5rem;
-  object-fit: cover;
 }
 .sheet-muscle-text { flex: 1 1 auto; min-width: 0; }
 

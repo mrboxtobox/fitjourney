@@ -257,7 +257,15 @@ FORBIDDEN: any ghosted, faded, phantom or semi-transparent figure; a third figur
 kettlebell; a third arm or leg; any limb, hand, foot or shoe not attached to a torso; the two
 figures overlapping; the bell above chest height; a squat instead of a hip hinge; a rounded back.
 CRITICAL: TWO complete separate figures. TWO kettlebells. Four arms and four legs in total,
-every one of them attached to a body.`,
+every one of them attached to a body.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- The backswing figure's KNEES BARELY BEND. The bell is HIKED HIGH between the thighs,
+  forearms pressed against the inner thighs — never a squat, never the bell dropped
+  low at shin height.
+
+FINAL CORRECTIONS:
+- In the backswing figure the kettlebell handle is IN her gripped hands, wrists pressed against her upper inner thighs, the bell tucked just behind and below the pelvis. The bell is CONNECTED to her hands.`,
   },
   {
     id: 'the-burner',
@@ -286,7 +294,11 @@ CONNECTING THE CIRCUIT:
 - A bold red arrow flows from panel 1 to panel 2, and from panel 2 to panel 3
 - A curved dashed arrow loops from panel 3 back around/under to panel 1 — showing the circuit REPEATS continuously
 
-CRITICAL: Three separate small vignettes of the SAME woman, arranged left to right, connected by arrows into a repeating loop. Each vignette is simple and clear. The red mini loop band is visible in all three.`,
+CRITICAL: Three separate small vignettes of the SAME woman, arranged left to right, connected by arrows into a repeating loop. Each vignette is simple and clear. The red mini loop band is visible in all three.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- In EVERY panel that shows a thigh band, the red band sits ABOVE BOTH kneecaps on the
+  lower thighs — never at, on, or below a knee.`,
   },
   {
     id: 'carry-heavy',
@@ -352,7 +364,12 @@ THE COMPOSITION — REPEATED FAST REPS:
 
 ENERGY: Quick, powerful, repeated — this is conditioning. Strong lines, dynamic feel.
 
-CRITICAL: A hip hinge — flat back, shins near vertical, hips push back. The double-headed arrow showing up-AND-down repeated movement is essential.`,
+CRITICAL: A hip hinge — flat back, shins near vertical, hips push back. The double-headed arrow showing up-AND-down repeated movement is essential.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- The hinged figure's NECK stays NEUTRAL — head in line with the flat back, gaze at
+  the floor ahead, never craned up to look forward.
+- The kettlebell is gripped with BOTH hands in both positions.`,
   },
 
   // =========================================================================
@@ -606,7 +623,10 @@ MOVEMENT INDICATORS:
 - Dashed line along the spine showing it stays FLAT throughout
 - Curved arrow at hips showing the hinge motion (hips going back/forward)
 
-CRITICAL: This is a HIP HINGE, not a squat. Solid figure shows bottom position (hinged). Ghosted figure shows standing top position.`,
+CRITICAL: This is a HIP HINGE, not a squat. Solid figure shows bottom position (hinged). Ghosted figure shows standing top position.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- SHINS NEAR VERTICAL: the knees stay behind the toes; the hips travel back, not down.`,
   },
   {
     id: 'kb-swing',
@@ -665,7 +685,14 @@ MOVEMENT INDICATORS:
 - Arrow at hips showing the forward HIP SNAP/THRUST
 - The dashed arc is critical to show the pendulum swing path
 
-CRITICAL: Kettlebell is at CHEST height (NOT overhead) in solid figure. Ghosted figure shows bottom position between legs. Dashed arc connects the two positions.`,
+CRITICAL: Kettlebell is at CHEST height (NOT overhead) in solid figure. Ghosted figure shows bottom position between legs. Dashed arc connects the two positions.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- The backswing ghost holds the bell HIKED HIGH into the groin, forearms against the
+  inner thighs, knees barely bent — never dangling at knee height.
+
+FINAL CORRECTIONS:
+- In the backswing ghost the kettlebell handle is IN his gripped hands, wrists pressed against the upper inner thighs, bell tucked behind the pelvis — connected to the hands, never floating.`,
   },
 
   // =========================================================================
@@ -700,7 +727,14 @@ MARKS: one bold red arrow at floor level pointing sideways.
 
 FORBIDDEN: a band on, across or below a kneecap; a slanted band; a visible band end; straight legs;
 standing upright; a missing or cropped head; a limb ending in a stump; a ghost; a frame; a white margin;
-drawing the stick figure itself.`,
+drawing the stick figure itself.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- She is in a TRUE quarter squat: hips visibly back and down, knees clearly bent —
+  never standing tall.
+
+FINAL CORRECTIONS:
+- Her THIGHS slope at about 45 degrees — hips pushed back and down as if about to sit, knees clearly bent. If her legs look straight the drawing is WRONG.`,
     poseSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <rect width="1024" height="1024" fill="#ffffff"/>
   <line x1="60" y1="900" x2="964" y2="900" stroke="#cccccc" stroke-width="6"/>
@@ -750,7 +784,11 @@ THE BAND — ONE red loop, and no other red on the page except a single arrow:
 MARKS: black dashed footprints on the floor ahead, and ONE bold red arrow showing the diagonal step.
 
 FORBIDDEN: a straight leg; standing upright; a band on a kneecap; any floating red arc, curve or
-parenthesis shape in the cream; more than one red arrow; a missing or cropped head.`,
+parenthesis shape in the cream; more than one red arrow; a missing or cropped head.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- The red band sits ABOVE BOTH kneecaps on the lower thighs — never below a knee,
+  never on a shin.`,
   },
   {
     id: 'band-glute-bridge',
@@ -807,7 +845,11 @@ DRAW THE BAND THIS WAY:
 - Red arrows: one at each knee, pointing OUTWARD and away from each other, showing the knees pressing
   apart against the band.
 FORBIDDEN: a band on or below a kneecap; a band running down a shin; a strand ending in the background;
-a second white or outlined strap; any arrow pointing inward at a knee; any ghost.`,
+a second white or outlined strap; any arrow pointing inward at a knee; any ghost.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- The red band sits on the LOWER THIRD OF THE THIGHS with a clear visible gap ABOVE
+  both kneecaps. It never touches or crosses a kneecap.`,
   },
   {
     id: 'band-clamshell',
@@ -837,7 +879,11 @@ never reaches the floor.
 MARKS: one small red arrow above the top knee, curving upward.
 
 FORBIDDEN: straight legs; legs stretched out in a long line; heels far from the buttocks; the feet
-apart; a red strap reaching the floor; a visible band end; a cropped head.`,
+apart; a red strap reaching the floor; a visible band end; a cropped head.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- BOTH strands of the red band sit ABOVE the knees on the lower thighs — the lower
+  strand never rides at or below the bottom knee.`,
   },
 
   {
@@ -955,7 +1001,11 @@ level; one red arrow beneath her hips pointing straight up.
 FORBIDDEN: a reclined, sloping or sagging torso; the bottom of the movement; a shin that slants
 forward so the foot is ahead of the knee; a foot planted out in front of the knee; the weight
 above the hip crease; a second couch; a ghost or faded figure; a frame; a white margin; drawing the
-stick figure itself.`,
+stick figure itself.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- The dumbbell LIES ON ITS SIDE ACROSS both hips — a horizontal bar across the hip
+  crease, steadied by both hands. Never standing on end, never balanced on one point.`,
     poseSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <rect width="1024" height="1024" fill="#ffffff"/>
   <line x1="60" y1="860" x2="964" y2="860" stroke="#cccccc" stroke-width="6"/>
@@ -1023,7 +1073,11 @@ HER POSITION: hips driven back, shins near vertical, knees softly bent, back FLA
 chest angled toward the floor. MARKS: one dashed straight line along her flat back.
 
 FORBIDDEN: an arm without a shoulder or elbow; a thin hairline arm; two dumbbells at different heights;
-one fist on two dumbbells; a dumbbell with no fist; a rounded back; a ghost; a frame; a white margin.`,
+one fist on two dumbbells; a dumbbell with no fist; a rounded back; a ghost; a frame; a white margin.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- Both dumbbells BRUSH AGAINST the legs — in contact with the shins/thighs, zero
+  daylight between bell and leg.`,
   },
   {
     id: 'box-squat',
@@ -1044,7 +1098,14 @@ corner. There is NO white margin, NO white border, NO frame, NO inset panel, NO 
 the artwork. The cream touches all four edges of the image.
 
 FORBIDDEN: a white margin or border of any kind; a coloured or wooden-toned chair; a second chair;
-a ghost or faded figure; heels lifting; knees caving inward.`,
+a ghost or faded figure; heels lifting; knees caving inward.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- His bottom only LIGHTLY GRAZES the front edge of the seat — daylight visible under
+  his thighs; he is hovering, not seated. Never settled onto the chair.
+
+FINAL CORRECTIONS:
+- Both legs are NORMAL drawn legs with crosshatch shading — never transparent, never showing bones or skeleton inside.`,
   },
 
   {
@@ -1067,7 +1128,13 @@ HER POSITION: a hip hinge on the front leg. Hips back, front shin vertical, back
 MARKS: one dashed straight line along her flat back.
 
 FORBIDDEN: a missing arm; a long stride; a split stance; a lunge; feet a leg-length apart; a rear shoe
-pointing backward or the opposite way from the front shoe; a paper-thin leg; a ghost; a frame.`,
+pointing backward or the opposite way from the front shoe; a paper-thin leg; a ghost; a frame.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- The rear foot is a KICKSTAND ONLY: it sits just HALF A FOOT-LENGTH behind the front
+  foot, toes down, heel up, carrying almost no weight. The feet are nearly together.
+- FORBIDDEN: a stride/lunge stance; the rear foot a full step behind; a loaded,
+  deeply bent rear leg.`,
   },
 
   // =========================================================================
@@ -1140,7 +1207,13 @@ MARKS:
 - One small red arrow at the hands and one at the heels, each pointing gently upward
 
 FORBIDDEN: a second or faded figure; bent or tucked knees; sitting up; a visible gap
-under the low back; a frame; a white margin.`,
+under the low back; a frame; a white margin.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- Her LOW BACK IS GLUED to the floor — the whole lumbar area in contact. Contact runs
+  from mid-back to pelvis; only shoulder blades and legs hover.
+- SHALLOW dish: heels about 30cm off the floor, shoulder blades barely lifted.
+- FORBIDDEN: a V-sit; legs or torso held high; floor contact at the sacrum only.`,
   },
   {
     id: 'pallof-press',
@@ -1644,7 +1717,11 @@ down, showing the hip sinking toward the floor.
 
 FORBIDDEN: a second figure of any kind. A faded, grey, ghosted or semi-transparent body. A figure
 folded forward over its leg. A dashed arc leading away to another body. A leg ending in a blunt
-rounded stump. A foot hidden behind the body. A rounded spine.`,
+rounded stump. A foot hidden behind the body. A rounded spine.
+
+=== PHYSIO REVIEW FIXES (MUST HOLD) ===
+- HIPS SQUARE to the floor: both hip bones face straight down, the back leg trailing
+  STRAIGHT behind on the centre line, hands planted symmetrically either side.`,
   },
 
   // =========================================================================
