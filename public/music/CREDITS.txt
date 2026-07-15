@@ -1,0 +1,17 @@
+Session music bundled with Idaraya
+==================================
+
+All tracks by Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+https://creativecommons.org/licenses/by/4.0/
+
+Tracks (loudness-normalized to -16 LUFS, re-encoded at 112 kbps for bundling):
+
+  exit-the-premises.mp3   "Exit the Premises"
+  raving-energy.mp3       "Raving Energy"
+  pamgaea.mp3             "Pamgaea"
+  cut-and-run.mp3         "Cut and Run"
+  electrodoodle.mp3       "Electrodoodle"
+  deuces.mp3              "Deuces"
+
+Attribution is also shown in the app under Settings → About.

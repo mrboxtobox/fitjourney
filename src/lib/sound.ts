@@ -1,18 +1,14 @@
-// Session cue player. Plays short CC0 / public-domain audio files via Web Audio
-// for low latency. Buffers are decoded once and cached; created on first user
-// gesture (the Start button calls initAudio).
+// Session cues, synthesized. No samples: every cue is a couple of soft mallet
+// strikes shaped in Web Audio — a warm triangle-plus-harmonic voice with a fast
+// attack and an exponential decay, run through a gentle lowpass so nothing pierces.
+// Designed to sit over the background music (which ducks briefly under each cue)
+// and to read as rhythm, not alarm — the old sampled countdown beeped like a
+// microwave, which is exactly the feeling being removed here.
 
-type Cue = 'tick' | 'go' | 'rest' | 'done';
-
-const FILES: Record<Cue, string> = {
-  tick: '/sounds/tick.ogg',
-  go: '/sounds/go.wav',
-  rest: '/sounds/rest.wav',
-  done: '/sounds/done.ogg',
-};
+import { duckMusic } from './music';
 
 let ctx: AudioContext | null = null;
-const buffers: Partial<Record<Cue, AudioBuffer>> = {};
+let master: GainNode | null = null;
 
 export function initAudio(): void {
   if (typeof window === 'undefined') return;
@@ -22,33 +18,81 @@ export function initAudio(): void {
       (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!Ctor) return;
     ctx = new Ctor();
-    // Preload + decode all cues.
-    (Object.keys(FILES) as Cue[]).forEach(async (cue) => {
-      try {
-        const res = await fetch(FILES[cue]);
-        const data = await res.arrayBuffer();
-        buffers[cue] = await ctx!.decodeAudioData(data);
-      } catch {
-        /* cue stays unavailable; playback is a no-op */
-      }
-    });
+    master = ctx.createGain();
+    master.gain.value = 1;
+    const lowpass = ctx.createBiquadFilter();
+    lowpass.type = 'lowpass';
+    lowpass.frequency.value = 3200;
+    master.connect(lowpass);
+    lowpass.connect(ctx.destination);
   }
   if (ctx.state === 'suspended') void ctx.resume();
 }
 
-function play(cue: Cue, volume: number): void {
-  const buf = buffers[cue];
-  if (!ctx || !buf) return;
-  const src = ctx.createBufferSource();
-  const gain = ctx.createGain();
-  gain.gain.value = volume;
-  src.buffer = buf;
-  src.connect(gain);
-  gain.connect(ctx.destination);
-  src.start();
+// One mallet strike: a triangle fundamental with a quiet sine an octave up,
+// both decaying exponentially. `bright` shortens the decay for tick-like hits.
+function strike(freq: number, at: number, vol: number, decay: number): void {
+  if (!ctx || !master) return;
+  const t = ctx.currentTime + at;
+
+  const fundamental = ctx.createOscillator();
+  fundamental.type = 'triangle';
+  fundamental.frequency.value = freq;
+
+  const overtone = ctx.createOscillator();
+  overtone.type = 'sine';
+  overtone.frequency.value = freq * 2;
+  overtone.detune.value = 4; // a hair sharp — the shimmer that reads as "mallet"
+
+  const env = ctx.createGain();
+  env.gain.setValueAtTime(0.0001, t);
+  env.gain.exponentialRampToValueAtTime(vol, t + 0.008);
+  env.gain.exponentialRampToValueAtTime(0.0001, t + decay);
+
+  const overtoneGain = ctx.createGain();
+  overtoneGain.gain.value = 0.35;
+
+  fundamental.connect(env);
+  overtone.connect(overtoneGain);
+  overtoneGain.connect(env);
+  env.connect(master);
+
+  fundamental.start(t);
+  overtone.start(t);
+  fundamental.stop(t + decay + 0.05);
+  overtone.stop(t + decay + 0.05);
 }
 
-export const cueTick = () => play('tick', 0.5);
-export const cueGo = () => play('go', 0.8);
-export const cueRest = () => play('rest', 0.7);
-export const cueDone = () => play('done', 0.9);
+// The last-three-seconds count: one soft, low wood-block tap. Quiet on purpose —
+// it marks time, it does not nag.
+export function cueTick(): void {
+  if (!ctx) return;
+  duckMusic(350);
+  strike(523.25, 0, 0.16, 0.09); // C5, very short
+}
+
+// Work begins: two quick rising notes — inhale, go.
+export function cueGo(): void {
+  if (!ctx) return;
+  duckMusic(700);
+  strike(440, 0, 0.4, 0.28); // A4
+  strike(659.25, 0.11, 0.45, 0.34); // E5
+}
+
+// Rest begins: the same figure falling — exhale.
+export function cueRest(): void {
+  if (!ctx) return;
+  duckMusic(700);
+  strike(659.25, 0, 0.35, 0.28); // E5
+  strike(440, 0.11, 0.4, 0.4); // A4, allowed to ring
+}
+
+// Session done: a small A-major arpeggio that overlaps into a chord.
+export function cueDone(): void {
+  if (!ctx) return;
+  duckMusic(1400);
+  strike(440, 0, 0.4, 0.5); // A4
+  strike(554.37, 0.13, 0.4, 0.5); // C#5
+  strike(659.25, 0.26, 0.45, 0.7); // E5
+  strike(880, 0.42, 0.3, 0.9); // A5, the sparkle on top
+}

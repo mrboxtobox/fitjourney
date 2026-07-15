@@ -129,6 +129,18 @@ export function SettingsView({ startDate, onBack, onStartDateChange }: SettingsV
           Glutes &amp; core first, then abs and arms — a gradual ramp from
           Foundation to Sustain over the year.
         </p>
+        <p class="text-xs mt-2" style={{ color: 'var(--text-dim)' }}>
+          Session music: Kevin MacLeod (incompetech.com), licensed under{' '}
+          <a
+            href="https://creativecommons.org/licenses/by/4.0/"
+            target="_blank"
+            rel="noreferrer"
+            style={{ textDecoration: 'underline' }}
+          >
+            CC BY 4.0
+          </a>
+          .
+        </p>
       </section>
     </div>
   );

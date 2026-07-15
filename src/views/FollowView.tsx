@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
-import { Radio, X } from 'lucide-preact';
+import { Radio, X, Music } from 'lucide-preact';
 import { watchSession, type LiveState } from '../lib/live';
+import { musicEnabled, syncMusic, stopFollowMusic } from '../lib/music';
 
 // The read-only mirror of someone else's guided session. Opened from a share link
 // (?follow=CODE), it renders whatever the host's screen currently says — same
@@ -20,8 +21,25 @@ function fmt(s: number): string {
 export function FollowView({ code }: FollowViewProps) {
   const [state, setState] = useState<LiveState>({ kind: 'waiting' });
   const [connected, setConnected] = useState(false);
+  // Mirror the host's music through the local bundled copy. Browsers refuse
+  // audio without a gesture, so a blocked attempt flips the toggle off and the
+  // Music button (a tap — a gesture) turns it back on.
+  const [tunes, setTunes] = useState(() => musicEnabled());
 
   useEffect(() => watchSession(code, setState, setConnected), [code]);
+
+  useEffect(() => {
+    if (!tunes) {
+      stopFollowMusic();
+      return;
+    }
+    if (state.kind === 'step' || state.kind === 'done') {
+      syncMusic(state.music ?? null, () => setTunes(false));
+    } else {
+      stopFollowMusic();
+    }
+  }, [state, tunes]);
+  useEffect(() => () => stopFollowMusic(), []);
 
   const leave = () => {
     location.href = location.origin;
@@ -39,7 +57,15 @@ export function FollowView({ code }: FollowViewProps) {
           <Radio size={13} strokeWidth={2.5} />
           {isLive ? `Live · ${code}` : code}
         </span>
-        <span class="session-icon-btn" aria-hidden="true" />
+        <button
+          onClick={() => setTunes((t) => !t)}
+          class="session-icon-btn"
+          data-music={tunes ? 'true' : undefined}
+          aria-label={tunes ? 'Stop mirroring their music' : 'Play their music too'}
+          aria-pressed={tunes}
+        >
+          <Music size={20} />
+        </button>
       </div>
 
       <div class="session-body">

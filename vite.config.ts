@@ -38,8 +38,25 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // Music is deliberately NOT precached (17MB of ambience must not gate
+        // install); it streams on demand and sticks via the runtime cache below.
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,webp}'],
         runtimeCaching: [
+          {
+            urlPattern: /\/music\/[^/]+\.mp3$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'session-music',
+              expiration: {
+                maxEntries: 12,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+              rangeRequests: true,
+            },
+          },
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'CacheFirst',
