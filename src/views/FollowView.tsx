@@ -120,6 +120,14 @@ export function FollowView({ code }: FollowViewProps) {
         )}
       </div>
 
+      {tunes && state.kind === 'step' && state.music && (
+        <div class="session-player follow-player">
+          <Music size={13} strokeWidth={2.5} class="session-player-icon" />
+          <span class="session-player-title">{state.music.title}</span>
+          <span class="session-player-artist">with them, in sync</span>
+        </div>
+      )}
+
       <div class="session-controls">
         <span class="session-controls-spacer" />
       </div>

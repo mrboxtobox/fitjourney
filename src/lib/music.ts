@@ -38,6 +38,21 @@ let playing = false;
 let duckTimer: ReturnType<typeof setTimeout> | null = null;
 let fadeTimer: ReturnType<typeof setInterval> | null = null;
 
+// Now-playing subscribers — the session's little player strip listens here.
+type TrackListener = (track: MusicTrack | null) => void;
+const trackListeners = new Set<TrackListener>();
+
+function notifyTrack(): void {
+  const track = currentTrack();
+  trackListeners.forEach((cb) => cb(track));
+}
+
+export function onTrackChange(cb: TrackListener): () => void {
+  trackListeners.add(cb);
+  cb(currentTrack());
+  return () => trackListeners.delete(cb);
+}
+
 export function musicEnabled(): boolean {
   if (typeof localStorage === 'undefined') return false;
   return localStorage.getItem(PREF_KEY) !== '0'; // ambience is on unless turned off
@@ -85,6 +100,12 @@ function playNext(): void {
   if (queueIdx === 0) queue = shuffled(MUSIC_TRACKS); // reshuffle each full pass
   audio.src = `/music/${queue[queueIdx].file}`;
   void audio.play().catch(() => {});
+  notifyTrack();
+}
+
+// The player strip's next button.
+export function skipTrack(): void {
+  if (playing) playNext();
 }
 
 // Begin (or resume) the playlist. Safe to call repeatedly.
@@ -104,8 +125,10 @@ export function startMusic(): void {
   void audio.play().catch(() => {
     // Autoplay refused (no gesture yet) — the next explicit toggle will retry.
     playing = false;
+    notifyTrack();
   });
   fadeTo(BASE_VOLUME, 900);
+  notifyTrack();
 }
 
 export function stopMusic(): void {
@@ -114,6 +137,7 @@ export function stopMusic(): void {
   fadeTo(0, 500, () => {
     audio?.pause();
   });
+  notifyTrack();
 }
 
 export function musicPlaying(): boolean {

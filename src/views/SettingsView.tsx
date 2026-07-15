@@ -139,7 +139,7 @@ export function SettingsView({ startDate, onBack, onStartDateChange }: SettingsV
           >
             CC BY 4.0
           </a>
-          .
+          . Coach voice generated with Kokoro TTS (Apache 2.0).
         </p>
       </section>
     </div>
