@@ -862,9 +862,13 @@ export function hasMotionFrames(id: string): boolean {
 // generation lands: band-clamshell (feet separate mid-open), hip-thrust (sits
 // upright on the bench), band-monster-walk (stands up out of the quarter squat).
 const VIDEO_HOLDOUTS = new Set(['band-clamshell', 'hip-thrust', 'band-monster-walk']);
-export const MOTION_VIDEOS: ReadonlySet<string> = new Set(
-  [...MOTION_FRAMES].filter((id) => !VIDEO_HOLDOUTS.has(id))
-);
+// The warmups animate too — they are the first screens anyone opens.
+// hip-circles failed video review twice (the figure rotates or steps) — static for now.
+const WARMUP_VIDEOS = ['cat-cow', 'leg-swings', 'glute-bridge-warmup'];
+export const MOTION_VIDEOS: ReadonlySet<string> = new Set([
+  ...[...MOTION_FRAMES].filter((id) => !VIDEO_HOLDOUTS.has(id)),
+  ...WARMUP_VIDEOS,
+]);
 
 export function hasMotionVideo(id: string): boolean {
   return MOTION_VIDEOS.has(id);

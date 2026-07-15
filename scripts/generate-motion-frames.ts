@@ -498,6 +498,51 @@ ARMS FULLY EXTENDED and straight, body one straight line from heels through hips
 head, inclined, chest away from the counter. Toes on the floor.`,
     standaloneStart: true,
   },
+
+  // ── Warmup seed frames (2026-07-15): single-figure stills that seed the Veo
+  // warmup clips. Only frame -a is used (run as `id:a`); statics keep their
+  // two-pose diagrams for the row thumbnails.
+  {
+    id: 'cat-cow',
+    name: 'Cat-Cow',
+    gender: 'female',
+    top: `unused`,
+    start: `CAMERA: side view (profile), she faces LEFT.
+She is on hands and knees in a NEUTRAL tabletop: palms flat under the shoulders, knees
+under the hips, shins on the floor, back flat and level, head in line with the spine.`,
+    standaloneStart: true,
+  },
+  {
+    id: 'leg-swings',
+    name: 'Leg Swings',
+    gender: 'male',
+    top: `unused`,
+    start: `CAMERA: side view (profile), he faces RIGHT. A plain wall edge at the LEFT.
+He stands tall on his LEFT leg with his LEFT hand resting FLAT on the wall for balance.
+His RIGHT leg hangs relaxed and straight, its foot just off the floor, ready to swing.`,
+    standaloneStart: true,
+  },
+  {
+    id: 'hip-circles',
+    name: 'Hip Circles',
+    gender: 'female',
+    top: `unused`,
+    start: `CAMERA: three-quarter front view.
+She stands tall with feet shoulder-width apart and BOTH hands on her hips, elbows out,
+relaxed confident posture, knees soft.`,
+    standaloneStart: true,
+  },
+  {
+    id: 'glute-bridge-warmup',
+    name: 'Glute Bridge (warmup)',
+    gender: 'male',
+    top: `unused`,
+    start: `CAMERA: side view (profile), at floor level, his head to the LEFT of frame.
+The athlete lies FLAT on his back on the floor: head, shoulders, back and pelvis ALL
+resting on the floor, arms at his sides palms down, knees bent to about 90 degrees so
+only the knees point up, BOTH feet flat on the floor.`,
+    standaloneStart: true,
+  },
 ];
 
 async function callModel(parts: Array<Record<string, unknown>>): Promise<Buffer | null> {
@@ -549,12 +594,14 @@ async function generatePair(spec: MotionSpec, frames: ReadonlySet<string>): Prom
     if (!top) return false;
     fs.writeFileSync(path.join(OUTPUT_DIR, `${spec.id}-b.png`), top);
     console.log(`  ✓ Saved: ${spec.id}-b.png`);
-  } else {
+  } else if (!spec.standaloneStart) {
     top = await loadTopFrame(spec.id);
     if (!top) {
       console.error(`  no existing ${spec.id}-b frame to reference — generate frame b first`);
       return false;
     }
+  } else {
+    top = null; // standalone start needs no reference
   }
   if (!frames.has('a')) return true;
 

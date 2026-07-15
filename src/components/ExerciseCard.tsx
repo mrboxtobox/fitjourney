@@ -19,13 +19,17 @@ const reducedMotion = () =>
 
 // The exercise picture, animated where animation exists. Preference order:
 // a true Veo clip (one drawn repetition, looping) → the two-frame flip →
-// the static diagram. Reduced-motion users always get the still.
+// the static diagram. Reduced-motion users always get the still, and a device
+// that refuses video playback (iOS Low Power Mode does) falls back rather than
+// freezing on the poster.
 export function ExerciseImage({ id, alt, imgClass }: { id: string; alt: string; imgClass: string }) {
-  if (!reducedMotion() && hasMotionVideo(id)) {
+  const [videoRefused, setVideoRefused] = useState(false);
+  if (!reducedMotion() && !videoRefused && hasMotionVideo(id)) {
     return (
       <video
         // Frameworks set `muted` as a property after the autoplay policy check,
         // which silently blocks playback — mute via ref and start it by hand.
+        // A rejected play() (e.g. Low Power Mode) flips to the flip/static fallback.
         ref={(el: HTMLVideoElement | null) => {
           if (el && el.paused) {
             el.muted = true;
@@ -36,9 +40,10 @@ export function ExerciseImage({ id, alt, imgClass }: { id: string; alt: string; 
           const v = e.currentTarget as HTMLVideoElement;
           if (v.paused) {
             v.muted = true;
-            void v.play().catch(() => {});
+            void v.play().catch(() => setVideoRefused(true));
           }
         }}
+        onError={() => setVideoRefused(true)}
         class={`${imgClass} motion-video`}
         src={`/motion/${id}.mp4`}
         poster={imageFor(id)}
@@ -366,7 +371,7 @@ export function WarmupItem({ exercise, completed, onToggle }: WarmupItemProps) {
 
       {open && (
         <Sheet title={exercise.name} onClose={() => setOpen(false)}>
-          <img src={imageFor(exercise.id)} alt={`${exercise.name} form`} class="sheet-image" />
+          <ExerciseImage id={exercise.id} alt={`${exercise.name} form`} imgClass="sheet-image" />
           <TimerControls
             seconds={exercise.duration}
             onComplete={() => {
