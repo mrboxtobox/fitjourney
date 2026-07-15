@@ -73,6 +73,19 @@ const SPECS: VideoSpec[] = [
   { id: 'db-tricep-kickback', seed: 'db-tricep-kickback-b.webp', motion: `The woman performs EXACTLY ONE slow triceps kickback starting extended: from this position with her arm straightened BEHIND her, she lets the forearm hinge slowly DOWN from the elbow until it hangs vertical, pauses, then straightens the elbow so the dumbbell travels BACKWARD behind her body again. The upper arm stays pinned parallel to the floor; the dumbbell always stays BEHIND her torso, never in front.`, negative: 'front raise, arm reaching forward, dumbbell in front of body' },
   { id: 'db-lateral-raise', motion: `The man performs EXACTLY ONE slow lateral raise: from arms at his sides he raises both dumbbells out to exactly shoulder height, elbows soft and leading, then lowers them back down. His torso stays vertical and still; no swinging.` },
   { id: 'band-pull-apart', motion: `The man performs EXACTLY ONE slow band pull-apart: with straight arms forward at chest height he pulls the red band wide until his arms are spread and the band is taut across his chest, then returns. His arms stay straight; shoulders stay down.` },
+
+  // ── Warmups (2026-07-15): the first screens anyone opens, so they animate too.
+  { id: 'cat-cow', motion: `The woman performs EXACTLY ONE slow cat-cow cycle on hands and knees: from a neutral flat back she ROUNDS her spine up toward the ceiling while her head drops, pauses, then reverses through neutral into a gentle arch with her chest and head lifting, then returns to neutral. Hands and knees never move; only the spine, head and pelvis flow.` },
+  { id: 'leg-swings', motion: `The man performs EXACTLY ONE slow front-to-back leg swing: standing tall on his left leg with his left hand flat on the wall, his RIGHT leg swings forward like a pendulum to a comfortable height, then swings back behind him, then returns to hang beneath him. His torso stays upright; the standing foot never moves; the swinging leg stays relaxed and straight.` },
+  { id: 'hip-circles', motion: `The woman performs EXACTLY ONE slow standing hip circle. She FACES THE CAMERA the entire time — her face, chest and toes point at the viewer in every single frame; her body NEVER turns, NEVER rotates, NEVER shows its side or back. With hands on hips and feet planted, only her PELVIS sways in a smooth circle: to her left, forward, to her right, back. Head and shoulders stay nearly still; feet never move.`, negative: 'turning around, rotating body, spinning, side view, back view' },
+
+];
+
+// Clips that reuse another exercise's verified clip because the movement is
+// identical. glute-bridge-warmup: two Veo attempts morphed into a face-down
+// plank; the warmup IS a glute bridge, so it plays the verified bridge clip.
+const COPIES: Array<{ id: string; from: string }> = [
+  { id: 'glute-bridge-warmup', from: 'glute-bridge' },
 ];
 
 async function launch(spec: VideoSpec): Promise<string> {
@@ -178,4 +191,14 @@ for (let i = 0; i < specs.length; i += 4) {
     })
   );
 }
+// Apply clip copies last, so a regenerated source refreshes its aliases too.
+for (const copy of COPIES) {
+  if (requested.length && !requested.includes(copy.id)) continue;
+  const from = path.join(OUT_DIR, `${copy.from}.mp4`);
+  if (fs.existsSync(from)) {
+    fs.copyFileSync(from, path.join(OUT_DIR, `${copy.id}.mp4`));
+    console.log(`  = ${copy.id}.mp4 (copy of ${copy.from})`);
+  }
+}
+
 console.log(`\nDone: ${ok}/${specs.length}.${failed.length ? ` Failed: ${failed.join(' ')}` : ''} Make contact sheets and LOOK at every clip.`);
