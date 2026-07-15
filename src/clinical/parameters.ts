@@ -631,52 +631,12 @@ export const LADDER_RUNGS: Record<Exclude<MovementPattern, 'mobility'>, LadderRu
   ],
 };
 
-// ─── 8. Pre-participation screening ─────────────────────────────────────────
+// ─── 8. The standing stop rule ──────────────────────────────────────────────
 //
-// Adapted from the PAR-Q+ (Physical Activity Readiness Questionnaire). It does not
-// diagnose and it does not block: a "yes" surfaces the advice to speak to a clinician
-// first, and is recorded so the advice can be shown again.
-
-export interface ReadinessQuestion {
-  id: string;
-  text: string;
-}
-
-export const READINESS_QUESTIONS: ReadinessQuestion[] = [
-  {
-    id: 'heart',
-    text: 'Has a doctor ever said you have a heart condition, or that you should only do physical activity supervised by a doctor?',
-  },
-  {
-    id: 'chestPain',
-    text: 'Do you feel pain in your chest when you do physical activity, or when you are not doing physical activity?',
-  },
-  {
-    id: 'dizziness',
-    text: 'Do you lose your balance from dizziness, or have you lost consciousness in the last 12 months?',
-  },
-  {
-    id: 'boneJoint',
-    text: 'Do you have a bone, joint, or soft-tissue problem that could be made worse by becoming more active?',
-  },
-  {
-    id: 'medication',
-    text: 'Are you currently taking prescribed medication for a chronic condition, including blood pressure or a heart condition?',
-  },
-  {
-    id: 'pregnancy',
-    text: 'Are you pregnant, or have you given birth within the last six months?',
-  },
-  {
-    id: 'otherReason',
-    text: 'Do you know of any other reason why you should not do physical activity?',
-  },
-];
-
-// The advice shown when any screening question is answered "yes", and the standing
-// stop rule shown to everyone.
-export const READINESS_FLAG_ADVICE =
-  'You answered yes to at least one question. Speak to your doctor or a physiotherapist before starting this or any other exercise program. You can still use the app — but get cleared first, and tell them what it asks you to do.';
+// The PAR-Q+ style questionnaire that used to live here was removed at the owner's
+// request (2026-07-15): it never blocked anyone — a "yes" only surfaced advice — so
+// the first-run disclaimer now carries that advice in prose instead. The red-flag
+// stop rule below is still shown to everyone.
 
 export const RED_FLAG_STOP_RULE =
   'Stop and seek help if you feel chest pain, faintness, or sudden severe pain.';

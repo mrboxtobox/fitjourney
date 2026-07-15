@@ -47,10 +47,10 @@ export function App() {
     loadSettings();
   }, []);
 
-  const completeReadiness = async (flaggedQuestionIds: string[]) => {
+  const completeReadiness = async () => {
     await saveReadiness({
       date: formatDateString(new Date()),
-      flaggedQuestionIds,
+      flaggedQuestionIds: [], // the PAR-Q questions are gone; the field stays for old records
       acknowledgedDisclaimer: true,
     });
     setNeedsReadiness(false);

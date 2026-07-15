@@ -874,43 +874,7 @@ html {
   padding: 2.5rem 1.25rem 3rem;
 }
 .readiness-title { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; }
-.readiness-lede {
-  margin-top: 0.5rem;
-  font-size: 0.9375rem;
-  line-height: 1.55;
-  color: var(--text-muted);
-}
-.readiness-questions { margin-top: 2rem; }
-.readiness-question { padding: 1rem 0; }
-.readiness-question + .readiness-question { border-top: 1px solid var(--border); }
-.readiness-question-text { font-size: 0.9375rem; line-height: 1.5; color: var(--text); }
-.readiness-answers { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
-.readiness-answer {
-  min-height: 2.75rem;
-  min-width: 5rem;
-  border-radius: 0.5rem;
-  background: var(--bg-alt);
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.12s ease, color 0.12s ease;
-}
-.readiness-answer:hover { background: var(--border); }
-.readiness-answer.selected { background: var(--text); color: var(--bg); }
-.readiness-answer.selected.flagged { background: var(--caution); color: #fff; }
-.readiness-answer:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-.readiness-flag {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.625rem;
-  margin-top: 1.5rem;
-  padding: 0.875rem 1rem;
-  border-radius: 0.75rem;
-  background: var(--bg-alt);
-}
-.readiness-flag p { font-size: 0.8125rem; line-height: 1.55; color: var(--text-muted); }
 
 .readiness-disclaimer {
   margin-top: 2rem;

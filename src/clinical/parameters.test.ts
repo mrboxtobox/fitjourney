@@ -20,7 +20,6 @@ import {
   LOAD_INCREMENTS,
   PAIN_BANDS,
   PATTERN_PAIN_REGIONS,
-  READINESS_QUESTIONS,
   SCHEDULE,
   PHASE_LAST_WEEK,
   AUTOREGULATION,
@@ -183,12 +182,6 @@ describe('the parameter file is internally consistent', () => {
       expect(inc.dumbbell, unit).toBeGreaterThan(0);
       expect(inc.kettlebell, unit).toBeGreaterThan(0);
     }
-  });
-
-  it('gives every readiness question a unique id and real text', () => {
-    const ids = READINESS_QUESTIONS.map((q) => q.id);
-    expect(new Set(ids).size).toBe(ids.length);
-    for (const q of READINESS_QUESTIONS) expect(q.text.length).toBeGreaterThan(20);
   });
 });
 
