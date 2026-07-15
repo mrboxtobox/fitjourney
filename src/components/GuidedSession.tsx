@@ -14,6 +14,8 @@ import {
   Trophy,
   Radio,
   Music,
+  Mic,
+  SkipForward,
 } from 'lucide-preact';
 import { buildSessionSteps, getExercise, type WorkoutDay, type SessionStep } from '../data/workouts';
 import { ExerciseImage } from './ExerciseCard';
@@ -25,7 +27,28 @@ import {
   type LiveBroadcaster,
 } from '../lib/live';
 import { initAudio, cueGo, cueRest, cueDone, cueTick } from '../lib/sound';
-import { musicEnabled, setMusicEnabled, startMusic, stopMusic, musicStatus } from '../lib/music';
+import {
+  musicEnabled,
+  setMusicEnabled,
+  startMusic,
+  stopMusic,
+  musicStatus,
+  skipTrack,
+  onTrackChange,
+  type MusicTrack,
+} from '../lib/music';
+import {
+  voiceEnabled,
+  setVoiceEnabled,
+  speak,
+  speakRandom,
+  stopSpeaking,
+  voiceFileForExercise,
+  voiceFileForFinisher,
+  ENCOURAGEMENTS,
+  WRAPUPS,
+  PACING,
+} from '../lib/voice';
 import { celebrate } from '../lib/confetti';
 import { getBestFinisherScore, saveFinisherScore, saveSetLogs, saveSymptom } from '../db';
 import { SetLogger } from './SetLogger';
@@ -129,6 +152,20 @@ export function GuidedSession({
   const [finished, setFinished] = useState(false);
   const [muted, setMuted] = useState(() => localStorage.getItem(MUTE_KEY) === '1');
   const [music, setMusic] = useState(() => musicEnabled());
+  const [voice, setVoice] = useState(() => voiceEnabled());
+  const [nowPlaying, setNowPlaying] = useState<MusicTrack | null>(null);
+  const restsSeen = useRef(0);
+
+  useEffect(() => onTrackChange(setNowPlaying), []);
+
+  const toggleVoice = () => {
+    setVoice((on) => {
+      const next = !on;
+      setVoiceEnabled(next);
+      if (!next) stopSpeaking();
+      return next;
+    });
+  };
 
   // Ambience runs for the session's lifetime and no longer: it starts with the
   // overlay (we are past the Start tap, so autoplay is allowed) and fades out
@@ -189,6 +226,7 @@ export function GuidedSession({
 
   // The socket must not outlive the session.
   useEffect(() => () => broadcaster.current?.close(), []);
+  useEffect(() => () => stopSpeaking(), []);
 
   const step = steps[idx];
   const timed = stepDuration(step) > 0;
@@ -220,9 +258,14 @@ export function GuidedSession({
     if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(pattern);
   };
 
-  // Entering a new step: reset timer + play the entry cue.
+  // Entering a new step: reset timer, play the entry cue, and let the coach talk.
+  // The voice is rationed by design — instructions once per exercise, pacing on
+  // the last set and final round, encouragement every other rest, never per rep.
   useEffect(() => {
-    if (finished) return;
+    if (finished) {
+      speakRandom(WRAPUPS);
+      return;
+    }
     setRemaining(stepDuration(step));
     setPaused(false);
     if (step.kind === 'rest' || step.kind === 'finisher-rest') {
@@ -233,6 +276,33 @@ export function GuidedSession({
     } else {
       beep(cueGo);
       buzz(30);
+    }
+
+    switch (step.kind) {
+      case 'warmup':
+        speak(voiceFileForExercise(step.id));
+        break;
+      case 'work':
+        if (step.set === 1) speak(voiceFileForExercise(step.id));
+        else if (step.isLastSet && step.sets > 1) speak(PACING.lastSet.file);
+        break;
+      case 'rest':
+      case 'finisher-rest':
+        restsSeen.current += 1;
+        if (restsSeen.current % 2 === 0) speakRandom(ENCOURAGEMENTS);
+        break;
+      case 'finisher-intro':
+        speak(voiceFileForFinisher(step.finisher.id));
+        break;
+      case 'finisher-work':
+        if (step.rounds > 1 && step.round === step.rounds) speak(PACING.finalRound.file);
+        break;
+      case 'finisher-score':
+        speak(PACING.score.file);
+        break;
+      case 'symptom-check':
+        speak(PACING.checkIn.file);
+        break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx, finished]);
@@ -333,9 +403,15 @@ export function GuidedSession({
   }, [idx, paused, timed, finished]);
 
   // Last-3-seconds tick cue, then advance at zero (auto-completing the set).
+  // Long timed efforts get a spoken halfway marker — the pacing the clock
+  // shows but tired eyes stop reading.
   useEffect(() => {
     if (finished || !timed) return;
     if (remaining > 0 && remaining <= 3) beep(cueTick);
+    const total = stepDuration(step);
+    if (total >= 40 && remaining === Math.ceil(total / 2) && step.kind !== 'rest') {
+      speak(PACING.halfway.file, 0);
+    }
     if (remaining <= 0) advance(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remaining]);
@@ -479,6 +555,15 @@ export function GuidedSession({
         </span>
         <div class="session-top-actions">
           <button
+            onClick={toggleVoice}
+            class="session-icon-btn"
+            data-music={voice ? 'true' : undefined}
+            aria-label={voice ? 'Turn coach voice off' : 'Turn coach voice on'}
+            aria-pressed={voice}
+          >
+            <Mic size={20} />
+          </button>
+          <button
             onClick={toggleMusic}
             class="session-icon-btn"
             data-music={music ? 'true' : undefined}
@@ -519,6 +604,18 @@ export function GuidedSession({
           </span>
           <span class="session-share-hint">{shareCopied ? 'Link copied' : 'Tap to copy link'}</span>
         </button>
+      )}
+
+      {/* Now playing — what the speaker is doing, and a way to change its mind. */}
+      {nowPlaying && (
+        <div class="session-player">
+          <Music size={13} strokeWidth={2.5} class="session-player-icon" />
+          <span class="session-player-title">{nowPlaying.title}</span>
+          <span class="session-player-artist">{nowPlaying.artist.split(' (')[0]}</span>
+          <button onClick={skipTrack} class="session-player-skip" aria-label="Next track">
+            <SkipForward size={16} />
+          </button>
+        </div>
       )}
 
       {/* Body */}

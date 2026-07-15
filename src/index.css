@@ -340,6 +340,50 @@ html {
   color: var(--text-dim);
 }
 
+/* Now playing — one quiet line: title, artist, skip. */
+.session-player {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.25rem 0.25rem 0.25rem 0.75rem;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  background: var(--bg-alt);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.session-player-icon { flex-shrink: 0; }
+.session-player-title {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.session-player-artist {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.session-player-skip {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.session-player-skip:hover { color: var(--text); }
+.follow-player { padding: 0.5rem 0.75rem; }
+
 .follow-badge {
   display: inline-flex;
   align-items: center;

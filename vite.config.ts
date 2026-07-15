@@ -43,12 +43,12 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,webp}'],
         runtimeCaching: [
           {
-            urlPattern: /\/music\/[^/]+\.mp3$/,
+            urlPattern: /\/(music|voice)\/[^/]+\.mp3$/,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'session-music',
+              cacheName: 'session-audio',
               expiration: {
-                maxEntries: 12,
+                maxEntries: 120,
                 maxAgeSeconds: 60 * 60 * 24 * 365,
               },
               cacheableResponse: {

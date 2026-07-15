@@ -10,6 +10,7 @@ import { join } from 'node:path';
 import { EXERCISES, EXERCISE_MUSCLES, WARMUP, MOTION_FRAMES } from './exercises';
 import { FINISHERS } from './workouts';
 import { MUSIC_TRACKS } from '../lib/music';
+import { VOICE_LINES } from '../lib/voice';
 
 const ROOT = process.cwd();
 const PUBLIC = join(ROOT, 'public', 'exercises');
@@ -64,6 +65,23 @@ describe('session music ships what the player lists — and nothing else', () =>
   it('bundles no orphan tracks the player can never reach', () => {
     const declared = new Set(MUSIC_TRACKS.map((t) => t.file));
     const orphans = readdirSync(MUSIC_DIR).filter(
+      (f) => f.endsWith('.mp3') && !declared.has(f)
+    );
+    expect(orphans).toEqual([]);
+  });
+
+  it('has a rendered clip for every line the coach can say', () => {
+    // speak() derives paths from VOICE_LINES; a missing clip is a silent coach
+    // exactly when the screen says she should be talking.
+    const VOICE_DIR = join(ROOT, 'public', 'voice');
+    const missing = VOICE_LINES.filter((l) => !existsSync(join(VOICE_DIR, l.file)));
+    expect(missing.map((l) => l.file)).toEqual([]);
+  });
+
+  it('bundles no orphan voice clips', () => {
+    const VOICE_DIR = join(ROOT, 'public', 'voice');
+    const declared = new Set(VOICE_LINES.map((l) => l.file));
+    const orphans = readdirSync(VOICE_DIR).filter(
       (f) => f.endsWith('.mp3') && !declared.has(f)
     );
     expect(orphans).toEqual([]);
