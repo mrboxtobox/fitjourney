@@ -111,28 +111,18 @@ invert.
 
 ## 4. Pre-participation screening
 
-**What we do.** On first launch, before any exercise is shown, the user answers seven
-yes/no questions adapted from the **PAR-Q+** (Physical Activity Readiness Questionnaire),
-and must explicitly acknowledge a notice stating that the app is not medical advice and has
-not been clinician-reviewed.
+**Removed at the owner's request (2026-07-15).** The app previously asked seven yes/no
+questions adapted from the **PAR-Q+** (Physical Activity Readiness Questionnaire) on first
+run. The questionnaire never blocked anyone — a "yes" only surfaced the advice to speak to a
+clinician — so its advisory content was folded into the first-run disclaimer, which every
+user must still acknowledge before starting: the app is not medical advice, has not been
+reviewed by a physiotherapist, and anyone with an injury, persistent pain, a heart
+condition, or an activity-limiting diagnosis should speak with a clinician first. The
+standing red-flag stop rule (chest pain, faintness, sudden severe pain) is unchanged.
 
-**A "yes" does not block use.** It surfaces advice to be cleared by a doctor or
-physiotherapist first, and is stored so the advice can be shown again.
-
-**A standing red-flag rule** is displayed to everyone: *stop and seek help if you feel
-chest pain, faintness, or sudden severe pain.*
-
-**Reviewer questions.**
-- Should any answer be a hard block rather than advice? The current design assumes a
-  consumer fitness app has no standing to refuse, and that a hard block simply teaches
-  users to lie. That is a product judgement, not a clinical one — please overrule it if
-  you disagree.
-- Is a seven-item adaptation sufficient, or should the full PAR-Q+ follow-up branch be
-  implemented?
-- The pregnancy/postpartum item currently only triggers generic advice. It arguably
-  warrants a different program, not a caveat.
-
----
+**Reviewer question.** Is a prose disclaimer an acceptable substitute for itemised
+screening questions in an unsupervised consumer app, given the questionnaire was advisory
+rather than gating?
 
 ## 5. The symptom gate
 

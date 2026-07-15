@@ -108,7 +108,7 @@ describe('the disclaimer the app ships is intact', () => {
 
   it('requires the user to acknowledge the notice before the program starts', () => {
     // The continue button must be disabled until the acknowledgement is checked.
-    expect(readiness).toMatch(/disabled=\{!answered \|\| !acknowledged\}/);
+    expect(readiness).toMatch(/disabled=\{!acknowledged\}/);
   });
 
   it('ships a standing red-flag stop rule', () => {
