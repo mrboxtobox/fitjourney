@@ -5,12 +5,19 @@ import { WeekView } from './views/WeekView';
 import { MonthView } from './views/MonthView';
 import { SettingsView } from './views/SettingsView';
 import { ReadinessScreen } from './components/ReadinessScreen';
+import { FollowView } from './views/FollowView';
+import { followCodeFromUrl } from './lib/live';
 import { getSettings, saveSettings, getReadiness, saveReadiness } from './db';
 import { formatDateString } from './hooks/useDate';
 
 type View = 'today' | 'week' | 'month' | 'weight' | 'settings';
 
+// A share link opens the read-only live viewer and nothing else: no readiness
+// gate (nothing is being prescribed), no navigation, no local state.
+const followCode = followCodeFromUrl();
+
 export function App() {
+  if (followCode) return <FollowView code={followCode} />;
   const [currentView, setCurrentView] = useState<View>('today');
   const [startDate, setStartDate] = useState(new Date('2025-01-06'));
   const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('lbs');

@@ -24,6 +24,7 @@
     "workbox-window": "^7.4.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260715.1",
     "@preact/preset-vite": "^2.10.2",
     "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^24.10.1",

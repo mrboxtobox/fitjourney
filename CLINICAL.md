@@ -369,14 +369,17 @@ The program is hinge- and bridge-dominant. Specifically:
 
 ## 10. Programming
 
-**Weekly template.** Six training days plus one rest day (Sunday). Every training day
-trains all four core anti-movement patterns, three lower-body patterns rotating by day, one
-or two upper-body patterns, one mobility stretch, and a scored conditioning finisher.
+**Weekly template.** Six training days plus one rest day (Sunday). Each training day is
+deliberately lean — five working exercises, gone deep, rather than ten gone shallow: two
+core anti-movement patterns (alternating A/B days), one **main lift** run as straight sets,
+one glute accessory, one upper-body pattern, one mobility stretch, and a scored
+conditioning finisher. Depth comes from per-exercise set counts (§6): main-lift patterns
+carry 4 sets, core and accessory work 3.
 
-**Core.** The three McGill anti-movement exercises (curl-up, side plank, bird dog) plus one
-anti-extension movement, **every training day, in every phase**. They are prescribed as
-short, repeated holds rather than long ones — endurance without accumulating spinal
-compression.
+**Core.** The four anti-movement patterns (the McGill trio plus anti-extension) alternate
+two per day, so each pattern is trained **three times a week in every phase** — coverage
+comes from the week, not the day. They are prescribed as short, repeated holds rather than
+long ones — endurance without accumulating spinal compression.
 
 **Supersets.** Non-competing patterns are paired back-to-back with rest only after the
 pair, to raise cardiovascular demand within a 30-minute session. Rest between pairs is
@@ -386,9 +389,11 @@ pair, to raise cardiovascular demand within a 30-minute session. Rest between pa
 loaded carries, bridge circuits, or fast deadlifts. All hinge/bridge/carry-based; **no
 jumping**. The score is recorded so the user competes against their own best.
 
-**Upper-body balance.** The program trains a horizontal push, a horizontal pull, a vertical
-push, and scapular retraction across the week. (The pull was absent from an earlier version
-of this program; a band pull-apart is scapular retraction, not a row.)
+**Upper-body balance.** One upper-body pattern per day rotates so the week still trains a
+horizontal push, a horizontal pull, a vertical push, elbow flexion and extension, and the
+two shoulder accessories — Saturday's slot alternates between lateral raise and scapular
+retraction week by week, so neither goes untrained. (The pull was absent from an earlier
+version of this program; a band pull-apart is scapular retraction, not a row.)
 
 **Phases** govern **volume only** — never difficulty, which belongs entirely to the engine.
 

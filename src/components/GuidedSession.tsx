@@ -12,8 +12,17 @@ import {
   Minus,
   Flame,
   Trophy,
+  Radio,
 } from 'lucide-preact';
 import { buildSessionSteps, getExercise, type WorkoutDay, type SessionStep } from '../data/workouts';
+import { ExerciseImage } from './ExerciseCard';
+import {
+  makeShareCode,
+  shareUrlFor,
+  startBroadcast,
+  liveStateForStep,
+  type LiveBroadcaster,
+} from '../lib/live';
 import { initAudio, cueGo, cueRest, cueDone, cueTick } from '../lib/sound';
 import { celebrate } from '../lib/confetti';
 import { getBestFinisherScore, saveFinisherScore, saveSetLogs, saveSymptom } from '../db';
@@ -57,6 +66,29 @@ function fmt(s: number): string {
   const m = Math.floor(s / 60);
   const sec = s % 60;
   return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
+function phaseLabelFor(step: SessionStep): string {
+  switch (step.kind) {
+    case 'warmup':
+      return 'Warm-up';
+    case 'rest':
+      return 'Rest';
+    case 'log':
+      return 'Log your sets';
+    case 'symptom-check':
+      return 'Check in';
+    case 'work':
+      return step.supersetLabel ?? `Set ${step.set} of ${step.sets}`;
+    case 'finisher-intro':
+      return 'Finisher';
+    case 'finisher-work':
+      return step.rounds > 1 ? `Finisher · Round ${step.round} of ${step.rounds}` : 'Finisher · Go';
+    case 'finisher-rest':
+      return `Finisher · Rest ${step.round} of ${step.rounds - 1}`;
+    case 'finisher-score':
+      return 'Finisher · Score';
+  }
 }
 
 function stepDuration(step: SessionStep): number {
@@ -103,6 +135,40 @@ export function GuidedSession({
   const mutedRef = useRef(muted);
   mutedRef.current = muted;
   const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  // Live follow: sharing opens a relay socket; every screen change is re-sent so a
+  // partner's phone mirrors this one. Read-only on their side by construction.
+  const [shareCode, setShareCode] = useState<string | null>(null);
+  const [shareLive, setShareLive] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const broadcaster = useRef<LiveBroadcaster | null>(null);
+
+  const copyShareLink = (code: string) => {
+    navigator.clipboard?.writeText(shareUrlFor(code)).then(
+      () => {
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2000);
+      },
+      () => {}
+    );
+  };
+
+  const toggleShare = () => {
+    if (shareCode) {
+      broadcaster.current?.close();
+      broadcaster.current = null;
+      setShareCode(null);
+      setShareLive(false);
+      return;
+    }
+    const code = makeShareCode();
+    setShareCode(code);
+    broadcaster.current = startBroadcast(code, setShareLive);
+    copyShareLink(code);
+  };
+
+  // The socket must not outlive the session.
+  useEffect(() => () => broadcaster.current?.close(), []);
 
   const step = steps[idx];
   const timed = stepDuration(step) > 0;
@@ -165,6 +231,10 @@ export function GuidedSession({
     }
   };
 
+  // What was actually logged, kept for the done screen: the session should end by
+  // showing what you did, not just that you did something.
+  const recap = useRef<Array<{ name: string; summary: string }>>([]);
+
   // Record what actually happened. This is the engine's only input — skipping it
   // leaves the prescription frozen where it is.
   const saveSets = async (
@@ -173,6 +243,13 @@ export function GuidedSession({
     rows: Array<{ reps: number; load: number; rir: number }>
   ) => {
     await saveSetLogs(dateString, exerciseId, prescribedSets, rows);
+    const best = Math.max(...rows.map((r) => r.reps));
+    const load = rows[0]?.load ?? 0;
+    const unit = measureOf(exerciseId) === 'seconds' ? 's' : measureOf(exerciseId) === 'steps' ? ' steps' : '';
+    recap.current.push({
+      name: getExercise(exerciseId).name,
+      summary: `${rows.length} × ${best}${unit}${load > 0 ? ` · ${load} ${weightUnit}` : ''}`,
+    });
     onSessionLogged();
     advance(false);
   };
@@ -196,6 +273,32 @@ export function GuidedSession({
     }
     advance(false);
   };
+
+  // Mirror this screen to anyone following the share link. Re-sent on every tick,
+  // so the viewer never needs its own clock (or trust in one).
+  useEffect(() => {
+    if (!shareCode || !broadcaster.current) return;
+    if (finished) {
+      broadcaster.current.send({
+        kind: 'done',
+        detail:
+          prResult && finisher
+            ? `${score} ${finisher.scoreUnit}${prResult.isPR ? ' — a new record' : ''}`
+            : undefined,
+        idx: steps.length,
+        total: steps.length,
+      });
+      return;
+    }
+    broadcaster.current.send({
+      kind: 'step',
+      ...liveStateForStep(step, phaseLabelFor(step), weightUnit),
+      timer: timed ? { remaining, paused } : undefined,
+      idx: idx + 1,
+      total: steps.length,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shareCode, idx, remaining, paused, finished]);
 
   // Countdown tick for timed steps.
   useEffect(() => {
@@ -313,6 +416,16 @@ export function GuidedSession({
           <p class="mt-1 text-sm" style={{ color: 'var(--text-dim)' }}>
             {completedExercises} exercises done.
           </p>
+          {recap.current.length > 0 && (
+            <dl class="session-recap">
+              {recap.current.map((r) => (
+                <div key={r.name} class="session-recap-row">
+                  <dt>{r.name}</dt>
+                  <dd>{r.summary}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
           <button class="session-btn-primary mt-8" onClick={onClose}>
             Done
           </button>
@@ -330,26 +443,7 @@ export function GuidedSession({
     step.kind === 'finisher-rest' ||
     step.kind === 'finisher-score';
 
-  const phaseLabel =
-    step.kind === 'warmup'
-      ? 'Warm-up'
-      : step.kind === 'rest'
-        ? 'Rest'
-        : step.kind === 'log'
-          ? 'Log your sets'
-          : step.kind === 'symptom-check'
-            ? 'Check in'
-            : step.kind === 'work'
-          ? (step.supersetLabel ?? `Set ${step.set} of ${step.sets}`)
-          : step.kind === 'finisher-intro'
-            ? 'Finisher'
-            : step.kind === 'finisher-work'
-              ? step.rounds > 1
-                ? `Finisher · Round ${step.round} of ${step.rounds}`
-                : 'Finisher · Go'
-              : step.kind === 'finisher-rest'
-                ? `Finisher · Rest ${step.round} of ${step.rounds - 1}`
-                : 'Finisher · Score';
+  const phaseLabel = phaseLabelFor(step);
 
   return (
     <div class="session-overlay" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
@@ -361,18 +455,40 @@ export function GuidedSession({
         <span class="text-xs" style={{ color: 'var(--text-dim)' }}>
           {idx + 1} / {total}
         </span>
-        <button
-          onClick={toggleMute}
-          class="session-icon-btn"
-          aria-label={muted ? 'Unmute' : 'Mute'}
-        >
-          {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-        </button>
+        <div class="session-top-actions">
+          <button
+            onClick={toggleShare}
+            class="session-icon-btn"
+            data-sharing={shareCode ? 'true' : undefined}
+            aria-label={shareCode ? 'Stop sharing live' : 'Share live'}
+            aria-pressed={!!shareCode}
+          >
+            <Radio size={20} />
+          </button>
+          <button
+            onClick={toggleMute}
+            class="session-icon-btn"
+            aria-label={muted ? 'Unmute' : 'Mute'}
+          >
+            {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+          </button>
+        </div>
       </div>
 
       <div class="session-progress">
         <div class="session-progress-fill" style={{ width: `${((idx + 1) / total) * 100}%` }} />
       </div>
+
+      {/* Live share strip — visible only while sharing, tap to re-copy the link. */}
+      {shareCode && (
+        <button class="session-share" onClick={() => copyShareLink(shareCode)} data-live={shareLive ? 'true' : undefined}>
+          <Radio size={13} strokeWidth={2.5} />
+          <span>
+            {shareLive ? 'Live' : 'Connecting'} · {shareCode}
+          </span>
+          <span class="session-share-hint">{shareCopied ? 'Link copied' : 'Tap to copy link'}</span>
+        </button>
+      )}
 
       {/* Body */}
       <div class="session-body">
@@ -504,7 +620,7 @@ export function GuidedSession({
         ) : (
           <>
             <h2 class="session-name">{step.name}</h2>
-            <img src={`/exercises/${step.id}.webp`} alt={step.name} class="session-image" loading="eager" />
+            <ExerciseImage id={step.id} alt={step.name} imgClass="session-image" />
             {timed ? (
               <div class="session-timer">{fmt(remaining)}</div>
             ) : (

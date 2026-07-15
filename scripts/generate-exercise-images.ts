@@ -1125,23 +1125,22 @@ CRITICAL: The body must lie EXACTLY on the dashed line — shoulders, hips/butto
     modelGender: 'female',
     formDescription: `CAMERA ANGLE: Side view (profile).
 
-=== PRIMARY POSITION (SOLID) ===
-A woman in a gymnastic hollow hold:
-- Lying on her BACK
-- Low back PRESSED firmly into the floor
-- Shoulders and head lifted slightly off the floor
-- ARMS extended straight overhead, just off the floor
-- LEGS straight and together, lifted to a low hover off the floor
-- Body forms a shallow banana/dish shape
+ONE woman only — no second figure, no ghost, no faded copy. This is a static hold.
 
-=== GHOSTED POSITION (faded - easier regression) ===
-Lighter version with the KNEES BENT (tucked) instead of legs straight — the easier version.
+She holds a gymnastic hollow hold:
+- Lying on her BACK on the floor
+- Low back PRESSED firmly into the floor — no gap anywhere beneath it
+- Shoulder blades and head lifted slightly off the floor
+- ARMS extended straight overhead past her ears, hovering just off the floor
+- LEGS straight and together, lifted to a LOW hover — heels about a foot off the floor
+- The whole body forms one shallow banana/dish curve
 
-MOVEMENT INDICATORS:
-- Dashed line under the low back showing it stays pressed down
-- Small red arrows showing shoulders and legs lifted off the floor
+MARKS:
+- A short dashed line on the floor directly under her low back, showing it stays pressed down
+- One small red arrow at the hands and one at the heels, each pointing gently upward
 
-CRITICAL: Low back stays flat on the floor (this is the whole point). Shallow dish shape. Arms overhead, legs hovering low.`,
+FORBIDDEN: a second or faded figure; bent or tucked knees; sitting up; a visible gap
+under the low back; a frame; a white margin.`,
   },
   {
     id: 'pallof-press',
@@ -1753,8 +1752,9 @@ other figure's face.`,
 BODY POSITION - DYNAMIC LEG SWING:
 - Person is standing on ONE leg, swinging the other leg forward
 
-SUPPORT:
-- LEFT hand touches a wall or support (on the left side of image)
+SUPPORT (THE HAND MUST TOUCH — past attempts left a gap):
+- His LEFT hand rests FLAT ON the wall at shoulder height, palm in FULL CONTACT with
+  the wall surface. Zero gap between hand and wall — he is leaning some weight on it.
 - This provides balance during the dynamic movement
 
 STANDING LEG (left leg):
@@ -1886,20 +1886,15 @@ The silhouette looks like a triangle: floor to shoulders (low), up to hips (high
 
 DO NOT show legs in the air. DO NOT show a leg raise. The feet MUST be on the ground.
 
-=== GHOSTED POSITION (FADED - Hips down/start position) ===
-Show a lighter/faded version of the same figure with:
-- Same lying position with bent knees
-- Same feet flat on floor
-- But HIPS resting ON THE GROUND (not lifted)
-- Lower back touching the floor
-- This is the starting position before lifting
+=== MOVEMENT INDICATORS (NO SECOND FIGURE) ===
+Draw ONE figure only — no ghost, no faded copy, no second body.
+- A black dashed arc tracing the path the hips travelled from the floor up to their lifted position
+- One bold red arrow pointing UP at the hips
+- A dashed straight line from shoulders through hips to knees marking the straight top position
 
-MOVEMENT INDICATORS:
-- Red arrow pointing UP at the hips showing the lift direction
-- Dashed arc showing the path of hip movement from floor to top
-- Dashed line from shoulders to knees showing the straight line at top position
+CRITICAL: ONE man only. Feet flat on the ground, knees bent, hips the highest point.
 
-CRITICAL: Solid figure shows top of bridge (hips up). Ghosted figure shows start position (hips down). Feet stay flat on ground throughout. Dashed arc shows hip lift path.`,
+FORBIDDEN: a second or faded figure; feet leaving the floor; a frame; a white margin.`,
   },
 ];
 

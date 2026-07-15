@@ -421,6 +421,80 @@ describe('programming balance', () => {
     expect(patterns.has('antiLateralFlexion')).toBe(true);
   });
 
+  it('keeps the day lean: at most six exercises, cooldown included', () => {
+    // The program went deep instead of wide: two core patterns, a main lift, one
+    // glute accessory, one arm move, one stretch. Ten-exercise days were the bug.
+    for (let i = 0; i < 14; i++) {
+      const w = getWorkoutForDate(dayOffset(i), START);
+      if (w.type === 'rest') continue;
+      expect(w.exercises.length, dateStr(dayOffset(i))).toBeLessThanOrEqual(6);
+    }
+  });
+
+  it('still trains every laddered pattern within two weeks', () => {
+    // A lean day must not strand a pattern. Anything with a ladder has to appear
+    // somewhere in the rotation, or its rungs are dead code.
+    const patterns = new Set<MovementPattern>();
+    for (let i = 0; i < 14; i++) {
+      const w = getWorkoutForDate(dayOffset(i), START);
+      w.exercises.forEach((px) => patterns.add(px.exercise.pattern));
+    }
+    for (const pattern of Object.keys(LADDERS) as MovementPattern[]) {
+      expect(patterns.has(pattern), `pattern never trained: ${pattern}`).toBe(true);
+    }
+  });
+
+  it('rotates the shared Saturday arm slot week by week', () => {
+    // One arm slot, two Saturday patterns: with no rotation, one of them would
+    // exist in the library and never occur in a playthrough.
+    const saturdays = [5, 12].map((i) => getWorkoutForDate(dayOffset(i), START));
+    const armPatterns = saturdays.map(
+      (w) => w.exercises.find((px) => px.exercise.block === 'arms')!.exercise.pattern
+    );
+    expect(new Set(armPatterns).size).toBe(2);
+  });
+
+  it('runs the main lift as straight sets between the two supersets', () => {
+    // The session must read: core pair → main lift → accessory pair. The main
+    // lift is the deep work; burying it after the band work would be a bug.
+    const w = getWorkoutForDate(dayOffset(0), START); // Monday: hinge is the main
+    const paired = new Set(w.supersets.flatMap((p) => p.exerciseIds));
+    const main = w.exercises.find(
+      (px) => px.exercise.block === 'strength' && !paired.has(px.exercise.id)
+    );
+    expect(main, 'an unpaired main strength lift must exist').toBeDefined();
+
+    const steps = buildSessionSteps(w);
+    const firstWorkIdx = (id: string) => steps.findIndex((s) => s.kind === 'work' && s.id === id);
+    const coreFirst = firstWorkIdx(w.supersets[0].exerciseIds[0]);
+    const mainFirst = firstWorkIdx(main!.exercise.id);
+    const accessoryFirst = firstWorkIdx(w.supersets[1].exerciseIds[0]);
+    expect(coreFirst).toBeLessThan(mainFirst);
+    expect(mainFirst).toBeLessThan(accessoryFirst);
+  });
+
+  it('the ladder path is wired to the snapshot, not decorative', () => {
+    // The sheet shows "you are here" + what unlocks next. If a raised pattern level
+    // doesn't move it, the path is a drawing of the engine, not a window into it.
+    const fresh = getWorkoutForDate(dayOffset(0), START, EMPTY_SNAPSHOT);
+    const bridgeFresh = fresh.exercises.find((px) => px.exercise.pattern === 'bridge')!;
+    expect(bridgeFresh.progress).toBeDefined();
+    expect(bridgeFresh.progress!.level).toBe(0);
+    expect(bridgeFresh.progress!.next?.name).toBe(bridgeFresh.progress!.rungs[1].name);
+
+    const climbed = getWorkoutForDate(dayOffset(0), START, {
+      ...EMPTY_SNAPSHOT,
+      patternLevels: { bridge: 2 },
+    });
+    const bridgeClimbed = climbed.exercises.find((px) => px.exercise.pattern === 'bridge')!;
+    expect(bridgeClimbed.progress!.level).toBe(2);
+    expect(bridgeClimbed.progress!.next?.name).toBe(bridgeClimbed.progress!.rungs[3].name);
+
+    // Mobility has no ladder and must not pretend to.
+    const stretch = fresh.exercises.find((px) => px.exercise.block === 'mobility')!;
+    expect(stretch.progress).toBeUndefined();
+  });
+
   it('never supersets an exercise with itself', () => {
     for (let i = 0; i < 14; i++) {
       const w = getWorkoutForDate(dayOffset(i), START);

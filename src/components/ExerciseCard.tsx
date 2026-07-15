@@ -3,6 +3,7 @@ import type { ComponentChildren } from 'preact';
 import { Check, Play, Pause, RotateCcw, X, ShieldCheck, Target, Flame, Trophy } from 'lucide-preact';
 import type { WarmupExercise, Finisher, PrescribedExercise } from '../data/workouts';
 import { getMuscleFocus, formatTempo } from '../data/workouts';
+import { hasMotionFrames } from '../data/exercises';
 import { getBestFinisherScore } from '../db';
 import { useTimer } from '../hooks/useTimer';
 
@@ -11,6 +12,21 @@ import { useTimer } from '../hooks/useTimer';
 // not by a broken image in the user's face.
 function imageFor(id: string): string {
   return `/exercises/${id}.webp`;
+}
+
+// The exercise picture, animated where a start/top frame pair exists: the two frames
+// crossfade so the movement itself is visible. Reduced-motion users get the top
+// frame, still. Falls back to the static diagram everywhere else.
+export function ExerciseImage({ id, alt, imgClass }: { id: string; alt: string; imgClass: string }) {
+  if (!hasMotionFrames(id)) {
+    return <img src={imageFor(id)} alt={alt} class={imgClass} loading="eager" />;
+  }
+  return (
+    <div class={`${imgClass} motion-image`} role="img" aria-label={alt}>
+      <img src={`/exercises/${id}-a.webp`} alt="" loading="eager" />
+      <img src={`/exercises/${id}-b.webp`} alt="" class="motion-frame-b" loading="eager" />
+    </div>
+  );
 }
 
 function formatSeconds(total: number): string {
@@ -34,9 +50,11 @@ interface RowProps {
   // The engine's own sentence, shown only when it actually decided something.
   why?: { action: string; reason: string };
   accent?: ComponentChildren;
+  // What the movement trains, visible on the row — not buried in the sheet.
+  muscles?: string[];
 }
 
-function Row({ id, name, dose, completed, onToggle, onOpen, why, accent }: RowProps) {
+function Row({ id, name, dose, completed, onToggle, onOpen, why, accent, muscles }: RowProps) {
   return (
     <div class="row" data-done={completed ? 'true' : undefined}>
       <div class="row-line">
@@ -51,9 +69,14 @@ function Row({ id, name, dose, completed, onToggle, onOpen, why, accent }: RowPr
 
         <button class="row-body" onClick={onOpen} aria-label={`${name} — how to do it`}>
           <img src={imageFor(id)} alt="" class="row-plate" loading="lazy" />
-          <span class="row-name">
-            {name}
-            {accent}
+          <span class="row-text">
+            <span class="row-name">
+              {name}
+              {accent}
+            </span>
+            {muscles && muscles.length > 0 && (
+              <span class="row-muscles">{muscles.join(' · ')}</span>
+            )}
           </span>
           <span class="row-dose">{dose}</span>
         </button>
@@ -136,6 +159,42 @@ function TimerControls({ seconds, onComplete }: { seconds: number; onComplete?: 
   );
 }
 
+// The engine's game board: the rungs of this movement's ladder, the one you're on,
+// and exactly what unlocks the next. Rendered only when there is a path to show.
+function LadderPath({ progress }: { progress: NonNullable<PrescribedExercise['progress']> }) {
+  if (progress.rungs.length < 2) return null;
+  const { rungs, level, next, qualifyingStreak, streakNeeded } = progress;
+  return (
+    <div class="sheet-path">
+      <p class="sheet-path-title">The path</p>
+      <ol class="sheet-path-rungs">
+        {rungs.map((rung, i) => (
+          <li
+            key={rung.name}
+            class="sheet-path-rung"
+            data-state={i < level ? 'earned' : i === level ? 'current' : 'ahead'}
+          >
+            {i < level ? <Check size={13} strokeWidth={2.5} /> : <span class="sheet-path-dot" />}
+            {rung.name}
+            {i === level && <span class="sheet-path-here">you are here</span>}
+          </li>
+        ))}
+      </ol>
+      {next ? (
+        <p class="sheet-path-next">
+          {next.criteria} {streakNeeded} good sessions like that unlock <strong>{next.name}</strong>
+          {qualifyingStreak > 0 && (
+            <span> — {qualifyingStreak} of {streakNeeded} banked</span>
+          )}
+          .
+        </p>
+      ) : (
+        <p class="sheet-path-next">Top of the ladder — from here, progress is load and reps.</p>
+      )}
+    </div>
+  );
+}
+
 function FormNotes({ standard, faults }: { standard: string; faults: string[] }) {
   return (
     <div class="form-notes">
@@ -184,11 +243,12 @@ export function ExerciseItem({ prescribed, weightUnit, completed, onToggle }: Ex
         onToggle={onToggle}
         onOpen={() => setOpen(true)}
         why={prescribed.decision ? { action: prescribed.decision.action, reason: prescribed.decision.reason } : undefined}
+        muscles={muscle?.targets}
       />
 
       {open && (
         <Sheet title={exercise.name} onClose={() => setOpen(false)}>
-          <img src={imageFor(exercise.id)} alt={`${exercise.name} form`} class="sheet-image" />
+          <ExerciseImage id={exercise.id} alt={`${exercise.name} form`} imgClass="sheet-image" />
 
           <p class="sheet-dose">
             {doseLong}
@@ -206,6 +266,8 @@ export function ExerciseItem({ prescribed, weightUnit, completed, onToggle }: Ex
 
           <p class="sheet-cue">{exercise.cue}</p>
           <FormNotes standard={exercise.standard} faults={exercise.faults} />
+
+          {prescribed.progress && <LadderPath progress={prescribed.progress} />}
 
           {exercise.kneeNote && (
             <p class="sheet-note">
