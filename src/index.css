@@ -1226,12 +1226,21 @@ html {
   position: absolute;
   top: 0;
   left: 0;
-  animation: motion-swap 3.2s ease-in-out infinite;
+  /* steps(): a hard flipbook cut. A crossfade blends the two drawings for a
+     moment, which reads as a double-exposure — the flip never overlays them. */
+  animation: motion-swap 2.4s steps(1, end) infinite;
 }
+
+/* Row thumbnails animate too — a fixed square, so the frames must cover it. */
+.row-plate.motion-image img {
+  height: 100%;
+  object-fit: cover;
+}
+video.motion-video { background: var(--bg-alt); }
+video.row-plate { object-fit: cover; }
 @keyframes motion-swap {
-  0%, 38% { opacity: 0; }
-  50%, 88% { opacity: 1; }
-  100% { opacity: 0; }
+  0%, 49% { opacity: 0; }
+  50%, 100% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .motion-image .motion-frame-b {

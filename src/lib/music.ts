@@ -202,13 +202,14 @@ export function stopFollowMusic(): void {
 }
 
 // Dip under a cue, then recover. Cues call this so they always read clearly.
-export function duckMusic(ms = 700): void {
+// `factor` sets how deep: cues use the default shallow dip; the voice fades the
+// music nearly out (factor ~0.1) so speech never fights the beat.
+export function duckMusic(ms = 700, factor = DUCK_FACTOR): void {
   if (!audio || !playing) return;
   if (duckTimer) clearTimeout(duckTimer);
-  clearFade();
-  audio.volume = BASE_VOLUME * DUCK_FACTOR;
+  fadeTo(BASE_VOLUME * factor, 180);
   duckTimer = setTimeout(() => {
     duckTimer = null;
-    if (playing) fadeTo(BASE_VOLUME, 400);
+    if (playing) fadeTo(BASE_VOLUME, 600);
   }, ms);
 }

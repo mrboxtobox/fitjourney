@@ -43,6 +43,21 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,webp}'],
         runtimeCaching: [
           {
+            urlPattern: /\/motion\/[^/]+\.mp4$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'motion-clips',
+              expiration: {
+                maxEntries: 40,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+              rangeRequests: true,
+            },
+          },
+          {
             urlPattern: /\/(music|voice)\/[^/]+\.mp3$/,
             handler: 'CacheFirst',
             options: {
