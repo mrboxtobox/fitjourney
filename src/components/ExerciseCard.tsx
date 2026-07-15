@@ -3,7 +3,7 @@ import type { ComponentChildren } from 'preact';
 import { Check, Play, Pause, RotateCcw, X, ShieldCheck, Target, Flame, Trophy } from 'lucide-preact';
 import type { WarmupExercise, Finisher, PrescribedExercise } from '../data/workouts';
 import { getMuscleFocus, formatTempo } from '../data/workouts';
-import { hasMotionFrames } from '../data/exercises';
+import { hasMotionFrames, hasMotionVideo } from '../data/exercises';
 import { getBestFinisherScore } from '../db';
 import { useTimer } from '../hooks/useTimer';
 
@@ -14,11 +14,44 @@ function imageFor(id: string): string {
   return `/exercises/${id}.webp`;
 }
 
-// The exercise picture, animated where a start/top frame pair exists: the two frames
-// crossfade so the movement itself is visible. Reduced-motion users get the top
-// frame, still. Falls back to the static diagram everywhere else.
+const reducedMotion = () =>
+  typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// The exercise picture, animated where animation exists. Preference order:
+// a true Veo clip (one drawn repetition, looping) → the two-frame flip →
+// the static diagram. Reduced-motion users always get the still.
 export function ExerciseImage({ id, alt, imgClass }: { id: string; alt: string; imgClass: string }) {
-  if (!hasMotionFrames(id)) {
+  if (!reducedMotion() && hasMotionVideo(id)) {
+    return (
+      <video
+        // Frameworks set `muted` as a property after the autoplay policy check,
+        // which silently blocks playback — mute via ref and start it by hand.
+        ref={(el: HTMLVideoElement | null) => {
+          if (el && el.paused) {
+            el.muted = true;
+            void el.play().catch(() => {});
+          }
+        }}
+        onCanPlay={(e: Event) => {
+          const v = e.currentTarget as HTMLVideoElement;
+          if (v.paused) {
+            v.muted = true;
+            void v.play().catch(() => {});
+          }
+        }}
+        class={`${imgClass} motion-video`}
+        src={`/motion/${id}.mp4`}
+        poster={imageFor(id)}
+        autoplay
+        muted
+        loop
+        playsinline
+        disableRemotePlayback
+        aria-label={alt}
+      />
+    );
+  }
+  if (reducedMotion() || !hasMotionFrames(id)) {
     return <img src={imageFor(id)} alt={alt} class={imgClass} loading="eager" />;
   }
   return (
@@ -68,7 +101,7 @@ function Row({ id, name, dose, completed, onToggle, onOpen, why, accent, muscles
         </button>
 
         <button class="row-body" onClick={onOpen} aria-label={`${name} — how to do it`}>
-          <img src={imageFor(id)} alt="" class="row-plate" loading="lazy" />
+          <ExerciseImage id={id} alt="" imgClass="row-plate" />
           <span class="row-text">
             <span class="row-name">
               {name}

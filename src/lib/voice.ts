@@ -1,10 +1,11 @@
-// The coach's voice — pre-generated Kokoro TTS clips, bundled under /voice.
+// The coach's voice — pre-generated TTS clips, bundled under /voice.
 //
-// Every line the coach can say is known at build time, so the 82M model never
+// Every line the coach can say is known at build time, so no TTS model ever
 // ships to a phone: scripts/generate-voice.ts renders THIS manifest to mp3 with
-// Kokoro (Apache 2.0) and the app just plays files. One source of truth: the
-// generator imports these exact lines, and the asset guard fails if a line has
-// no file or a file has no line.
+// Gemini TTS under acting direction (an energized trainer, not an announcer)
+// and the app just plays files. One source of truth: the generator imports
+// these exact lines, and the asset guard fails if a line has no file or a file
+// has no line.
 //
 // Voice design: instructions state the movement once; pacing lines mark where
 // you are (last set, final round, halfway); encouragement is rationed — every
@@ -22,14 +23,14 @@ export interface VoiceLine {
 const exerciseLine = (name: string, cue: string): string => `${name}. ${cue}`;
 
 export const ENCOURAGEMENTS: VoiceLine[] = [
-  { file: 'enc-1.mp3', text: 'Good work. Breathe, and reset.' },
+  { file: 'enc-1.mp3', text: 'Good work! Breathe, and reset.' },
   { file: 'enc-2.mp3', text: "You're moving well. Keep that form." },
-  { file: 'enc-3.mp3', text: 'Strong set. Shake it loose.' },
+  { file: 'enc-3.mp3', text: 'Strong set! Shake it loose.' },
   { file: 'enc-4.mp3', text: 'Stay with it. It all adds up.' },
   { file: 'enc-5.mp3', text: 'Nice pace. Recover, then go again.' },
   { file: 'enc-6.mp3', text: "Deep breath. You've got more in you." },
   { file: 'enc-7.mp3', text: 'Small rests, big returns.' },
-  { file: 'enc-8.mp3', text: "That's how it's done. Next one soon." },
+  { file: 'enc-8.mp3', text: "That's how it's done! Next one's coming up." },
 ];
 
 export const WRAPUPS: VoiceLine[] = [
@@ -42,9 +43,9 @@ export const WRAPUPS: VoiceLine[] = [
 ];
 
 export const PACING: Record<string, VoiceLine> = {
-  lastSet: { file: 'pace-last-set.mp3', text: 'Last set. Make it count.' },
-  finalRound: { file: 'pace-final-round.mp3', text: 'Final round. Empty the tank.' },
-  halfway: { file: 'pace-halfway.mp3', text: 'Halfway. Stay smooth.' },
+  lastSet: { file: 'pace-last-set.mp3', text: 'Last set! Make it count!' },
+  finalRound: { file: 'pace-final-round.mp3', text: 'Final round! Empty the tank!' },
+  halfway: { file: 'pace-halfway.mp3', text: 'Halfway there — stay smooth!' },
   score: { file: 'pace-score.mp3', text: 'Count it up, and log your score.' },
   checkIn: { file: 'pace-check-in.mp3', text: "Session's done. How did that feel?" },
   cooldown: { file: 'pace-cooldown.mp3', text: 'Cooldown. Slow everything down, and breathe.' },
@@ -94,7 +95,9 @@ export function speak(file: string, delayMs = 400): void {
       el.preload = 'auto';
       el.volume = 0.95;
       el.addEventListener('loadedmetadata', () => {
-        if (el && Number.isFinite(el.duration)) duckMusic(el.duration * 1000 + 400);
+        // Fade the music nearly out for the length of the line — speech over a
+        // shallow duck is what made the coach sound like a station announcement.
+        if (el && Number.isFinite(el.duration)) duckMusic(el.duration * 1000 + 500, 0.1);
       });
     }
     el.src = `/voice/${file}`;
