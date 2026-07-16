@@ -35,12 +35,12 @@ export function ExerciseImage({ id, alt, imgClass }: { id: string; alt: string; 
   return (
     <div
       class={`${imgClass} pose-set`}
-      style={{ gridTemplateColumns: `repeat(${panels.length}, 1fr)` }}
+      style={{ gridTemplateColumns: `repeat(${Math.min(panels.length, 2)}, 1fr)` }}
       role="group"
       aria-label={alt}
     >
       {panels.map((p) => (
-        <figure key={p.caption} class="pose">
+        <figure key={p.caption} class={p.caption === 'Muscles' && panels.length > 2 ? 'pose pose-muscles' : 'pose'}>
           <img src={p.src} alt={p.alt} loading="eager" />
           <figcaption>{p.caption}</figcaption>
         </figure>
