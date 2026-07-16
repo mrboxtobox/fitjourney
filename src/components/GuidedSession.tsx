@@ -16,6 +16,7 @@ import {
   Music,
   Mic,
   SkipForward,
+  Settings2,
 } from 'lucide-preact';
 import { buildSessionSteps, getExercise, type WorkoutDay, type SessionStep } from '../data/workouts';
 import { ExerciseImage } from './ExerciseCard';
@@ -196,6 +197,7 @@ export function GuidedSession({
   // Live follow: sharing opens a relay socket; every screen change is re-sent so a
   // partner's phone mirrors this one. Read-only on their side by construction.
   const [shareCode, setShareCode] = useState<string | null>(null);
+  const [optionsOpen, setOptionsOpen] = useState(false);
   const [shareLive, setShareLive] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const broadcaster = useRef<LiveBroadcaster | null>(null);
@@ -553,43 +555,43 @@ export function GuidedSession({
         <span class="text-xs" style={{ color: 'var(--text-dim)' }}>
           {idx + 1} / {total}
         </span>
-        <div class="session-top-actions">
-          <button
-            onClick={toggleVoice}
-            class="session-icon-btn"
-            data-music={voice ? 'true' : undefined}
-            aria-label={voice ? 'Turn coach voice off' : 'Turn coach voice on'}
-            aria-pressed={voice}
-          >
-            <Mic size={20} />
-          </button>
-          <button
-            onClick={toggleMusic}
-            class="session-icon-btn"
-            data-music={music ? 'true' : undefined}
-            aria-label={music ? 'Turn music off' : 'Turn music on'}
-            aria-pressed={music}
-          >
-            <Music size={20} />
-          </button>
-          <button
-            onClick={toggleShare}
-            class="session-icon-btn"
-            data-sharing={shareCode ? 'true' : undefined}
-            aria-label={shareCode ? 'Stop sharing live' : 'Share live'}
-            aria-pressed={!!shareCode}
-          >
-            <Radio size={20} />
-          </button>
-          <button
-            onClick={toggleMute}
-            class="session-icon-btn"
-            aria-label={muted ? 'Unmute' : 'Mute'}
-          >
-            {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-          </button>
-        </div>
+        <button
+          onClick={() => setOptionsOpen((o) => !o)}
+          class="session-icon-btn"
+          aria-label="Session options"
+          aria-expanded={optionsOpen}
+        >
+          <Settings2 size={20} />
+        </button>
       </div>
+
+      {optionsOpen && (
+        <>
+          <div class="session-options-backdrop" onClick={() => setOptionsOpen(false)} />
+          <div class="session-options" role="menu" aria-label="Session options">
+            <button class="session-option" data-on={voice ? 'true' : undefined} onClick={toggleVoice} role="menuitemcheckbox" aria-checked={voice}>
+              <Mic size={16} />
+              <span>Coach voice</span>
+              <span class="session-option-state">{voice ? 'On' : 'Off'}</span>
+            </button>
+            <button class="session-option" data-on={music ? 'true' : undefined} onClick={toggleMusic} role="menuitemcheckbox" aria-checked={music}>
+              <Music size={16} />
+              <span>Music</span>
+              <span class="session-option-state">{music ? 'On' : 'Off'}</span>
+            </button>
+            <button class="session-option" data-on={!muted ? 'true' : undefined} onClick={toggleMute} role="menuitemcheckbox" aria-checked={!muted}>
+              {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+              <span>Sound cues</span>
+              <span class="session-option-state">{muted ? 'Off' : 'On'}</span>
+            </button>
+            <button class="session-option" data-on={shareCode ? 'true' : undefined} onClick={toggleShare} role="menuitemcheckbox" aria-checked={!!shareCode}>
+              <Radio size={16} />
+              <span>Share live</span>
+              <span class="session-option-state">{shareCode ? (shareLive ? 'Live' : '…') : 'Off'}</span>
+            </button>
+          </div>
+        </>
+      )}
 
       <div class="session-progress">
         <div class="session-progress-fill" style={{ width: `${((idx + 1) / total) * 100}%` }} />
